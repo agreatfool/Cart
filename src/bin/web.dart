@@ -68,7 +68,6 @@ main() {
           // oauth code got, process next step
           libhttp.post(
               oauth['google_oauth_token_url'],
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'},
               body: {
                 'code': queries['code'],
                 'client_id': oauth['web']['client_id'],
