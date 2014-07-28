@@ -1,0 +1,8 @@
+name: Cart
+dependencies:
+  crypto: any
+  http: any
+  logging: any
+  path: any
+  stack_trace: any
+  start: any

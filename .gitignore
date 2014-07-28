@@ -11,3 +11,6 @@ packages/
 
 # Include when developing application packages.
 pubspec.lock
+
+# Node.js node_modules
+node_modules/

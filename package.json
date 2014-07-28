@@ -1,0 +1,25 @@
+{
+  "name": "Cart",
+  "version": "0.0.0",
+  "description": "Personal blog system, write with markdown, sync with Google Drive",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agreatfool/Cart"
+  },
+  "keywords": [
+    "Blog",
+    "Dart",
+    "NodeJs",
+    "Google Drive",
+    "HTML5"
+  ],
+  "author": "Jonathan Dai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agreatfool/Cart/issues"
+  },
+  "homepage": "https://github.com/agreatfool/Cart",
+  "dependencies": {
+    "gulp": "^3.8.6"
+  }
+}
