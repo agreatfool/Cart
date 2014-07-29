@@ -17,18 +17,18 @@ main() {
 
   PinUtility.setCwdToRoot('../..');
 
-  var auth = new GoogleOAuth.OAuth2Console(
-      identifier: oauth['web']['client_id'],
-      secret: oauth['web']['client_secret'],
-      scopes: [oauth['scope']['email'], oauth['scope']['drive']],
-      authorizedRedirect: oauth['web']['redirect_url'],
-      credentialsFilePath: 'config/credentials.json'
-  );
-  var drive = new GoogleDrive.Drive(auth);
-  drive.makeAuthRequests = true;
-
   new File('config/oauth.json').readAsString().then((String contents) {
     oauth = JSON.decode(contents);
+
+    var auth = new GoogleOAuth.OAuth2Console(
+        identifier: oauth['web']['client_id'],
+        secret: oauth['web']['client_secret'],
+        scopes: [oauth['scope']['email'], oauth['scope']['drive']],
+        authorizedRedirect: oauth['web']['redirect_url'],
+        credentialsFilePath: 'config/credentials.json'
+    );
+    var drive = new GoogleDrive.Drive(auth);
+    drive.makeAuthRequests = true;
 
     LibStart.start(port: 18090).then((LibStart.Server app) {
 
@@ -48,8 +48,21 @@ main() {
 
       app.get('/blog').listen((LibStart.Request request) {
 
-        drive.request('files', 'GET').then((_) {
-          request.response.json(_);
+        drive.request('files', 'GET', queryParams: {
+            'maxResults': 250,
+            'q': "mimeType = 'application/vnd.google-apps.folder' and 'root' in parents"
+        }).then((Map data) {
+          var decoder = new JsonEncoder.withIndent('    ');
+          new File('dummy/data.json').writeAsString(decoder.convert(data['items']));
+          String info = 'Dirs: \n';
+          if (data.containsKey('items')) {
+            List items = data['items'];
+            items.forEach((element) {
+              info += element['title'] + '\n';
+            });
+            new File('dummy/dirs.txt').writeAsString(info);
+          }
+          request.response.send('Dirs count: ' + data['items'].length.toString());
         });
 
       });

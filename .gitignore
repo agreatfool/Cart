@@ -14,3 +14,9 @@ pubspec.lock
 
 # Node.js node_modules
 node_modules/
+
+# credentials
+config/credentials.json
+
+# dummy
+dummy/
