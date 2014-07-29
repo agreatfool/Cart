@@ -6,14 +6,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as LibHttp;
 import 'package:start/start.dart' as LibStart;
 import 'package:google_drive_v2_api/drive_v2_api_console.dart' as GoogleDrive;
+import 'package:google_oauth2_client/google_oauth2_console.dart' as GoogleOAuth;
 
 import 'package:oauth2/oauth2.dart' as OAuth2;
 
 import '../lib/pin.dart';
 
 main() {
-  int counter = 0;
-  Map oauth = null;
+  Map oauth;
 
   PinUtility.setCwdToRoot('../..');
 
@@ -36,14 +36,13 @@ main() {
         }
       });
 
-      app.get('/counter').listen((LibStart.Request request) {
-        request.response.header('Content-Type', 'application/json; charset=UTF-8').json(
-            {'counter': counter++}
-        );
-      });
-
       app.get('/blog').listen((LibStart.Request request) {
         request.response.json(Uri.splitQueryString(request.uri.query));
+
+        var auth = new GoogleOAuth.OAuth2Console();
+        var drive = new GoogleDrive.Drive(auth);
+
+        drive.request();
       });
 
       app.get('/oauth2').listen((LibStart.Request request) {
@@ -76,19 +75,43 @@ main() {
                 'grant_type': 'authorization_code'
               }
           ).then((LibHttp.Response response) {
-            // token got
-//            {
-//              "access_token" : "ya29.UACD48pvUVNbBxwAAAB-QhCLdx1oGiKa2TLray9FYM6QdFcyeCSnLAMAw6uqXA",
-//              "token_type" : "Bearer",
-//              "expires_in" : 3600,
-//              "id_token" : "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyMGRjZGUyMGI5OTcyMDc4ZWNiODE5MTJkZjJmNjZiNDZmZjJiNTcifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiaWQiOiIxMTA3MzY5NTc1NTg4ODA4MDI2NDMiLCJzdWIiOiIxMTA3MzY5NTc1NTg4ODA4MDI2NDMiLCJhenAiOiI1MjQxMDMxMTQyNTktZjZmcnJoYWdubjgxMTFsMGRudDNhcm8xMTdzdmwyNDEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJlbWFpbCI6Im5pZ2h0Z2hvc3Q1MDc4QGdtYWlsLmNvbSIsImF0X2hhc2giOiJIdnBsMHo0cHlOandMZ2hKRVFpb3VBIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6IjUyNDEwMzExNDI1OS1mNmZycmhhZ25uODExMWwwZG50M2FybzExN3N2bDI0MS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInRva2VuX2hhc2giOiJIdnBsMHo0cHlOandMZ2hKRVFpb3VBIiwidmVyaWZpZWRfZW1haWwiOnRydWUsImNpZCI6IjUyNDEwMzExNDI1OS1mNmZycmhhZ25uODExMWwwZG50M2FybzExN3N2bDI0MS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImlhdCI6MTQwNjU0MDA1MCwiZXhwIjoxNDA2NTQzOTUwfQ.xKKwOqf2VqyMl-aY70_wSTyz29xERI_2tg1ud77_bIsS4BrmunICnnUakQ-EdZoxgPL4Jt6NJWIMRYrdb07GzM79sPGxXl0ROTRpT4EOw5NQ8UylnTK9MwbY6uItOSPrIFUEHY4p3lRkbDoAsxt_597R3-atD0bglaoOH05gXtQ",
-//              "refresh_token" : "1/why2cEP9h9hxPF-vK6G8PBXBKLJc7pnV4iWZKR24An8"
-//            }
-            request.response.send(response.body);
+            // token response got
+            Map authResponse = JSON.decode(response.body);
+            if (authResponse.containsKey('access_token')) {
+              // access token got
+              var expiration = null;
+              if (authResponse.containsKey('expires_in')) {
+                var now = new DateTime.now();
+                now.add(new Duration(seconds: authResponse['expires_in']));
+                expiration = now.millisecondsSinceEpoch;
+              }
+              Map credentials = {
+                'accessToken': authResponse['access_token'],
+                'refreshToken': authResponse['refresh_token'],
+                'tokenEndpoint': oauth['google_oauth_token_url'],
+                'scopes': [oauth['scope']['email'], oauth['scope']['drive']],
+                'expiration': expiration
+              };
+              if (authResponse.containsKey('id_token')) {
+                credentials['idToken'] = authResponse['id_token'];
+              }
+              new File('config/credentials.json').writeAsString(JSON.encode(credentials)).then((_) {
+                request.response.redirect(request.uri.host + '/blog');
+              });
+            } else if (authResponse.containsKey('error')) {
+              // error
+              request.response.send('Error: ${queries['error']}');
+            } else {
+              // unrecognized
+              request.response.send('Error: Unrecognized oauth response');
+            }
           });
         } else if (queries.containsKey('error')) {
           // error
           request.response.send('Error: ${queries['error']}');
+        } else {
+          // unrecognized
+          request.response.send('Error: Unrecognized oauth response');
         }
       });
 
