@@ -17,6 +17,16 @@ main() {
 
   PinUtility.setCwdToRoot('../..');
 
+  var auth = new GoogleOAuth.OAuth2Console(
+      identifier: oauth['web']['client_id'],
+      secret: oauth['web']['client_secret'],
+      scopes: [oauth['scope']['email'], oauth['scope']['drive']],
+      authorizedRedirect: oauth['web']['redirect_url'],
+      credentialsFilePath: 'config/credentials.json'
+  );
+  var drive = new GoogleDrive.Drive(auth);
+  drive.makeAuthRequests = true;
+
   new File('config/oauth.json').readAsString().then((String contents) {
     oauth = JSON.decode(contents);
 
@@ -37,12 +47,11 @@ main() {
       });
 
       app.get('/blog').listen((LibStart.Request request) {
-        request.response.json(Uri.splitQueryString(request.uri.query));
 
-        var auth = new GoogleOAuth.OAuth2Console();
-        var drive = new GoogleDrive.Drive(auth);
+        drive.request('files', 'GET').then((_) {
+          request.response.json(_);
+        });
 
-        drive.request();
       });
 
       app.get('/oauth2').listen((LibStart.Request request) {
@@ -60,8 +69,6 @@ main() {
       });
 
       app.get('/oauth2next').listen((LibStart.Request request) {
-        // error: https://oauth2-login-demo.appspot.com/code?error=access_denied
-        // succeed: https://oauth2-login-demo.appspot.com/code?code=4/P7q7W91a-oMsCeLvIaQm6bTrgtp7
         Map queries = Uri.splitQueryString(request.uri.query);
         if (queries.containsKey('code')) {
           // oauth code got, process next step
