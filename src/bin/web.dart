@@ -120,7 +120,7 @@ main() {
               });
             } else if (authResponse.containsKey('error')) {
               // error
-              request.response.send('Error: ${queries['error']}');
+              request.response.send('Error: ${authResponse['error']}');
             } else {
               // unrecognized
               request.response.send('Error: Unrecognized oauth response');
