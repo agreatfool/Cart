@@ -10,4 +10,11 @@ class PinUtility {
     Directory.current = root;
   }
 
+  static void validate(bool condition, String message) {
+    if (condition) {
+      return;
+    }
+    throw new FormatException('Wrong format: $message.');
+  }
+
 }
