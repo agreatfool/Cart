@@ -4,139 +4,92 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as LibHttp;
-import 'package:start/start.dart' as LibStart;
+import 'package:express/express.dart';
 import 'package:google_drive_v2_api/drive_v2_api_console.dart' as GoogleDrive;
 import 'package:google_oauth2_client/google_oauth2_console.dart' as GoogleOAuth;
 
 import 'package:oauth2/oauth2.dart' as OAuth2;
 
-import '../lib/pin.dart';
+import '../lib/pin/pin.dart';
+import '../lib/cart/cart.dart';
 
 main() {
-  Map oauth;
 
   PinUtility.setCwdToRoot('../..');
 
-  new File('config/oauth.json').readAsString().then((String contents) {
-    oauth = JSON.decode(contents);
+  Map setting = JSON.decode(new File('config/setting.json').readAsStringSync());
+  Map oauth = JSON.decode(new File('config/oauth.json').readAsStringSync());
+  Map credentials = {};
+  var credentialsFile = new File(oauth['web']['credentialsFilePath']);
+  if (credentialsFile.existsSync()) {
+    var fileContent = credentialsFile.readAsStringSync();
+    if (fileContent.isNotEmpty) {
+      try {
+        credentials = JSON.decode(fileContent);
+      } catch (e) {
+        PinLogger.instance.shout('[WebMain] Error in JSON parsing credentials data: ${fileContent}');
+      }
+    }
+  }
 
-    var auth = new GoogleOAuth.OAuth2Console(
-        identifier: oauth['web']['client_id'],
-        secret: oauth['web']['client_secret'],
-        scopes: [oauth['scope']['email'], oauth['scope']['drive']],
-        authorizedRedirect: oauth['web']['redirect_url'],
-        credentialsFilePath: 'config/credentials.json'
-    );
-    var drive = new GoogleDrive.Drive(auth);
-    drive.makeAuthRequests = true;
+  var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
+  var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
 
-    LibStart.start(port: 18090).then((LibStart.Server app) {
+  bool isSignedIn(HttpContext ctx) {
+    bool signedIn = true;
 
-      PinLogger.instance.fine('[EvernoteBlog Web] App server started, listening on port 18090 ...');
+    if (!signedIn) {
+      ctx.res.redirect(new Uri(path: '/'));
+    }
 
-      app.get('/error').listen((LibStart.Request request) {
-        var err = new ArgumentError('custom error in handler');
+    return signedIn;
+  }
 
-        try {
-          throw err;
-        } catch(ex, stackTrace) {
-          request.response.header('Content-Type', 'text/plain; charset=UTF-8').send(
-              stackTrace.toString()
-          );
-        }
-      });
+  var app = new Express();
 
-      app.get('/blog').listen((LibStart.Request request) {
-
-        drive.request('files', 'GET', queryParams: {
-            'maxResults': 250,
-            'q': "mimeType = 'application/vnd.google-apps.folder' and 'root' in parents"
-        }).then((Map data) {
-          var decoder = new JsonEncoder.withIndent('    ');
-          new File('dummy/data.json').writeAsString(decoder.convert(data['items']));
-          String info = 'Dirs: \n';
-          if (data.containsKey('items')) {
-            List items = data['items'];
-            items.forEach((element) {
-              info += element['title'] + '\n';
-            });
-            new File('dummy/dirs.txt').writeAsString(info);
-          }
-          request.response.send('Dirs count: ' + data['items'].length.toString());
-        });
-
-      });
-
-      app.get('/oauth2').listen((LibStart.Request request) {
-        var grant = new OAuth2.AuthorizationCodeGrant(
-            oauth['web']['client_id'],
-            oauth['web']['client_secret'],
-            Uri.parse(oauth['google_oauth_url']),
-            Uri.parse(oauth['google_oauth_token_url'])
-        );
-        Uri authUrl = grant.getAuthorizationUrl(
-            Uri.parse(oauth['web']['redirect_url']),
-            scopes: [oauth['scope']['email'], oauth['scope']['drive']]
-        );
-        request.response.redirect(authUrl.toString());
-      });
-
-      app.get('/oauth2next').listen((LibStart.Request request) {
-        Map queries = Uri.splitQueryString(request.uri.query);
-        if (queries.containsKey('code')) {
-          // oauth code got, process next step
-          LibHttp.post(
-              oauth['google_oauth_token_url'],
-              body: {
-                'code': queries['code'],
-                'client_id': oauth['web']['client_id'],
-                'client_secret': oauth['web']['client_secret'],
-                'redirect_uri': oauth['web']['redirect_url'],
-                'grant_type': 'authorization_code'
-              }
-          ).then((LibHttp.Response response) {
-            // token response got
-            Map authResponse = JSON.decode(response.body);
-            if (authResponse.containsKey('access_token')) {
-              // access token got
-              var expiration = null;
-              if (authResponse.containsKey('expires_in')) {
-                var now = new DateTime.now();
-                now.add(new Duration(seconds: authResponse['expires_in']));
-                expiration = now.millisecondsSinceEpoch;
-              }
-              Map credentials = {
-                'accessToken': authResponse['access_token'],
-                'refreshToken': authResponse['refresh_token'],
-                'tokenEndpoint': oauth['google_oauth_token_url'],
-                'scopes': [oauth['scope']['email'], oauth['scope']['drive']],
-                'expiration': expiration
-              };
-              if (authResponse.containsKey('id_token')) {
-                credentials['idToken'] = authResponse['id_token'];
-              }
-              new File('config/credentials.json').writeAsString(JSON.encode(credentials)).then((_) {
-                request.response.redirect(request.uri.host + '/blog');
-              });
-            } else if (authResponse.containsKey('error')) {
-              // error
-              request.response.send('Error: ${authResponse['error']}');
-            } else {
-              // unrecognized
-              request.response.send('Error: Unrecognized oauth response');
-            }
+  app.get('/blog', (HttpContext ctx) {
+    if (credentials.length == 0) {
+      // TODO redirect to '/oauth2'
+      ctx.sendHtml('<h1>BLOG PAGE</h1>');
+    } else {
+      pinGoogleDrive.listFiles(queryParams: {
+          'maxResults': 250,
+          'q': "mimeType = 'application/vnd.google-apps.folder' and 'root' in parents"
+      }).then((Map data) {
+        var decoder = new JsonEncoder.withIndent('    ');
+        new File('dummy/data.json').writeAsString(decoder.convert(data['items']));
+        String info = 'Dirs: <br/>';
+        if (data.containsKey('items')) {
+          List items = data['items'];
+          items.forEach((element) {
+            info += element['title'] + '<br/>';
           });
-        } else if (queries.containsKey('error')) {
-          // error
-          request.response.send('Error: ${queries['error']}');
-        } else {
-          // unrecognized
-          request.response.send('Error: Unrecognized oauth response');
+          new File('dummy/dirs.txt').writeAsString(info);
         }
+        ctx.sendHtml(info);
       });
+    }
+  });
 
+  app.get('/oauth2', (HttpContext ctx) {
+    // FIXME validate already authorized or not
+    ctx.res.redirect(Uri.parse(pinGoogleOAuth.getOAuthUrl()));
+  });
+
+  app.get('/oauth2next', (HttpContext ctx) {
+    Map queries = Uri.splitQueryString(ctx.uri.query);
+    pinGoogleOAuth.processOAuthNext(queries).then((Map done) {
+      if (done['result']) {
+        credentials = JSON.decode(credentialsFile.readAsStringSync());
+        ctx.sendHtml('<h1>OAuth done!</h1>');
+      } else {
+        ctx.sendJson(done);
+      }
     });
+  });
 
+  app.listen('127.0.0.1', setting['port']).then((_) {
+    PinLogger.instance.fine('[WebMain] App server started, listening on http://127.0.0.1:${setting['port']} ...');
   });
 
 }

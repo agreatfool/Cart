@@ -1,13 +1,12 @@
 {
-    "google_oauth_url": "https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force",
-    "google_oauth_token_url": "https://accounts.google.com/o/oauth2/token",
-    "scope": {
-        "email": "https://www.googleapis.com/auth/userinfo.email",
-        "drive": "https://www.googleapis.com/auth/drive"
-    },
     "web": {
-        "client_id": "524103114259-f6frrhagnn8111l0dnt3aro117svl241.apps.googleusercontent.com",
-        "client_secret": "nCowJYKzRsH4fzVmyBf-GYFm",
-        "redirect_url": "http://enblog.com/oauth2next"
+        "identifier": "524103114259-f6frrhagnn8111l0dnt3aro117svl241.apps.googleusercontent.com",
+        "secret": "nCowJYKzRsH4fzVmyBf-GYFm",
+        "scopes": [
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/drive"
+        ],
+        "redirectUrl": "http://enblog.com/oauth2next",
+        "credentialsFilePath": "config/credentials.json"
     }
 }
