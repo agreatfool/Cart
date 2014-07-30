@@ -71,8 +71,7 @@ main() {
   });
 
   app.get('/oauth2next', (HttpContext ctx) {
-    Map queries = Uri.splitQueryString(ctx.uri.query);
-    pinGoogleOAuth.processOAuthNext(queries).then((Map done) {
+    pinGoogleOAuth.processOAuthNext(ctx.params).then((Map done) {
       if (done['result']) {
         credentials = JSON.decode(credentialsFile.readAsStringSync());
         ctx.sendHtml('<h1>OAuth done!</h1>');
