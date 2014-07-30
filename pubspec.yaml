@@ -7,3 +7,4 @@ dependencies:
   logging: any
   path: any
   stack_trace: any
+  wilt: any
