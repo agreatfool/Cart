@@ -1,3 +1,6 @@
+##
+# Dart
+##
 # Don’t commit the following directories created by pub.
 build/
 packages/
@@ -12,11 +15,18 @@ packages/
 # Include when developing application packages.
 pubspec.lock
 
-# Node.js node_modules
+##
+# NPM
+##
 node_modules/
 
-# credentials
-config/credentials.json
+##
+# Bower
+##
+web/src/bower/
 
-# dummy
+##
+# Dart
+##
+config/credentials.json
 dummy/

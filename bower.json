@@ -14,5 +14,8 @@
   "description": "Personal blog system, write with markdown, sync with Google Drive",
   "license": "MIT",
   "homepage": "https://github.com/agreatfool/Cart",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "angularjs": "~1.2.21"
+  }
 }
