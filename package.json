@@ -20,6 +20,15 @@
   },
   "homepage": "https://github.com/agreatfool/Cart",
   "dependencies": {
+    "browserify": "^5.9.1",
+    "deamdify": "^0.1.1",
+    "debowerify": "^0.8.1",
+    "forever": "^0.11.1",
     "gulp": "^3.8.6"
+  },
+  "browserify": {
+    "transform": [
+      "debowerify"
+    ]
   }
 }

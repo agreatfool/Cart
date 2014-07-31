@@ -16,6 +16,10 @@
   "homepage": "https://github.com/agreatfool/Cart",
   "private": true,
   "dependencies": {
-    "angularjs": "~1.2.21"
+    "angular": "~1.2.21",
+    "angular-route": "~1.2.21",
+    "angular-animate": "~1.2.21",
+    "moment": "~2.8.0",
+    "jquery": "~2.1.1"
   }
 }
