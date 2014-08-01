@@ -16,6 +16,11 @@ packages/
 pubspec.lock
 
 ##
+# IDE
+##
+.idea
+
+##
 # NPM
 ##
 node_modules/
