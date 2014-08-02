@@ -5,9 +5,10 @@ var moment = require('moment');
 require('angular');
 require('angular-route');
 require('angular-animate');
+require('angular-pouchdb');
 
 var app = angular.module('Cart', [
-    'ngAnimate', 'ngRoute',
+    'ngAnimate', 'ngRoute', 'pouchdb',
     'Cart.Controllers', 'Cart.Services'
 ]);
 
@@ -18,7 +19,7 @@ controllers.controller('CartIndexCtrl', ['$scope', function ($scope) {
 
 var services = angular.module('Cart.Services', []);
 
-services.factory('CartIndexService', ['$http', '$q', function($http, $q) {
+services.factory('CartIndexService', ['$http', '$q', 'pouchdb', function($http, $q, pouchdb) {
     return {
     };
 }]);
