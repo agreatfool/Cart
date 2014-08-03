@@ -21,6 +21,6 @@
     "angular-animate": "~1.2.21",
     "moment": "~2.8.0",
     "jquery": "~2.1.1",
-    "angular-pouchdb": "~0.1.5"
+    "pouchdb": "~2.2.3"
   }
 }
