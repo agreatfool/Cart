@@ -15,27 +15,20 @@ packages/
 # Include when developing application packages.
 pubspec.lock
 
-##
 # IDE
-##
 .idea
 
-##
 # NPM
-##
 node_modules/
 
-##
 # Bower
-##
 web/src/bower/
 
-##
 # Dart
-##
 config/credentials.json
 
-##
 # HTML
-##
 web/public
+
+# SASS
+.sass-cache
