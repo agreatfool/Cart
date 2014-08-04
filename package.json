@@ -26,20 +26,17 @@
     "forever": "^0.11.1",
     "gulp": "^3.8.6",
     "gulp-autoprefixer": "0.0.8",
-    "gulp-concat": "^2.3.4",
-    "gulp-ignore": "^1.2.0",
     "gulp-jshint": "^1.8.2",
     "gulp-livereload": "^2.1.0",
     "gulp-minify-css": "^0.3.7",
+    "gulp-minify-html": "^0.1.4",
     "gulp-rename": "^1.2.0",
     "gulp-rimraf": "^0.1.0",
     "gulp-ruby-sass": "^0.7.1",
-    "gulp-uglify": "^0.3.1",
-    "gulp-util": "^3.0.0"
-  },
-  "browserify": {
-    "transform": [
-      "debowerify"
-    ]
+    "gulp-util": "^3.0.0",
+    "jshint-stylish": "^0.4.0",
+    "uglifyify": "^2.5.0",
+    "vinyl-source-stream": "^0.1.1",
+    "watchify": "^1.0.1"
   }
 }
