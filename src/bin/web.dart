@@ -41,32 +41,7 @@ main() {
 
   var app = new Express();
 
-  app.get('/blog', (HttpContext ctx) {
-    if (credentials.length == 0) {
-      // TODO redirect to '/oauth2'
-      ctx.sendHtml('<h1>BLOG PAGE</h1>');
-    } else {
-      pinGoogleDrive.listFiles(queryParams: {
-          'maxResults': 250,
-          'q': "mimeType = 'application/vnd.google-apps.folder' and 'root' in parents"
-      }).then((Map data) {
-        var decoder = new JsonEncoder.withIndent('    ');
-        new File('dummy/data.json').writeAsString(decoder.convert(data['items']));
-        String info = 'Dirs: <br/>';
-        if (data.containsKey('items')) {
-          List items = data['items'];
-          items.forEach((element) {
-            info += element['title'] + '<br/>';
-          });
-          new File('dummy/dirs.txt').writeAsString(info);
-        }
-        ctx.sendHtml(info);
-      });
-    }
-  });
-
   app.get('/oauth2', (HttpContext ctx) {
-    // FIXME validate already authorized or not
     ctx.res.redirect(Uri.parse(pinGoogleOAuth.getOAuthUrl()));
   });
 
