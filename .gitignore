@@ -29,6 +29,7 @@ config/credentials.json
 
 # HTML
 web/public
+web/**/*/packages
 
 # SASS
 .sass-cache
