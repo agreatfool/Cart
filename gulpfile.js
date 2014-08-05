@@ -44,20 +44,14 @@ var Task_Styles = function() {
 };
 
 var Task_Scripts = function(needWatch) {
-    var bundler = new browserify({
-        basedir: __dirname, debug: true,
-        cache: {}, // required for watchify
-        packageCache: {}, // required for watchify
-        fullPaths: needWatch // required to be true only for watchify
-    });
+    var bundler = new browserify('./web/src/scripts/app.js', watchify.args);
 
     if (needWatch) {
         bundler = watchify(bundler);
     }
 
-    bundler.add('./web/src/scripts/app.js');
-    bundler.transform({global: true}, debowerify);
-    bundler.transform({global: true}, deamdify);
+    bundler.transform(debowerify);
+    bundler.transform(deamdify);
     if (production) {
         bundler.transform({global: true}, uglifyify);
     }
