@@ -102,6 +102,14 @@ gulp.task('styles', function() {
     return Task_Styles();
 });
 
+gulp.task('styles_move', function() {
+    return gulp.src([
+        'web/src/bower/bootstrap/dist/css/**/*',
+        'web/src/bower/bootstrap/dist/fonts/**/*'
+    ], { base: 'web/src/bower' })
+    .pipe(gulp.dest('web/public/css'));
+});
+
 gulp.task('scripts', function() {
     return Task_Scripts(false);
 });
@@ -115,7 +123,7 @@ gulp.task('images', function() {
 });
 
 gulp.task('default', ['clean'], function() {
-    gulp.start('lint-scripts', 'scripts', 'styles', 'htmls', 'images');
+    gulp.start('lint-scripts', 'scripts', 'styles_move', 'styles', 'htmls', 'images');
 });
 
 gulp.task('watch', function() {
