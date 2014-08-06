@@ -5,7 +5,7 @@ var stylish = require('jshint-stylish');
 var livereload = require('gulp-livereload');
 var mincss = require('gulp-minify-css');
 var rename = require('gulp-rename');
-var rimraf = require('gulp-rimraf');
+var rimraf = require('rimraf');
 var sass = require('gulp-ruby-sass');
 var minhtml = require('gulp-minify-html');
 var gutil = require('gulp-util');
@@ -77,13 +77,14 @@ var Task_Htmls = function() {
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* TASKS
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-gulp.task('clean', function() {
-    return gulp.src(['web/public/**/*', '!web/public/packages/**/*'], { read: false })
-        .pipe(rimraf());
+gulp.task('clean', function(done) {
+    rimraf('web/public/*', function() {
+        done();
+    });
 });
 
 gulp.task('lint-scripts', function() {
-    return gulp.src('web/src/scripts/**/*.js')
+    return gulp.src(['web/src/scripts/**/*.js', '!web/public/packages/**/*'])
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter(stylish))
         .on('error', handleError);
@@ -101,8 +102,8 @@ gulp.task('htmls', function() {
     return Task_Htmls();
 });
 
-gulp.task('default', ['clean', 'lint-scripts'], function() {
-    gulp.start('scripts', 'styles', 'htmls');
+gulp.task('default', ['clean'], function() {
+    gulp.start('lint-scripts', 'scripts', 'styles', 'htmls');
 });
 
 gulp.task('watch', function() {
