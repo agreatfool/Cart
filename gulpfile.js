@@ -120,7 +120,7 @@ gulp.task('default', ['clean'], function() {
 
 gulp.task('watch', function() {
     // watch styles
-    gulp.watch('web/src/styles/**/*.sass', function(event) {
+    gulp.watch('web/src/styles/**/*.scss', function(event) {
         gutil.log('Style file ' + gutil.colors.cyan(event.path) + ' was ' + gutil.colors.cyan(event.type) + ', run styles sync ...');
         return Task_Styles();
     });
