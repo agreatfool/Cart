@@ -84,7 +84,7 @@ gulp.task('clean', function(done) {
 });
 
 gulp.task('lint-scripts', function() {
-    return gulp.src(['web/src/scripts/**/*.js', '!web/public/packages/**/*'])
+    return gulp.src(['web/src/scripts/**/*.js', '!web/src/scripts/packages/**/*'])
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter(stylish))
         .on('error', handleError);
