@@ -33,7 +33,7 @@ function handleError(err) {
 //-* FUNCTIONS
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var Task_Styles = function() {
-    return gulp.src('web/src/styles/main.sass')
+    return gulp.src('web/src/styles/main.scss')
         .pipe(sass({ style: 'expanded' }))
         .on('error', handleError)
         .pipe(autoprefixer('last 2 version', '> 1%', 'safari 6', 'ie 8', 'ie 9', 'ios 6', 'android 4'))
