@@ -3,12 +3,21 @@
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- LIB & ANNOUNCEMENT
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+// jQuery family
 var $ = require('jquery');
-var moment = require('moment');
+global.jQuery = $;
+require('./../bower/letteringjs/jquery.lettering.js');
+require('./../bower/textillate/jquery.textillate.js');
+require('./../bower/Blur.js/blur.js');
+
+// angular family
 require('angular');
 require('angular-route');
 require('angular-animate');
 require('angular-route-segment');
+
+// others
+var moment = require('moment');
 var pouchdb = require('pouchdb');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
