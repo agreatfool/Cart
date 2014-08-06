@@ -8,6 +8,8 @@ var rename = require('gulp-rename');
 var rimraf = require('rimraf');
 var sass = require('gulp-ruby-sass');
 var minhtml = require('gulp-minify-html');
+var minimg = require('gulp-imagemin');
+var cache = require('gulp-cache');
 var gutil = require('gulp-util');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
@@ -53,7 +55,7 @@ var Task_Scripts = function(needWatch) {
     bundler.transform(debowerify);
     bundler.transform(deamdify);
     if (production) {
-        bundler.transform({global: true}, uglifyify);
+        bundler.transform({ global: true }, uglifyify);
     }
 
     var rebundle = function() {
@@ -72,6 +74,12 @@ var Task_Htmls = function() {
     return gulp.src(['web/src/**/*.html', '!web/src/bower/**/*'])
         .pipe(minhtml())
         .pipe(gulp.dest('web/public'));
+};
+
+var Task_Images = function() {
+    return gulp.src(['web/src/images/**/*', '!web/src/images/packages/**/*'])
+        .pipe(cache(minimg({ optimizationLevel: 5, progressive: true, interlaced: true })))
+        .pipe(gulp.dest('web/public/img'));
 };
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -102,8 +110,12 @@ gulp.task('htmls', function() {
     return Task_Htmls();
 });
 
+gulp.task('images', function() {
+    return Task_Images();
+});
+
 gulp.task('default', ['clean'], function() {
-    gulp.start('lint-scripts', 'scripts', 'styles', 'htmls');
+    gulp.start('lint-scripts', 'scripts', 'styles', 'htmls', 'images');
 });
 
 gulp.task('watch', function() {
@@ -123,6 +135,12 @@ gulp.task('watch', function() {
     gulp.watch('web/src/**/*.html', function(event) {
         gutil.log('Html file ' + gutil.colors.cyan(event.path) + ' was ' + gutil.colors.cyan(event.type) + ', run htmls sync ...');
         return Task_Htmls();
+    });
+
+    // watch images
+    gulp.watch('web/src/images/**/*', function(event) {
+        gutil.log('Image file ' + gutil.colors.cyan(event.path) + ' was ' + gutil.colors.cyan(event.type) + ', run images sync ...');
+        return Task_Images();
     });
 
     // livereload
