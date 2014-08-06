@@ -5,10 +5,9 @@
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 // jQuery family
 var $ = require('jquery');
-global.jQuery = $;
+global.$ = global.jQuery = $;
 require('./../bower/letteringjs/jquery.lettering.js');
 require('./../bower/textillate/jquery.textillate.js');
-require('./../bower/Blur.js/blur.js');
 
 // angular family
 require('angular');
