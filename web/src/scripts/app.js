@@ -37,7 +37,7 @@ function($routeProvider, $routeSegmentProvider) {
     $routeSegmentProvider.options.autoLoadTemplates = true;
     $routeSegmentProvider.options.strictMode = true;
     $routeSegmentProvider.
-        when('/',                    'blog').
+        when('/',                    'blog.list').
         when('/new/:postId',         'blog.new').
         when('/update/:postId',      'blog.update').
         when('/:year/:month/:title', 'blog.view').
@@ -46,12 +46,18 @@ function($routeProvider, $routeSegmentProvider) {
         when('/oauth2',              'oauth2').
         when('/login',               'login').
         when('/profile',             'profile').
+        when('/master',              'master').
+        when('/404',                 '404').
         // BLOG
         segment('blog', {
             'templateUrl': 'views/blog/home.html',
             'controller': 'CartBlogCtrl'
         }).
         within().
+            segment('list', {
+                'templateUrl': 'views/blog/list.html',
+                'controller': 'CartBlogListCtrl'
+            }).
             segment('new', {
                 'templateUrl': 'views/blog/edit.html',
                 'controller': 'CartBlogNewCtrl',
@@ -92,8 +98,17 @@ function($routeProvider, $routeSegmentProvider) {
         segment('profile', {
             'templateUrl': 'views/profile/home.html',
             'controller': 'CartProfileCtrl'
+        }).
+        // MASTER
+        segment('master', {
+            'templateUrl': 'views/master/home.html',
+            'controller': 'CartMasterCtrl'
+        }).
+        // 404
+        segment('404', {
+            'templateUrl': 'views/404/home.html'
         });
-    $routeProvider.otherwise({redirectTo: '/'});
+    $routeProvider.otherwise({ redirectTo: '/' });
 }]);
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -103,6 +118,10 @@ var controllers = angular.module('Cart.Controllers', []);
 
 controllers.controller('CartBlogCtrl', ['$scope', function ($scope) {
     console.log('CartBlogCtrl');
+}]);
+
+controllers.controller('CartBlogListCtrl', ['$scope', function ($scope) {
+    console.log('CartBlogListCtrl');
 }]);
 
 controllers.controller('CartBlogNewCtrl', ['$scope', function ($scope) {
@@ -141,6 +160,11 @@ controllers.controller('CartProfileCtrl', ['$scope', function ($scope) {
 //- SERVICE
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var services = angular.module('Cart.Services', []);
+
+services.factory('CartRoleService', ['$http', '$q', function($http, $q) {
+    return {
+    };
+}]);
 
 services.factory('CartService', ['$http', '$q', function($http, $q) {
     return {
