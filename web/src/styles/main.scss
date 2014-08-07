@@ -1,38 +1,48 @@
 $bg-black-url: '../img/bg/bg.jpg';
 
 $primary-font-color: #E3E6E9;
-$primary-page-color: #2F2E38;
+$primary-page-color: #302F39;
+$primary-page-color-dark: #25242C;
 
 $nav-shadow-color: rgba(67, 67, 67, 0.3);
 $nav-width-opened: 80px;
 $nav-width-expended: 240px;
+
+$nav-icon-size: 40px;
+$nav-icon-margin-l: 15px;
+$icon-pos-adj-h: 1px;
+$icon-pos-adj-v: -3px;
 
 body {
   background: url($bg-black-url) 50% 0% / cover no-repeat fixed;
   color: $primary-font-color;
 }
 
-.lnav-trigger {
+.nav-trigger {
   position: fixed;
   top: 5px;
   left: 5px;
-  font-size: 40px;
+  width: $nav-icon-size * 2;
+  height: $nav-icon-size * 2;
+  font-size: $nav-icon-size;
+  border-radius: $nav-icon-size;
+  background: $primary-page-color-dark;
   z-index: 1000;
   span {
-    margin: 0px 15px;
+    margin: ($nav-icon-size / 2 + $icon-pos-adj-v) ($nav-icon-size / 2 + $icon-pos-adj-h);
   }
 }
 
-.lnav {
+.nav-fixed {
   position: fixed;
   width: 0px;
   top: 0px;
   bottom: 0px;
   left: 0px;
-  box-shadow: inset -15px 0px 30px $nav-shadow-color;
+  box-shadow: inset -15px 0px 40px $nav-shadow-color;
 }
 
-.rpage {
+.page-content {
   position: absolute;
   background-color: $primary-page-color;
   top: 0px;
@@ -43,19 +53,37 @@ body {
 }
 
 .nav-opened {
-  .lnav {
+  .nav-fixed {
     width: $nav-width-opened;
   }
-  .rpage {
+  .page-content {
     left: $nav-width-opened;
+  }
+  .nav-trigger {
+    width: $nav-icon-size;
+    height: $nav-icon-size;
+    border-radius: 0px;
+    background: transparent;
+    span {
+      margin: 0 $nav-icon-margin-l;
+    }
   }
 }
 
 .nav-expanded {
-  .lnav {
+  .nav-fixed {
     width: $nav-width-expended;
   }
-  .rpage {
+  .page-content {
     left: $nav-width-expended;
+  }
+  .nav-trigger {
+    width: $nav-icon-size;
+    height: $nav-icon-size;
+    border-radius: 0px;
+    background: transparent;
+    span {
+      margin: 0 $nav-icon-margin-l;
+    }
   }
 }
