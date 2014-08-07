@@ -1,8 +1,9 @@
 $bg-black-url: '../img/bg/bg.jpg';
 
-$primary-font-color: #E3E6E9;
-$primary-page-color: #302F39;
-$primary-page-color-dark: #25242C;
+$font-color-white: #E3E6E9;
+$page-color-green: #209D78;
+$page-color-gray: #302F39;
+$page-color-dark: #25242C;
 
 $nav-shadow-color: rgba(67, 67, 67, 0.3);
 $nav-width-opened: 80px;
@@ -15,11 +16,11 @@ $icon-pos-adj-v: -3px;
 
 body {
   background: url($bg-black-url) 50% 0% / cover no-repeat fixed;
-  color: $primary-font-color;
+  color: $font-color-white;
 }
 
 .nav-icon {
-  color: $primary-font-color;
+  color: $font-color-white;
   font-size: $nav-icon-size;
   cursor: pointer;
 }
@@ -31,7 +32,7 @@ body {
   width: $nav-icon-size * 2;
   height: $nav-icon-size * 2;
   border-radius: $nav-icon-size;
-  background: $primary-page-color-dark;
+  background: $page-color-dark;
   z-index: 1000;
   span {
     margin: ($nav-icon-size / 2 + $icon-pos-adj-v) ($nav-icon-size / 2 + $icon-pos-adj-h);
@@ -50,12 +51,11 @@ body {
 
 .page-content {
   position: absolute;
-  background-color: $primary-page-color;
+  background-color: $page-color-gray;
   top: 0px;
   bottom: 0px;
   left: 0px;
   width: 100%;
-  padding: 0 0 0 25px;
 }
 
 .nav-opened {
