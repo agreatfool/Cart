@@ -1,4 +1,62 @@
+$bg-black-url: '../img/bg/bg.jpg';
+
+$primary-font-color: #E3E6E9;
+$primary-page-color: #2F2E38;
+
+$nav-shadow-color: rgba(67, 67, 67, 0.3);
+$nav-width-opened: 80px;
+$nav-width-expended: 240px;
+
 body {
-  background: url(../img/bg/bg2.png) repeat;
-  color: #E3E6E9;
+  background: url($bg-black-url) 50% 0% / cover no-repeat fixed;
+  color: $primary-font-color;
+}
+
+.lnav-trigger {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  font-size: 40px;
+  color: $primary-font-color;
+  z-index: 1000;
+  span {
+    margin: 0px 15px;
+  }
+}
+
+.lnav {
+  position: fixed;
+  width: 0px;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  box-shadow: inset -15px 0px 30px $nav-shadow-color;
+}
+
+.rpage {
+  position: absolute;
+  background-color: $primary-page-color;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  padding: 0 0 0 25px;
+}
+
+.nav-opened {
+  .lnav {
+    width: $nav-width-opened;
+  }
+  .rpage {
+    left: $nav-width-opened;
+  }
+}
+
+.nav-expanded {
+  .lnav {
+    width: $nav-width-expended;
+  }
+  .rpage {
+    left: $nav-width-expended;
+  }
 }
