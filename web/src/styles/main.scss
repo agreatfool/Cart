@@ -18,13 +18,18 @@ body {
   color: $primary-font-color;
 }
 
+.nav-icon {
+  color: $primary-font-color;
+  font-size: $nav-icon-size;
+  cursor: pointer;
+}
+
 .nav-trigger {
   position: fixed;
   top: 5px;
   left: 5px;
   width: $nav-icon-size * 2;
   height: $nav-icon-size * 2;
-  font-size: $nav-icon-size;
   border-radius: $nav-icon-size;
   background: $primary-page-color-dark;
   z-index: 1000;
@@ -39,6 +44,7 @@ body {
   top: 0px;
   bottom: 0px;
   left: 0px;
+  z-index: 999;
   box-shadow: inset -15px 0px 40px $nav-shadow-color;
 }
 
