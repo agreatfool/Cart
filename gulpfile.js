@@ -36,7 +36,7 @@ function handleError(err) {
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var Task_Styles = function() {
     return gulp.src('web/src/styles/main.scss')
-        .pipe(sass({ style: 'expanded' }))
+        .pipe(sass({ style: 'expanded', trace: true }))
         .on('error', handleError)
         .pipe(autoprefixer('last 2 version', '> 1%', 'safari 6', 'ie 8', 'ie 9', 'ios 6', 'android 4'))
         .pipe(gulp.dest('web/public/css'))
