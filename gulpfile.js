@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gulpif = require('gulp-if');
 var autoprefixer = require('gulp-autoprefixer');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
@@ -41,7 +42,7 @@ var Task_Styles = function() {
         .pipe(autoprefixer('last 2 version', '> 1%', 'safari 6', 'ie 8', 'ie 9', 'ios 6', 'android 4'))
         .pipe(gulp.dest('web/public/css'))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(mincss())
+        .pipe(gulpif(production, mincss()))
         .pipe(gulp.dest('web/public/css'));
 };
 
@@ -71,14 +72,14 @@ var Task_Scripts = function(needWatch) {
 };
 
 var Task_Htmls = function() {
-    return gulp.src(['web/src/**/*.html', '!web/src/bower/**/*'])
-        .pipe(minhtml())
+    return gulp.src(['web/src/index.html', 'web/src/views/**/*.html'], { base: 'web/src' })
+        .pipe(gulpif(production, minhtml()))
         .pipe(gulp.dest('web/public'));
 };
 
 var Task_Images = function() {
     return gulp.src(['web/src/images/**/*', '!web/src/images/packages/**/*'])
-        .pipe(cache(minimg({ optimizationLevel: 5, progressive: true, interlaced: true })))
+        .pipe(gulpif(production, cache(minimg({ optimizationLevel: 5, progressive: true, interlaced: true }))))
         .pipe(gulp.dest('web/public/img'));
 };
 
