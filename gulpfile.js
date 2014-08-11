@@ -104,9 +104,16 @@ gulp.task('styles', function() {
 });
 
 gulp.task('styles_move', function() {
+    // FIXME css codes in this task shall also be minified !!!
     return gulp.src([
         'web/src/bower/bootstrap/dist/css/**/*',
-        'web/src/bower/bootstrap/dist/fonts/**/*'
+        'web/src/bower/bootstrap/dist/fonts/**/*',
+        'web/src/bower/bootstrap/dist/js/**/*',
+        'web/src/bower/Flat-UI/css/**/*',
+        'web/src/bower/Flat-UI/fonts/**/*',
+        'web/src/bower/Flat-UI/images/**/*',
+        'web/src/bower/Flat-UI/js/**/*',
+        'web/src/bower/css-social-buttons/css/**/*'
     ], { base: 'web/src/bower' })
     .pipe(gulp.dest('web/public/css'));
 });
