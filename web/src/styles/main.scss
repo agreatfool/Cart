@@ -1,9 +1,13 @@
 $bg-black-url: '../img/bg/bg.jpg';
 
-$font-color-white: #E3E6E9;
-$page-color-green: #209D78;
-$page-color-gray: #302F39;
-$page-color-dark: #25242C;
+$color-white: #E3E6E9;
+$color-green: #209D78;
+$color-blue: #3498DB;
+$color-gray: #302F39;
+$color-dark: #25242C;
+$color-orange: #FE8B6C;
+$color-red: #B81D18;
+$color-purple: #EC3F8C;
 
 $nav-shadow-color: rgba(67, 67, 67, 0.3);
 $nav-width-opened: 80px;
@@ -16,11 +20,11 @@ $icon-pos-adj-v: -3px;
 
 body {
   background: url($bg-black-url) 50% 0% / cover no-repeat fixed;
-  color: $font-color-white;
+  color: $color-dark;
 }
 
 .nav-icon {
-  color: $font-color-white;
+  color: $color-white;
   font-size: $nav-icon-size;
   cursor: pointer;
 }
@@ -32,7 +36,7 @@ body {
   width: $nav-icon-size * 2;
   height: $nav-icon-size * 2;
   border-radius: $nav-icon-size;
-  background: $page-color-dark;
+  background: $color-dark;
   z-index: 1000;
   span {
     margin: ($nav-icon-size / 2 + $icon-pos-adj-v) ($nav-icon-size / 2 + $icon-pos-adj-h);
@@ -51,7 +55,7 @@ body {
 
 .page-content {
   position: absolute;
-  background-color: $page-color-gray;
+  background-color: $color-white;
   top: 0px;
   bottom: 0px;
   left: 0px;
@@ -91,5 +95,40 @@ body {
     span {
       margin: 0 $nav-icon-margin-l;
     }
+  }
+}
+
+.landing-top {
+  width: 100%;
+  color: $color-white;
+  background: $color-gray;
+  padding-bottom: 3%;
+  .top {
+    margin-top: 5%;
+  }
+  .title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 72px;
+    line-height: 80px;
+  }
+  .zocial {
+    margin-top: 10%;
+    width: 100%;
+  }
+}
+
+.landing-bottom {
+  width: 100%;
+  color: $color-dark;
+  .row {
+    margin-top: 2%;
+  }
+  .grid {
+    min-height: 20em;
+    margin-right: 1%;
+  }
+  .grid-left {
+    margin-left: 11.5%;
   }
 }
