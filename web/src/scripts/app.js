@@ -28,6 +28,11 @@ var app = angular.module('Cart', [
     'Cart.Controllers', 'Cart.Services'
 ]);
 
+// STATUS:
+// 1. blog not inited
+// 2. user not login
+// 3. user login
+
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- ROUTE
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
