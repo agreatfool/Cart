@@ -1,11 +1,12 @@
 $bg-black-url: '../img/bg/bg.jpg';
 
-$color-white: #E3E6E9;
+$color-white: #F5F5F5;
+$color-gray: #E3E6E9;
 $color-green: #209D78;
 $color-blue: #3498DB;
-$color-gray: #302F39;
-$color-dark: #25242C;
-$color-orange: #FE8B6C;
+$color-dark: #302F39;
+$color-black: #25242C;
+$color-pink: #FE8B6C;
 $color-red: #B81D18;
 $color-purple: #EC3F8C;
 
@@ -20,11 +21,11 @@ $icon-pos-adj-v: -3px;
 
 body {
   background: url($bg-black-url) 50% 0% / cover no-repeat fixed;
-  color: $color-dark;
+  color: $color-black;
 }
 
 .nav-icon {
-  color: $color-white;
+  color: $color-gray;
   font-size: $nav-icon-size;
   cursor: pointer;
 }
@@ -36,7 +37,7 @@ body {
   width: $nav-icon-size * 2;
   height: $nav-icon-size * 2;
   border-radius: $nav-icon-size;
-  background: $color-dark;
+  background: $color-black;
   z-index: 1000;
   span {
     margin: ($nav-icon-size / 2 + $icon-pos-adj-v) ($nav-icon-size / 2 + $icon-pos-adj-h);
@@ -55,7 +56,7 @@ body {
 
 .page-content {
   position: absolute;
-  background-color: $color-white;
+  background-color: $color-gray;
   top: 0px;
   bottom: 0px;
   left: 0px;
@@ -100,8 +101,8 @@ body {
 
 .landing-top {
   width: 100%;
-  color: $color-white;
-  background: $color-gray;
+  color: $color-gray;
+  background: $color-dark;
   padding-bottom: 3%;
   .top {
     margin-top: 5%;
@@ -120,7 +121,7 @@ body {
 
 .landing-bottom {
   width: 100%;
-  color: $color-dark;
+  color: $color-black;
   .row {
     margin-top: 2%;
   }
