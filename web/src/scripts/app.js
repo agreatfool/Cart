@@ -121,7 +121,7 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
         segment('error', {
             'templateUrl': 'views/error/home.html'
         });
-    $routeProvider.otherwise({ redirectTo: '/' });
+    $routeProvider.otherwise({ redirectTo: '/404' });
 }]);
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
