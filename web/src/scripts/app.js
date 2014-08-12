@@ -18,6 +18,7 @@ require('angular-route-segment');
 // others
 var moment = require('moment');
 var pouchdb = require('pouchdb');
+var md5 = require('blueimp-md5').md5;
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- APP
