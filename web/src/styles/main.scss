@@ -45,6 +45,7 @@ body {
 }
 
 .nav-fixed {
+  display: none;
   position: fixed;
   width: 0px;
   top: 0px;
@@ -52,6 +53,23 @@ body {
   left: 0px;
   z-index: 999;
   box-shadow: inset -15px 0px 40px $nav-shadow-color;
+  div {
+    height: 40px;
+    margin: 15px 0 0 0;
+    padding: 0 0 0 20px;
+    cursor: pointer;
+  }
+  .nav-top {
+    margin-top: 80px;
+  }
+  .nav-icon-font {
+    color: $color-gray;
+    margin: 0 0 25px 10px;
+    height: $nav-icon-size;
+    line-height: $nav-icon-size;
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 .page-content {
@@ -63,26 +81,9 @@ body {
   width: 100%;
 }
 
-.nav-opened {
-  .nav-fixed {
-    width: $nav-width-opened;
-  }
-  .page-content {
-    left: $nav-width-opened;
-  }
-  .nav-trigger {
-    width: $nav-icon-size;
-    height: $nav-icon-size;
-    border-radius: 0px;
-    background: transparent;
-    span {
-      margin: 0 $nav-icon-margin-l;
-    }
-  }
-}
-
 .nav-expanded {
   .nav-fixed {
+    display: block;
     width: $nav-width-expended;
   }
   .page-content {

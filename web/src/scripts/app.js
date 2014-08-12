@@ -48,7 +48,9 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
         when('/new/:postId',         'blog.new').
         when('/update/:postId',      'blog.update').
         when('/:year/:month/:title', 'blog.view').
+        when('/category',            'blog.category').
         when('/category/:category',  'blog.category').
+        when('/tag',                 'blog.tag').
         when('/tag/:tag',            'blog.tag').
         when('/oauth2',              'oauth2').
         when('/login',               'login').
@@ -128,6 +130,19 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
 //- CONTROLLER
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var controllers = angular.module('Cart.Controllers', []);
+
+controllers.controller('CartMainCtrl', ['$scope', '$location', function($scope, $location) {
+    console.log('CartMainCtrl');
+    $scope.pageGoTo = function(page) {
+        $location.url('/' + page);
+    };
+    $scope.navToggle = function() {
+
+    };
+    $scope.loginToggle = function() {
+
+    };
+}]);
 
 controllers.controller('CartBlogCtrl', ['$scope', function ($scope) {
     console.log('CartBlogCtrl');
