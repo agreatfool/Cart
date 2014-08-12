@@ -162,6 +162,10 @@ controllers.controller('CartProfileCtrl', ['$scope', function ($scope) {
     console.log('CartProfileCtrl');
 }]);
 
+controllers.controller('CartMasterCtrl', ['$scope', function ($scope) {
+    console.log('CartMasterCtrl');
+}]);
+
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- SERVICE
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
