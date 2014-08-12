@@ -38,8 +38,9 @@ var app = angular.module('Cart', [
 //- ROUTE
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 app.config([
-    '$routeProvider', '$routeSegmentProvider',
-function($routeProvider, $routeSegmentProvider) {
+    '$routeProvider', '$locationProvider', '$routeSegmentProvider',
+function($routeProvider, $locationProvider, $routeSegmentProvider) {
+    $locationProvider.html5Mode(true);
     $routeSegmentProvider.options.autoLoadTemplates = true;
     $routeSegmentProvider.options.strictMode = true;
     $routeSegmentProvider.
