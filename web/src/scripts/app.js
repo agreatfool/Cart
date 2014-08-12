@@ -54,6 +54,8 @@ function($routeProvider, $routeSegmentProvider) {
         when('/profile',             'profile').
         when('/master',              'master').
         when('/404',                 '404').
+        when('/error',               'error').
+        when('/502',                 'error').
         // BLOG
         segment('blog', {
             'templateUrl': 'views/blog/home.html',
@@ -113,6 +115,10 @@ function($routeProvider, $routeSegmentProvider) {
         // 404
         segment('404', {
             'templateUrl': 'views/404/home.html'
+        }).
+        // ERROR
+        segment('error', {
+            'templateUrl': 'views/error/home.html'
         });
     $routeProvider.otherwise({ redirectTo: '/' });
 }]);
