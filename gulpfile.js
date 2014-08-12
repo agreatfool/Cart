@@ -113,7 +113,8 @@ gulp.task('styles_move', function() {
         'web/src/bower/Flat-UI/fonts/**/*',
         'web/src/bower/Flat-UI/images/**/*',
         'web/src/bower/Flat-UI/js/**/*',
-        'web/src/bower/css-social-buttons/css/**/*'
+        'web/src/bower/css-social-buttons/css/**/*',
+        'web/src/bower/animate.css/animate.min.css'
     ], { base: 'web/src/bower' })
     .pipe(gulp.dest('web/public/css'));
 });
