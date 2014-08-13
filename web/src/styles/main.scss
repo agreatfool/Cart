@@ -88,17 +88,22 @@ body {
     width: 0px;
     height: $nav-icon-size;
     margin-top: 4px;
+    display: block;
+    float: left;
+    overflow: hidden;
     opacity: 0;
     transition: $nav-animation-speed ease-in;
   }
   .nav-icon-font {
     color: $color-gray;
     width: 0px;
-    height: $nav-icon-size;
+    height: $nav-icon-size + 10px;
     margin: 0 0;
-    line-height: $nav-icon-size;
-    display: inline-block;
+    line-height: $nav-icon-size + 10px;
+    display: block;
+    float: left;
     vertical-align: middle;
+    overflow: hidden;
     opacity: 0;
     transition: $nav-animation-speed ease-in;
   }
@@ -129,7 +134,7 @@ body {
     }
     .nav-icon-font {
       width: 165px;
-      margin: 0 0 25px 10px;
+      margin: 0 0 0 15px;
       opacity: 1;
     }
   }
