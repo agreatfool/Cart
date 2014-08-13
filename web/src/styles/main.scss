@@ -1,4 +1,4 @@
-$bg-black-url: '../img/bg/bg.jpg';
+$bg-img-url: '../img/bg/bg.jpg';
 
 $color-white: #F5F5F5;
 $color-gray: #E3E6E9;
@@ -11,17 +11,14 @@ $color-pink: #FE8B6C;
 $color-red: #B81D18;
 $color-purple: #EC3F8C;
 
-$nav-shadow-color: rgba(67, 67, 67, 0.3);
+$nav-trigger-margin: 5px;
 $nav-width-expended: 240px;
 $nav-trigger-adj: 10px;
 $nav-icon-size: 40px;
-$nav-icon-margin-l: 15px;
 $nav-animation-speed: 1s;
-$icon-pos-adj-h: 1px;
-$icon-pos-adj-v: -3px;
 
 body {
-  background: url($bg-black-url) 50% 0% / cover no-repeat fixed;
+  background: url($bg-img-url) 50% 0% / cover no-repeat fixed;
   color: $color-black;
 }
 
@@ -33,8 +30,8 @@ body {
 
 .nav-trigger {
   position: fixed;
-  top: 5px;
-  left: 5px;
+  top: $nav-trigger-margin;
+  left: $nav-trigger-margin;
   width: ($nav-icon-size - $nav-trigger-adj) * 2;
   height: ($nav-icon-size - $nav-trigger-adj) * 2;
   border-radius: $nav-icon-size - $nav-trigger-adj;
@@ -123,7 +120,7 @@ body {
 .nav-expanded {
   .nav-fixed {
     width: $nav-width-expended;
-    box-shadow: inset -15px 0px 40px $nav-shadow-color;
+    box-shadow: inset -15px 0px 40px rgba(67, 67, 67, 0.3);
     .nav-line {
       width: $nav-width-expended;
       padding: 0 0 0 20px;
@@ -146,7 +143,7 @@ body {
     height: $nav-icon-size;
     border-radius: 0px;
     background: transparent;
-    margin: 0 $nav-icon-margin-l;
+    margin: 0 15px;
     span {
       margin: 0 0;
     }
