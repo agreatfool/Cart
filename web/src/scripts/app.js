@@ -28,7 +28,7 @@ CartConst.ANIMATE_END_EVENT = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd
 //- APP
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var app = angular.module('Cart', [
-    'ngAnimate', 'ngRoute',
+    'ngRoute', 'ngAnimate',
     'route-segment', 'view-segment',
     'Cart.Controllers', 'Cart.Services'
 ]);
