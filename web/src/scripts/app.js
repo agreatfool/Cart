@@ -135,18 +135,19 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var controllers = angular.module('Cart.Controllers', []);
 
-controllers.controller('CartMainCtrl', ['$scope', '$location', function($scope, $location) {
+controllers.controller('CartMainCtrl', [
+    '$scope', '$location', '$routeSegment',
+function($scope, $location, $routeSegment) {
     console.log('CartMainCtrl');
+    $scope.segment = $routeSegment;
     $scope.pageGoTo = function(page) {
         $location.url('/' + page);
     };
     $scope.navToggle = function() {
-        var body = $('body');
-        var navTriggerIcon = $('.nav-trigger span');
-
         // body
-        body.toggleClass('nav-expanded');
+        $('body').toggleClass('nav-expanded');
         // trigger
+        var navTriggerIcon = $('.nav-trigger span');
         navTriggerIcon.on(CartConst.ANIMATE_END_EVENT, function() {
             navTriggerIcon.removeClass('animated flip');
         });

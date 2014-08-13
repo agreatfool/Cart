@@ -20,23 +20,23 @@
 
         <div class="nav-fixed">
             <div class="nav-list">
-                <div class="nav-line" ng-click="pageGoTo('')">
+                <div class="nav-line" ng-click="pageGoTo('')" ng-class="{active: segment.startsWith('blog') && (segment.contains('list') || segment.contains('new') || segment.contains('update') || segment.contains('view'))}">
                     <span class="glyphicon glyphicon-align-justify nav-icon"></span>
-                    <span class="nav-icon-font">Home</span>
+                    <span class="nav-icon-font">Blog</span>
                 </div>
-                <div class="nav-line" ng-click="pageGoTo('category')">
+                <div class="nav-line" ng-click="pageGoTo('category')" ng-class="{active: segment.startsWith('blog') && segment.contains('category')}">
                     <span class="glyphicon glyphicon-th-list nav-icon"></span>
                     <span class="nav-icon-font">Category</span>
                 </div>
-                <div class="nav-line" ng-click="pageGoTo('tag')">
+                <div class="nav-line" ng-click="pageGoTo('tag')" ng-class="{active: segment.startsWith('blog') && segment.contains('tag')}">
                     <span class="glyphicon glyphicon-tag nav-icon"></span>
                     <span class="nav-icon-font">Tag</span>
                 </div>
-                <div class="nav-line" ng-click="pageGoTo('profile')">
+                <div class="nav-line" ng-click="pageGoTo('profile')" ng-class="{active: segment.startsWith('profile')}">
                     <span class="glyphicon glyphicon-user nav-icon"></span>
                     <span class="nav-icon-font">Profile</span>
                 </div>
-                <div class="nav-line" ng-click="pageGoTo('master')">
+                <div class="nav-line" ng-click="pageGoTo('master')" ng-class="{active: segment.startsWith('master')}">
                     <span class="glyphicon glyphicon-wrench nav-icon"></span>
                     <span class="nav-icon-font">Master</span>
                 </div>
