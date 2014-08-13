@@ -13,10 +13,10 @@ $color-purple: #EC3F8C;
 
 $nav-shadow-color: rgba(67, 67, 67, 0.3);
 $nav-width-expended: 240px;
-
 $nav-trigger-adj: 10px;
 $nav-icon-size: 40px;
 $nav-icon-margin-l: 15px;
+$nav-animation-speed: 1s;
 $icon-pos-adj-h: 1px;
 $icon-pos-adj-v: -3px;
 
@@ -42,15 +42,15 @@ body {
   z-index: 1001;
   margin: 0 0;
   cursor: pointer;
-  transition: 1s ease-in;
+  transition: $nav-animation-speed ease-in;
   span {
     margin: 8px 12px;
-    animation-duration: 1s;
-    transition: 1s ease-in;
+    animation-duration: $nav-animation-speed;
+    transition: $nav-animation-speed ease-in;
   }
 }
 .nav-trigger:hover {
-  animation: tada 1s;
+  animation: tada $nav-animation-speed;
 }
 
 .nav-fixed {
@@ -61,7 +61,7 @@ body {
   left: 0px;
   z-index: 999;
   box-shadow: none;
-  transition: 1s ease-in;
+  transition: $nav-animation-speed ease-in;
   .nav-list {
     margin-top: 80px;
   }
@@ -70,12 +70,15 @@ body {
     height: $nav-icon-size + 10px;
     padding: 0 0;
     cursor: pointer;
-    transition: width 1s ease-in, padding 1s ease-in, background-color 0.4s ease-in;
+    transition:
+      width $nav-animation-speed ease-in,
+      padding $nav-animation-speed ease-in,
+      background-color 0.4s ease-in;
   }
   .nav-line:hover {
     background-color: $color-blue;
     .nav-icon {
-      animation: bounce 1s;
+      animation: bounce $nav-animation-speed;
     }
   }
   .active {
@@ -86,7 +89,7 @@ body {
     height: $nav-icon-size;
     margin-top: 4px;
     opacity: 0;
-    transition: 1s ease-in;
+    transition: $nav-animation-speed ease-in;
   }
   .nav-icon-font {
     color: $color-gray;
@@ -97,7 +100,7 @@ body {
     display: inline-block;
     vertical-align: middle;
     opacity: 0;
-    transition: 1s ease-in;
+    transition: $nav-animation-speed ease-in;
   }
 }
 
@@ -109,7 +112,7 @@ body {
   width: 100%;
   background-color: $color-gray;
   z-index: 1000;
-  transition: 1s ease-in;
+  transition: $nav-animation-speed ease-in;
 }
 
 .nav-expanded {
