@@ -57,23 +57,33 @@ body {
   z-index: 999;
   box-shadow: none;
   transition: 1s ease-in;
-  div {
-    width: $nav-width-expended;
-    height: $nav-icon-size;
-    margin: 15px 0 0 0;
-    padding: 0 0 0 20px;
-    cursor: pointer;
-  }
-  .nav-top {
+  .nav-list {
     margin-top: 80px;
+  }
+  .nav-line {
+    width: 0px;
+    height: $nav-icon-size;
+    margin: 0 0;
+    padding: 0 0;
+    cursor: pointer;
+    transition: 1s ease-in;
+  }
+  .nav-icon {
+    width: 0px;
+    height: $nav-icon-size;
+    visibility: hidden;
+    transition: 1s ease-in;
   }
   .nav-icon-font {
     color: $color-gray;
-    margin: 0 0 25px 10px;
+    width: 0px;
     height: $nav-icon-size;
+    margin: 0 0;
     line-height: $nav-icon-size;
     display: inline-block;
     vertical-align: middle;
+    visibility: hidden;
+    transition: 1s ease-in;
   }
 }
 
@@ -91,6 +101,22 @@ body {
   .nav-fixed {
     width: $nav-width-expended;
     box-shadow: inset -15px 0px 40px $nav-shadow-color;
+    .nav-line {
+      width: $nav-width-expended;
+      margin: 15px 0 0 0;
+      padding: 0 0 0 20px;
+      transition: 1s ease-in;
+    }
+    .nav-icon {
+      width: $nav-icon-size;
+      visibility: visible;
+      transition: 1s ease-in;
+    }
+    .nav-icon-font {
+      width: 165px;
+      margin: 0 0 25px 10px;
+      visibility: visible;
+    }
   }
   .page-content {
     left: $nav-width-expended;
