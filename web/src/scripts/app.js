@@ -20,6 +20,10 @@ var moment = require('moment');
 var pouchdb = require('pouchdb');
 var md5 = require('blueimp-md5').md5;
 
+// const
+var CartConst = function() {};
+CartConst.ANIMATE_END_EVENT = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- APP
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -137,7 +141,16 @@ controllers.controller('CartMainCtrl', ['$scope', '$location', function($scope, 
         $location.url('/' + page);
     };
     $scope.navToggle = function() {
+        var body = $('body');
+        var navTriggerIcon = $('.nav-trigger span');
 
+        // body
+        body.toggleClass('nav-expanded');
+        // trigger
+        navTriggerIcon.on(CartConst.ANIMATE_END_EVENT, function() {
+            navTriggerIcon.removeClass('animated flip');
+        });
+        navTriggerIcon.addClass('animated flip');
     };
     $scope.loginToggle = function() {
 

@@ -11,7 +11,6 @@ $color-red: #B81D18;
 $color-purple: #EC3F8C;
 
 $nav-shadow-color: rgba(67, 67, 67, 0.3);
-$nav-width-opened: 80px;
 $nav-width-expended: 240px;
 
 $nav-icon-size: 40px;
@@ -39,22 +38,28 @@ body {
   border-radius: $nav-icon-size;
   background: $color-black;
   z-index: 1000;
+  margin: 0 0;
+  cursor: pointer;
+  transition: 1s ease-in;
   span {
     margin: ($nav-icon-size / 2 + $icon-pos-adj-v) ($nav-icon-size / 2 + $icon-pos-adj-h);
+    animation-duration: 1s;
+    transition: 1s ease-in;
   }
 }
 
 .nav-fixed {
-  display: none;
   position: fixed;
   width: 0px;
   top: 0px;
   bottom: 0px;
   left: 0px;
   z-index: 999;
-  box-shadow: inset -15px 0px 40px $nav-shadow-color;
+  box-shadow: none;
+  transition: 1s ease-in;
   div {
-    height: 40px;
+    width: $nav-width-expended;
+    height: $nav-icon-size;
     margin: 15px 0 0 0;
     padding: 0 0 0 20px;
     cursor: pointer;
@@ -79,12 +84,13 @@ body {
   bottom: 0px;
   left: 0px;
   width: 100%;
+  transition: 1s ease-in;
 }
 
 .nav-expanded {
   .nav-fixed {
-    display: block;
     width: $nav-width-expended;
+    box-shadow: inset -15px 0px 40px $nav-shadow-color;
   }
   .page-content {
     left: $nav-width-expended;
@@ -94,8 +100,9 @@ body {
     height: $nav-icon-size;
     border-radius: 0px;
     background: transparent;
+    margin: 0 $nav-icon-margin-l;
     span {
-      margin: 0 $nav-icon-margin-l;
+      margin: 0 0;
     }
   }
 }
