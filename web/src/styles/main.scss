@@ -3,6 +3,7 @@ $bg-black-url: '../img/bg/bg.jpg';
 $color-white: #F5F5F5;
 $color-gray: #E3E6E9;
 $color-green: #209D78;
+$color-green-light: #2ECC71;
 $color-blue: #3498DB;
 $color-dark: #302F39;
 $color-black: #25242C;
@@ -48,6 +49,9 @@ body {
     transition: 1s ease-in;
   }
 }
+.nav-trigger:hover {
+  animation: tada 1s;
+}
 
 .nav-fixed {
   position: fixed;
@@ -63,15 +67,24 @@ body {
   }
   .nav-line {
     width: 0px;
-    height: $nav-icon-size;
-    margin: 0 0;
+    height: $nav-icon-size + 10px;
     padding: 0 0;
     cursor: pointer;
-    transition: 1s ease-in;
+    transition: width 1s ease-in, padding 1s ease-in, background-color 0.4s ease-in;
+  }
+  .nav-line:hover {
+    background-color: $color-blue;
+    .nav-icon {
+      animation: bounce 1s;
+    }
+  }
+  .nav-selected {
+    background-color: $color-blue;
   }
   .nav-icon {
     width: 0px;
     height: $nav-icon-size;
+    margin-top: 4px;
     opacity: 0;
     transition: 1s ease-in;
   }
@@ -105,14 +118,11 @@ body {
     box-shadow: inset -15px 0px 40px $nav-shadow-color;
     .nav-line {
       width: $nav-width-expended;
-      margin: 15px 0 0 0;
       padding: 0 0 0 20px;
-      transition: 1s ease-in;
     }
     .nav-icon {
       width: $nav-icon-size;
       opacity: 1;
-      transition: 1s ease-in;
     }
     .nav-icon-font {
       width: 165px;
