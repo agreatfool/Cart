@@ -13,6 +13,7 @@ $color-purple: #EC3F8C;
 $nav-shadow-color: rgba(67, 67, 67, 0.3);
 $nav-width-expended: 240px;
 
+$nav-trigger-adj: 10px;
 $nav-icon-size: 40px;
 $nav-icon-margin-l: 15px;
 $icon-pos-adj-h: 1px;
@@ -33,16 +34,16 @@ body {
   position: fixed;
   top: 5px;
   left: 5px;
-  width: $nav-icon-size * 2;
-  height: $nav-icon-size * 2;
-  border-radius: $nav-icon-size;
+  width: ($nav-icon-size - $nav-trigger-adj) * 2;
+  height: ($nav-icon-size - $nav-trigger-adj) * 2;
+  border-radius: $nav-icon-size - $nav-trigger-adj;
   background: $color-black;
   z-index: 1000;
   margin: 0 0;
   cursor: pointer;
   transition: 1s ease-in;
   span {
-    margin: ($nav-icon-size / 2 + $icon-pos-adj-v) ($nav-icon-size / 2 + $icon-pos-adj-h);
+    margin: 8px 12px;
     animation-duration: 1s;
     transition: 1s ease-in;
   }
@@ -71,7 +72,7 @@ body {
   .nav-icon {
     width: 0px;
     height: $nav-icon-size;
-    visibility: hidden;
+    opacity: 0;
     transition: 1s ease-in;
   }
   .nav-icon-font {
@@ -82,7 +83,7 @@ body {
     line-height: $nav-icon-size;
     display: inline-block;
     vertical-align: middle;
-    visibility: hidden;
+    opacity: 0;
     transition: 1s ease-in;
   }
 }
@@ -109,13 +110,13 @@ body {
     }
     .nav-icon {
       width: $nav-icon-size;
-      visibility: visible;
+      opacity: 1;
       transition: 1s ease-in;
     }
     .nav-icon-font {
       width: 165px;
       margin: 0 0 25px 10px;
-      visibility: visible;
+      opacity: 1;
     }
   }
   .page-content {
