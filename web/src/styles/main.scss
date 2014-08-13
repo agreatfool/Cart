@@ -38,7 +38,7 @@ body {
   height: ($nav-icon-size - $nav-trigger-adj) * 2;
   border-radius: $nav-icon-size - $nav-trigger-adj;
   background: $color-black;
-  z-index: 1000;
+  z-index: 1001;
   margin: 0 0;
   cursor: pointer;
   transition: 1s ease-in;
@@ -90,11 +90,12 @@ body {
 
 .page-content {
   position: absolute;
-  background-color: $color-gray;
   top: 0px;
   bottom: 0px;
   left: 0px;
   width: 100%;
+  background-color: $color-gray;
+  z-index: 1000;
   transition: 1s ease-in;
 }
 
