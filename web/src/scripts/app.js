@@ -23,6 +23,8 @@ var md5 = require('blueimp-md5').md5;
 // const
 var CartConst = function() {};
 CartConst.ANIMATE_END_EVENT = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+CartConst.NAV_TRIGGER_HINT_X = 150;
+CartConst.NAV_TRIGGER_HINT_Y = 150;
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- APP
@@ -222,5 +224,17 @@ services.factory('CartService', ['$http', '$q', function($http, $q) {
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var $html = angular.element(document.getElementsByTagName('html')[0]);
 angular.element().ready(function() {
+    // boot angular
     angular.bootstrap($html, ['Cart']);
+    // nav hover display effect
+    $('.page-content').mousemove(function(e) {
+        var elementOffset = $(this).offset();
+        var posX = e.pageX - elementOffset.left;
+        var posY = e.pageY - elementOffset.top;
+        if (posX <= CartConst.NAV_TRIGGER_HINT_X && posY <= CartConst.NAV_TRIGGER_HINT_Y) {
+            $('.nav-trigger').addClass('nav-trigger-active');
+        } else {
+            $('.nav-trigger').removeClass('nav-trigger-active');
+        }
+    });
 });
