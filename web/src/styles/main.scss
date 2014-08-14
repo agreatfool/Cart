@@ -30,6 +30,10 @@ body {
   color: $color-black;
 }
 
+.clear-all {
+  clear: both;
+}
+
 .nav-icon {
   color: $color-gray;
   font-size: $nav-icon-size;
@@ -246,6 +250,15 @@ body {
   width: 3px;
   background-color: $color-dark;
 }
+.blog-list:after {
+  content: ' ';
+  position: absolute;
+  top: 80%;
+  bottom: 0;
+  left: 18.5px;
+  width: 3px;
+  background: linear-gradient(to bottom, $color-dark, $color-white);
+}
 .blog-list {
   min-height: 500px;
   position: relative;
@@ -253,7 +266,13 @@ body {
   li {
     position: relative;
   }
-  .badge {
+  .row {
+    margin: 0 0;
+  }
+  .col-md-1 {
+    margin: 0 5px 0 0;
+  }
+  .post-badge {
     position: absolute;
     z-index: $page-layer-content + 1;
     top: 16px;
@@ -273,7 +292,7 @@ body {
       background-color: $color-dark;
     }
   }
-  .panel {
+  .post-panel {
     position: relative;
     width: 55%;
     padding: 5px 20px;
@@ -282,8 +301,25 @@ body {
     border: 1px solid $color-gray-dark;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
     background-color: $color-white-pure;
+    .post-heading {
+      h4 {
+        margin: 10px 0 0 0;
+      }
+      .text-muted{
+        .glyphicon {
+          top: 2px;
+        }
+        .btn-xs {
+          padding: 3px 9px;
+          margin: -3px 0 0 0;
+        }
+      }
+    }
+    .post-body {
+      margin: 5px 0 0 0;
+    }
   }
-  .panel:before {
+  .post-panel:before {
     content: " ";
     display: inline-block;
     position: absolute;
