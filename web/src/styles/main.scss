@@ -242,7 +242,7 @@ body {
   margin-top: 20px;
 }
 .blog-list:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 0;
   bottom: 0;
@@ -251,7 +251,7 @@ body {
   background-color: $color-dark;
 }
 .blog-list:after {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 80%;
   bottom: 0;
