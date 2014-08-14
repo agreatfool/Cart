@@ -4,6 +4,7 @@ $color-white-pure: #FFFFFF;
 $color-white: #F5F5F5;
 $color-gray: #E3E6E9;
 $color-gray-dark: #D4D4D4;
+$color-silver: #BDC3C7;
 $color-green: #209D78;
 $color-green-light: #2ECC71;
 $color-blue: #3498DB;
@@ -306,6 +307,9 @@ body {
         margin: 10px 0 0 0;
       }
       .text-muted{
+        .post-time {
+          color: $color-silver;
+        }
         .glyphicon {
           top: 2px;
         }
