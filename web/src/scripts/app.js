@@ -58,6 +58,9 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
         when('/category/:category',  'blog.category').
         when('/tag',                 'blog.tag').
         when('/tag/:tag',            'blog.tag').
+        when('/year/:datetime',      'blog.list').
+        when('/month/:datetime',     'blog.list').
+        when('/day/:datetime',       'blog.list').
         when('/oauth2',              'oauth2').
         when('/login',               'login').
         when('/profile',             'profile').
