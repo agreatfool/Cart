@@ -1,13 +1,16 @@
-$bg-img-url: '../img/bg/bg.jpg';
+$nav-bg-img-url: '../img/bg/bg.jpg';
 
+$color-white-pure: #FFFFFF;
 $color-white: #F5F5F5;
 $color-gray: #E3E6E9;
+$color-gray-dark: #D4D4D4;
 $color-green: #209D78;
 $color-green-light: #2ECC71;
 $color-blue: #3498DB;
 $color-dark: #302F39;
 $color-black: #25242C;
 $color-pink: #FE8B6C;
+$color-red-light: #E74C3C;
 $color-red: #B81D18;
 $color-purple: #EC3F8C;
 
@@ -23,7 +26,7 @@ $page-layer-nav: 1000;
 $page-layer-hide: 999;
 
 body {
-  background: url($bg-img-url) 50% 0% / cover no-repeat fixed;
+  background-color: $color-gray;
   color: $color-black;
 }
 
@@ -67,6 +70,7 @@ body {
   left: 0px;
   z-index: $page-layer-nav;
   box-shadow: none;
+  background: url($nav-bg-img-url) 50% 0% / cover no-repeat fixed;
   transition: $nav-animation-speed ease-in;
   .nav-list {
     margin-top: 80px;
