@@ -34,6 +34,7 @@
     "SpinKit": "*",
     "saffron": "~0.2.2",
     "css-loading-spinners": "~1.0.0",
-    "angular-ui-calendar": "~0.8.1"
+    "angular-ui-calendar": "~0.8.1",
+    "underscore": "~1.6.0"
   }
 }

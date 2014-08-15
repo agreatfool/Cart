@@ -3,6 +3,10 @@
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- LIB & ANNOUNCEMENT
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+// underscore
+var _ = require('underscore');
+global._ = _;
+
 // jQuery family
 var $ = require('jquery');
 global.$ = global.jQuery = $;
