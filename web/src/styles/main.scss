@@ -5,6 +5,8 @@ $color-white: #F5F5F5;
 $color-gray: #E3E6E9;
 $color-gray-dark: #D4D4D4;
 $color-silver: #BDC3C7;
+$color-concrete: #95A5A6;
+$color-asbestos: #7F8C8D;
 $color-green: #209D78;
 $color-green-light: #2ECC71;
 $color-blue: #3498DB;
@@ -14,6 +16,8 @@ $color-pink: #FE8B6C;
 $color-red-light: #E74C3C;
 $color-red: #B81D18;
 $color-purple: #EC3F8C;
+
+$box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
 
 $nav-trigger-margin: 5px;
 $nav-width-expended: 240px;
@@ -300,7 +304,7 @@ body {
     margin: 0 0 20px 20px;
     border-radius: 2px;
     border: 1px solid $color-gray-dark;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+    box-shadow: $box-shadow;
     background-color: $color-white-pure;
     .post-heading {
       h4 {
@@ -335,5 +339,39 @@ body {
     border-left: 20px solid $color-white-pure;
     border-right-width: 20px;
     border-left-width: 0;
+  }
+}
+
+.page-label {
+  .label-body {
+    margin: 15px 0 0 0;
+  }
+  .tag {
+    padding-right: 16px;
+  }
+  .tag:hover {
+    padding-right: 22px;
+  }
+  .tagsinput {
+    height: auto;
+    border: none;
+    padding: 10px 1px 5px 6px;
+    box-shadow: $box-shadow;
+  }
+  .tagsinput-remove-link {
+    padding-top: 10px;
+  }
+  .tag-name {
+    display: block;
+    float: left;
+    margin: 3px 5px 0 0;
+  }
+  .tag-num {
+    display: block;
+    float: left;
+    margin: 3px 0 0 0;
+    border-radius: 3px;
+    color: $color-concrete;
+    background-color: $color-white-pure;
   }
 }
