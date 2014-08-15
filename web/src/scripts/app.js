@@ -62,6 +62,7 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
         when('/year/:datetime',      'blog.list').
         when('/month/:datetime',     'blog.list').
         when('/day/:datetime',       'blog.list').
+        when('/search',              'search').
         when('/oauth2',              'oauth2').
         when('/login',               'login').
         when('/profile',             'profile').
@@ -103,6 +104,11 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
                 'controller': 'CartBlogTagCtrl'
             }).
         up().
+        // SEARCH
+        segment('search', {
+            'templateUrl': 'views/search/home.html',
+            'controller': 'CartSearchCtrl'
+        }).
         // OAUTH2
         segment('oauth2', {
             'templateUrl': 'views/oauth2/home.html',

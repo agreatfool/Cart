@@ -32,6 +32,10 @@
                     <span class="glyphicon glyphicon-tag nav-icon"></span>
                     <span class="nav-icon-font">Tag</span>
                 </div>
+                <div class="nav-line" ng-click="pageGoTo('search')" ng-class="{active: segment.startsWith('search')}">
+                    <span class="glyphicon glyphicon-search nav-icon"></span>
+                    <span class="nav-icon-font">Search</span>
+                </div>
                 <div class="nav-line" ng-click="pageGoTo('profile')" ng-class="{active: segment.startsWith('profile')}">
                     <span class="glyphicon glyphicon-user nav-icon"></span>
                     <span class="nav-icon-font">Profile</span>
