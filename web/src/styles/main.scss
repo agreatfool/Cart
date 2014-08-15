@@ -375,3 +375,12 @@ body {
     background-color: $color-white-pure;
   }
 }
+
+.page-search {
+  .search-calendar {
+    padding: 25px;
+    background-color: $color-white-pure;
+    border-radius: 10px;
+    box-shadow: $box-shadow;
+  }
+}
