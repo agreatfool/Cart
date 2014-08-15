@@ -55,9 +55,9 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
         when('/update/:postId',      'blog.update').
         when('/:year/:month/:title', 'blog.view').
         when('/category',            'blog.category').
-        when('/category/:category',  'blog.category').
+        when('/category/:category',  'blog.list').
         when('/tag',                 'blog.tag').
-        when('/tag/:tag',            'blog.tag').
+        when('/tag/:tag',            'blog.list').
         when('/year/:datetime',      'blog.list').
         when('/month/:datetime',     'blog.list').
         when('/day/:datetime',       'blog.list').
@@ -94,14 +94,12 @@ function($routeProvider, $locationProvider, $routeSegmentProvider) {
                 'dependencies': ['year', 'month', 'title']
             }).
             segment('category', {
-                'templateUrl': 'views/blog/list.html',
-                'controller': 'CartBlogCategoryCtrl',
-                'dependencies': ['category']
+                'templateUrl': 'views/blog/label.html',
+                'controller': 'CartBlogCategoryCtrl'
             }).
             segment('tag', {
-                'templateUrl': 'views/blog/list.html',
-                'controller': 'CartBlogTagCtrl',
-                'dependencies': ['tag']
+                'templateUrl': 'views/blog/label.html',
+                'controller': 'CartBlogTagCtrl'
             }).
         up().
         // OAUTH2
