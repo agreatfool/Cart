@@ -8,6 +8,7 @@ var $ = require('jquery');
 global.$ = global.jQuery = $;
 require('./../bower/letteringjs/jquery.lettering.js');
 require('./../bower/textillate/jquery.textillate.js');
+require('./../bower/bootstrap/dist/js/bootstrap.min.js');
 
 // angular family
 require('angular');
