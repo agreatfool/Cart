@@ -29,6 +29,10 @@
     "bootstrap": "~3.2.0",
     "animate.css": "~3.2.0",
     "Flat-UI": "~2.1.3",
-    "css-social-buttons": "*"
+    "css-social-buttons": "*",
+    "magic": "~1.0.0",
+    "SpinKit": "*",
+    "saffron": "~0.2.2",
+    "css-loading-spinners": "~1.0.0"
   }
 }
