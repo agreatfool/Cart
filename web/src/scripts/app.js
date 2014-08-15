@@ -164,7 +164,13 @@ function($scope, $location, $routeSegment) {
         navTriggerIcon.addClass('animated flip');
     };
     $scope.loginToggle = function() {
-
+        var alreadyLogin = false;
+        if (alreadyLogin) { // already login
+            // logout
+        } else {
+            // redirect to login page
+            $location.url('/login');
+        }
     };
 }]);
 
