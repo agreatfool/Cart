@@ -382,5 +382,11 @@ body {
     background-color: $color-white-pure;
     border-radius: 10px;
     box-shadow: $box-shadow;
+    h2 a {
+      cursor: pointer;
+    }
+    .fc-day {
+      cursor: pointer;
+    }
   }
 }
