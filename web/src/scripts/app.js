@@ -25,6 +25,7 @@ require('angular-ui-calendar');
 
 // others
 var moment = require('moment');
+global.moment = moment;
 var pouchdb = require('pouchdb');
 var md5 = require('blueimp-md5').md5;
 
@@ -67,7 +68,7 @@ controllers.controller('CartBlogUpdateCtrl', ['$scope', ctrlSources.CartBlogUpda
 controllers.controller('CartBlogViewCtrl', ['$scope', ctrlSources.CartBlogViewCtrl]);
 controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCategoryCtrl]);
 controllers.controller('CartBlogTagCtrl', ['$scope', ctrlSources.CartBlogTagCtrl]);
-controllers.controller('CartSearchCtrl', ['$scope', ctrlSources.CartSearchCtrl]);
+controllers.controller('CartSearchCtrl', ['$scope', '$compile', ctrlSources.CartSearchCtrl]);
 controllers.controller('CartOauthCtrl', ['$scope', ctrlSources.CartOauthCtrl]);
 controllers.controller('CartLoginCtrl', ['$scope', ctrlSources.CartLoginCtrl]);
 controllers.controller('CartProfileCtrl', ['$scope', ctrlSources.CartProfileCtrl]);
