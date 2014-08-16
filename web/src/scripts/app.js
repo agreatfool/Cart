@@ -15,7 +15,6 @@ require('./../bower/letteringjs/jquery.lettering.js');
 require('./../bower/textillate/jquery.textillate.js');
 require('./../bower/bootstrap/dist/js/bootstrap.js');
 require('./../bower/fullcalendar/fullcalendar.js');
-require('./../bower/fullcalendar/gcal.js');
 
 // angular family
 require('angular');
