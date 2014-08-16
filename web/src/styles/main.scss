@@ -388,5 +388,11 @@ body {
     .fc-day {
       cursor: pointer;
     }
+    .fc-event-inner {
+      padding-left: 5px;
+    }
+    .calEvent {
+      animation: bounce 2s 1s;
+    }
   }
 }
