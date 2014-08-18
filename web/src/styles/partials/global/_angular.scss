@@ -1,0 +1,8 @@
+.ng-animate-css.ng-hide {
+  animation: fadeOutRight 1s;
+}
+
+.ng-animate-css.ng-hide-remove {
+  opacity: 0;
+  animation: fadeIn 1s 1s;
+}
