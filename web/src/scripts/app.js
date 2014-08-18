@@ -4,12 +4,10 @@
 //- LIB & ANNOUNCEMENT
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 // underscore
-var _ = require('underscore');
-global._ = _;
+global._ = require('underscore');
 
 // jQuery family
-var $ = require('jquery');
-global.$ = global.jQuery = $;
+global.$ = global.jQuery = require('jquery');
 require('./../bower/jquery-ui/ui/jquery-ui.js');
 require('./../bower/letteringjs/jquery.lettering.js');
 require('./../bower/textillate/jquery.textillate.js');
@@ -24,10 +22,9 @@ require('angular-route-segment');
 require('angular-ui-calendar');
 
 // others
-var moment = require('moment');
-global.moment = moment;
-var pouchdb = require('pouchdb');
-var md5 = require('blueimp-md5').md5;
+global.moment = require('moment');
+global.pouchdb = require('pouchdb');
+global.md5 = require('blueimp-md5').md5;
 
 // app sources
 var CartConst = require('./const/const.js');
