@@ -1,0 +1,134 @@
+
+.nav-icon {
+  color: $color-gray;
+  font-size: $nav-icon-size;
+  cursor: pointer;
+}
+
+.nav-trigger {
+  position: fixed;
+  top: $nav-trigger-margin;
+  left: $nav-trigger-margin;
+  width: ($nav-icon-size - $nav-trigger-adj) * 2;
+  height: ($nav-icon-size - $nav-trigger-adj) * 2;
+  border-radius: $nav-icon-size - $nav-trigger-adj;
+  background: $color-black;
+  z-index: $page-layer-trigger;
+  margin: 0 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: $nav-animation-speed ease-in;
+  span {
+    margin: 8px 12px;
+    animation-duration: $nav-animation-speed;
+    transition: $nav-animation-speed ease-in;
+  }
+}
+.nav-trigger:hover {
+  animation: tada $nav-animation-speed;
+}
+.nav-trigger-active {
+  opacity: 1;
+}
+
+.nav-fixed {
+  position: fixed;
+  width: 0px;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: $page-layer-nav;
+  box-shadow: none;
+  background: url($nav-bg-img-url) 50% 0% / cover no-repeat fixed;
+  transition: $nav-animation-speed ease-in;
+  .nav-list {
+    margin-top: 80px;
+  }
+  .nav-line {
+    width: 0px;
+    height: $nav-icon-size + 10px;
+    padding: 0 0;
+    cursor: pointer;
+    transition:
+      width $nav-animation-speed ease-in,
+      padding $nav-animation-speed ease-in,
+      background-color 0.4s ease-in;
+  }
+  .nav-line:hover {
+    background-color: $color-blue;
+    .nav-icon {
+      animation: bounce $nav-animation-speed;
+    }
+  }
+  .active {
+    background-color: $color-blue;
+  }
+  .nav-icon {
+    width: 0px;
+    height: $nav-icon-size;
+    margin-top: 4px;
+    display: block;
+    float: left;
+    overflow: hidden;
+    opacity: 0;
+    transition: $nav-animation-speed ease-in;
+  }
+  .nav-icon-font {
+    color: $color-gray;
+    width: 0px;
+    height: $nav-icon-size + 10px;
+    margin: 0 0;
+    line-height: $nav-icon-size + 10px;
+    display: block;
+    float: left;
+    vertical-align: middle;
+    overflow: hidden;
+    opacity: 0;
+    transition: $nav-animation-speed ease-in;
+  }
+}
+
+.page-content {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: $color-gray;
+  z-index: $page-layer-content;
+  transition: $nav-animation-speed ease-in;
+}
+
+.nav-expanded {
+  .nav-fixed {
+    width: $nav-width-expended;
+    box-shadow: inset -15px 0px 40px rgba(67, 67, 67, 0.3);
+    .nav-line {
+      width: $nav-width-expended;
+      padding: 0 0 0 20px;
+    }
+    .nav-icon {
+      width: $nav-icon-size;
+      opacity: 1;
+    }
+    .nav-icon-font {
+      width: 165px;
+      margin: 0 0 0 15px;
+      opacity: 1;
+    }
+  }
+  .page-content {
+    left: $nav-width-expended;
+  }
+  .nav-trigger {
+    width: $nav-icon-size;
+    height: $nav-icon-size;
+    border-radius: 0px;
+    background: transparent;
+    margin: 0 15px;
+    opacity: 1;
+    span {
+      margin: 0 0;
+    }
+  }
+}
