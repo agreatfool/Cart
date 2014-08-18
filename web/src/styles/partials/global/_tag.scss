@@ -1,0 +1,31 @@
+.tagsrow {
+  margin: 15px 0 0 0;
+  .tag {
+    padding-right: 16px;
+  }
+  .tag:hover {
+    padding-right: 22px;
+  }
+  .tagsinput {
+    height: auto;
+    border: none;
+    padding: 10px 1px 5px 6px;
+    box-shadow: $box-shadow;
+  }
+  .tagsinput-remove-link {
+    padding-top: 10px;
+  }
+  .tag-name {
+    display: block;
+    float: left;
+    margin: 3px 5px 0 0;
+  }
+  .tag-num {
+    display: block;
+    float: left;
+    margin: 3px 0 0 0;
+    border-radius: 3px;
+    color: $color-concrete;
+    background-color: $color-white-pure;
+  }
+}

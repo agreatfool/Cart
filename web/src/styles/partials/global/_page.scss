@@ -1,0 +1,16 @@
+.page-content-container {
+  animation: fadeIn 1.5s;
+}
+
+.page-top {
+  width: 100%;
+  color: $color-gray;
+  background: $color-dark;
+  h3 {
+    margin-top: 21px;
+  }
+}
+
+.page-body {
+  margin-top: 20px;
+}

@@ -1,0 +1,56 @@
+.landing-top {
+  width: 100%;
+  color: $color-gray;
+  background: $color-dark;
+  padding-bottom: 3%;
+  .top {
+    margin-top: 5%;
+  }
+  .title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 72px;
+    line-height: 80px;
+  }
+  .title-sub {
+    margin-top: 1%;
+    text-align: center;
+    font-size: 30px;
+    line-height: 50px;
+  }
+  .avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 80px;
+  }
+  .zocial {
+    margin-top: 10%;
+    width: 100%;
+  }
+}
+
+.landing-bottom {
+  width: 100%;
+  color: $color-black;
+  .row {
+    margin-top: 2%;
+  }
+  .grid {
+    min-height: 20em;
+    margin-right: 1%;
+  }
+  .grid-left {
+    margin-left: 11.5%;
+  }
+}
+
+.http-code {
+  min-height: 500px;
+  .top {
+    margin-top: 15%;
+  }
+  .title {
+    font-size: 100px;
+    line-height: 100px;
+  }
+}
