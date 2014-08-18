@@ -4,6 +4,17 @@
 module.exports = function ($scope, $compile) {
     console.log('CartSearchCtrl');
 
+    // DISPLAY CONTROL
+    $scope.displayCondNames = ['Calendar', 'Categories', 'Tags'];
+    $scope.displayCondName = 'Calendar';
+    $scope.displayCond = function(cond) {
+        $scope.displayCondName = cond;
+    };
+
+    $scope.selectedDate = '2014-08-12';//null;
+    $scope.selectedCategory = 'category';//null;
+    $scope.selectedTags = [1,2,3]; //[];
+
     // CALENDAR
     var date = new Date();
     var d = date.getDate();
@@ -69,9 +80,9 @@ module.exports = function ($scope, $compile) {
             var yearDisplay = dateDisplay[1];
             var monthDisplay = dateDisplay[0];
             var titleReformat =
-                "<a ng-click=\"addSearchCondDate({'month': '" + moment(yearDisplay + ' ' + monthDisplay, 'YYYY MMMM').format('YYYY-MM') + "'})\">" + monthDisplay + "</a>"
-                + '&nbsp;'
-                + "<a ng-click=\"addSearchCondDate({'year': '" + yearDisplay + "'})\">" + yearDisplay + "</a>";
+                "<a ng-click=\"addSearchCondDate({'month': '" + moment(yearDisplay + ' ' + monthDisplay, 'YYYY MMMM').format('YYYY-MM') + "'})\">" + monthDisplay + "</a>" +
+                '&nbsp;' +
+                "<a ng-click=\"addSearchCondDate({'year': '" + yearDisplay + "'})\">" + yearDisplay + "</a>";
             dateTitle.html(titleReformat);
             $compile(dateTitle)($scope); // recompile the ng-click tag
         },
@@ -81,5 +92,5 @@ module.exports = function ($scope, $compile) {
     };
 
     /* event sources array*/
-    $scope.eventSources = [$scope.events, $scope.eventsF];
+    $scope.eventSources = [$scope.events];
 };

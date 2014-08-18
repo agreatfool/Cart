@@ -5,27 +5,99 @@
         </div>
     </div>
     <div class="row page-body">
+        <!-- search conditions display -->
         <div class="col-md-12">
+            <div class="row search-line">
+                <div class="col-md-2">
+                    <div class="btn-group select select-block">
+                        <button class="btn dropdown-toggle clearfix btn-primary" data-toggle="dropdown">
+                            <span class="filter-option pull-left">Show Search</span>
+                            &nbsp;
+                            <span class="caret"></span>
+                        </button>
+                        <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+                        <ul class="dropdown-menu dropdown-inverse">
+                            <li ng-class="{selected: displayCondName == condName}" ng-repeat="condName in displayCondNames">
+                                <a ng-click="displayCond(condName)"><span class="pull-left">{{ condName }}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <!-- search conditions -->
-            <div class="row">
+            <div class="row search-line" ng-show="selectedDate || selectedCategory || selectedTags">
                 <div class="col-md-12">
-
+                    <div class="row">
+                        <div class="col-md-12" ng-show="selectedDate || selectedCategory">
+                            <span class="label label-default pull-left" ng-show="selectedDate">Selected Date: </span>
+                            <span class="search-selected-span pull-left">{{ selectedDate }}</span>
+                            <span class="label label-default pull-left" ng-show="selectedCategory">Selected Category: </span>
+                            <span class="search-selected-span pull-left">{{ selectedCategory }}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="selectedTags">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="label label-default">Selected Tags: </span>
+                                </div>
+                            </div>
+                            <div class="row tagsrow tagsinput">
+                                <div class="col-md-12">
+                                    <span class="tag">
+                                        <span>
+                                            <span class="tag-name">This is a very long long tag name, longer than you can imagine</span>
+                                        </span>
+                                        <a class="tagsinput-remove-link"></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- categories -->
-            <div class="row">
+            <div class="row search-line" ng-show="displayCondName == 'Categories'">
                 <div class="col-md-12">
-
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="label label-default" ng-show="selectedDate">Categories: </span>
+                        </div>
+                    </div>
+                    <div class="row tagsrow tagsinput">
+                        <div class="col-md-12">
+                            <span class="tag">
+                                <span>
+                                    <span class="tag-name">This is a very long long tag name, longer than you can imagine</span>
+                                </span>
+                                <a class="tagsinput-remove-link"></a>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- tags -->
-            <div class="row">
+            <div class="row search-line" ng-show="displayCondName == 'Tags'">
                 <div class="col-md-12">
-
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="label label-default" ng-show="selectedDate">Tags: </span>
+                        </div>
+                    </div>
+                    <div class="row tagsrow tagsinput">
+                        <div class="col-md-12">
+                            <span class="tag">
+                                <span>
+                                    <span class="tag-name">This is a very long long tag name, longer than you can imagine</span>
+                                </span>
+                                <a class="tagsinput-remove-link"></a>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- calendar -->
-            <div class="row">
+            <div class="row search-line" ng-show="displayCondName == 'Calendar'">
                 <div class="col-md-12">
                     <div ui-calendar="calendarOptions" class="calendar search-calendar" ng-model="eventSources"></div>
                 </div>

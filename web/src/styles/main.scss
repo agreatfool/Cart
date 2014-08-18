@@ -375,6 +375,15 @@ body {
 }
 
 .page-search {
+  .tagsrow {
+    margin: 0;
+  }
+  .search-line {
+    margin-bottom: 20px;
+  }
+  .search-selected-span {
+    margin: -4px 15px 0 5px;
+  }
   .search-calendar {
     padding: 25px;
     background-color: $color-white-pure;
