@@ -111,7 +111,6 @@ var fixFooter = function() {
     var pageContentTop = $('.page-content-top'); // page top element: page content excepts footer
     var pageTopCurHeight = pageContentTop.height(); // current page top height
     var pageTopMinHeight = $(document).height() - CartConst.PAGE_FOOTER_HEIGHT; // min page top height
-    console.log($(document).height(), pageTopCurHeight, pageTopMinHeight);
     if (pageTopCurHeight < pageTopMinHeight) {
         // only fix the footer position when page is too 'short'
         pageContentTop.css('min-height', pageTopMinHeight);
