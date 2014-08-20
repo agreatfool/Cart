@@ -88,6 +88,7 @@ var $html = angular.element(document.getElementsByTagName('html')[0]);
 angular.element().ready(function() {
     // boot angular
     angular.bootstrap($html, ['Cart']);
+
     // nav hover display effect
     $('.page-content').mousemove(function(e) {
         var elementOffset = $(this).offset();
@@ -99,8 +100,24 @@ angular.element().ready(function() {
             $('.nav-trigger').removeClass('nav-trigger-active');
         }
     });
+
     // window resize event
     $(window).resize(fixFooter);
+
+    // scroll to top
+    var toTopBtn = $('.page-to-top');
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 300) {
+            toTopBtn.fadeIn(500);
+        } else {
+            toTopBtn.fadeOut(500);
+        }
+    });
+    toTopBtn.click(function(event) {
+        event.preventDefault();
+        $('html, body').animate({ scrollTop: 0 }, 500);
+        return false;
+    });
 });
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

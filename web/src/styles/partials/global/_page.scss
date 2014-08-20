@@ -24,4 +24,30 @@
   padding: 15px;
   color: $color-gray;
   background: $color-black;
+
+.page-to-top {
+  display: none;
+  position: fixed;
+  bottom: 5%;
+  right: 3%;
+  width: 50px;
+  height: 50px;
+  padding: 4px 17px;
+  color: $color-gray;
+  background-color: $color-dark;
+  border-radius: 5px;
+  z-index: $page-layer-trigger;
+  cursor: pointer;
+  transition: 0.5s ease-in;
+  span {
+    display: block;
+  }
+  .page-to-top-font {
+    font-size: 14px;
+    margin-left: -3px;
+  }
+}
+.page-to-top:hover {
+  color: $color-green-light;
+  background-color: $color-black;
 }
