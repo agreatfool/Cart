@@ -21,15 +21,15 @@
 
         <div class="nav-fixed">
             <div class="nav-list">
-                <div class="nav-line" ng-click="pageGoTo('')" ng-class="{active: segment.startsWith('blog') && (segment.contains('list') || segment.contains('new') || segment.contains('update') || segment.contains('view'))}">
+                <div class="nav-line" ng-click="pageGoTo('')" ng-class="{active: indexPaths.indexOf(rootPath) !== -1 || segment.startsWith('blog_view')}">
                     <span class="glyphicon glyphicon-align-justify nav-icon"></span>
                     <span class="nav-icon-font">Blog</span>
                 </div>
-                <div class="nav-line" ng-click="pageGoTo('category')" ng-class="{active: segment.startsWith('blog') && segment.contains('category')}">
+                <div class="nav-line" ng-click="pageGoTo('category')" ng-class="{active: rootPath == 'category'}">
                     <span class="glyphicon glyphicon-th-list nav-icon"></span>
                     <span class="nav-icon-font">Category</span>
                 </div>
-                <div class="nav-line" ng-click="pageGoTo('tag')" ng-class="{active: segment.startsWith('blog') && segment.contains('tag')}">
+                <div class="nav-line" ng-click="pageGoTo('tag')" ng-class="{active: rootPath == 'tag'}">
                     <span class="glyphicon glyphicon-tag nav-icon"></span>
                     <span class="nav-icon-font">Tag</span>
                 </div>
@@ -54,8 +54,30 @@
 
         <div class="page-content">
             <div class="page-content-top" app-view-segment="0"></div>
-            <!-- FIXME footer to be done -->
-            <div class="page-footer">This is the footer</div>
+
+            <div class="page-footer">
+                <div class="row footer-line1">
+                    <div class="col-md-3">
+                        Copyright &nbsp;&nbsp; &copy; 2014 Jonathan Dai &nbsp;&nbsp; All rights reserved.
+                    </div>
+                </div>
+                <div class="row footer-line2">
+                    <div class="col-md-12">
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('')" ng-class="{active: indexPaths.indexOf(rootPath) !== -1 || segment.startsWith('blog_view')}">
+                            Blog
+                        </div>
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('category')" ng-class="{active: rootPath == 'category'}">
+                            Category
+                        </div>
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('tag')" ng-class="{active: rootPath == 'tag'}">
+                            Tag
+                        </div>
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('search')" ng-class="{active: segment.startsWith('search')}">
+                            Search
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="page-to-top">

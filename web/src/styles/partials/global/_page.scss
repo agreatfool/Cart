@@ -20,10 +20,32 @@
 }
 
 .page-footer {
-  height: 100px;
-  padding: 15px;
+  height: $footer-height;
   color: $color-gray;
-  background: $color-black;
+  background-color: $color-black;
+  .footer-line1 {
+    height: $footer-height / 2;
+    padding: $footer-padding;
+  }
+  .footer-line2 {
+    height: $footer-height / 2;
+    padding: $footer-padding;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    .footer-nav-btn {
+      margin-right: 10px;
+      padding: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.5s ease-in;
+    }
+    .footer-nav-btn:hover {
+      background-color: $color-dark;
+    }
+    .active {
+      background-color: $color-dark;
+    }
+  }
+}
 
 .page-to-top {
   display: none;
