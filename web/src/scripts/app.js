@@ -58,7 +58,7 @@ app.config(['$routeProvider', '$locationProvider', '$routeSegmentProvider', rout
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var controllers = angular.module('Cart.Controllers', []);
 
-controllers.controller('CartMainCtrl', ['$scope', '$location', '$routeSegment', ctrlSources.CartMainCtrl]);
+controllers.controller('CartMainCtrl', ['$scope', '$location', '$routeSegment', 'CartFixFooterService', ctrlSources.CartMainCtrl]);
 controllers.controller('CartBlogCtrl', ['$scope', ctrlSources.CartBlogCtrl]);
 controllers.controller('CartBlogListCtrl', ['$scope', ctrlSources.CartBlogListCtrl]);
 controllers.controller('CartBlogNewCtrl', ['$scope', ctrlSources.CartBlogNewCtrl]);
@@ -78,6 +78,9 @@ controllers.controller('CartMasterCtrl', ['$scope', ctrlSources.CartMasterCtrl])
 var services = angular.module('Cart.Services', []);
 
 services.factory('CartAccessCtrlService', ['$http', '$q', serviceSources.CartAccessCtrlService]);
+services.factory('CartFixFooterService', [function() {
+    return { 'fixFooter': fixFooter };
+}]);
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- BOOTSTRAP
@@ -97,4 +100,20 @@ angular.element().ready(function() {
             $('.nav-trigger').removeClass('nav-trigger-active');
         }
     });
+    // window resize event
+    $(window).resize(fixFooter);
 });
+
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+//- OTHERS
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+var fixFooter = function() {
+    var pageContentTop = $('.page-content-top'); // page top element: page content excepts footer
+    var pageTopCurHeight = pageContentTop.height(); // current page top height
+    var pageTopMinHeight = $(document).height() - CartConst.PAGE_FOOTER_HEIGHT; // min page top height
+    console.log($(document).height(), pageTopCurHeight, pageTopMinHeight);
+    if (pageTopCurHeight < pageTopMinHeight) {
+        // only fix the footer position when page is too 'short'
+        pageContentTop.css('min-height', pageTopMinHeight);
+    }
+};

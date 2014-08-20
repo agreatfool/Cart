@@ -3,7 +3,7 @@
 /* global $ */
 var CartConst = require('../const/const.js');
 
-module.exports = function($scope, $location, $routeSegment) {
+module.exports = function($scope, $location, $routeSegment, footerService) {
     console.log('CartMainCtrl');
     $scope.segment = $routeSegment;
     $scope.pageGoTo = function(page) {
@@ -28,4 +28,8 @@ module.exports = function($scope, $location, $routeSegment) {
             $location.url('/login');
         }
     };
+    // route change event, when location changed
+    $scope.$on('$routeChangeStart', function() {
+        footerService.fixFooter();
+    });
 };
