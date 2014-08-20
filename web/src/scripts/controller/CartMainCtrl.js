@@ -14,7 +14,7 @@ module.exports = function($scope, $location, $routeSegment, footerService) {
         $('body').toggleClass('nav-expanded');
         // trigger
         var navTriggerIcon = $('.nav-trigger span');
-        navTriggerIcon.on(CartConst.ANIMATE_END_EVENT, function() {
+        navTriggerIcon.bind(CartConst.ANIMATE_END_EVENT, function() {
             navTriggerIcon.removeClass('animated flip');
         });
         navTriggerIcon.addClass('animated flip');
