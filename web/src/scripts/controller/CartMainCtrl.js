@@ -31,5 +31,11 @@ module.exports = function($scope, $location, $routeSegment, footerService) {
     // route change event, when location changed
     $scope.$on('$routeChangeStart', function() {
         footerService.fixFooter();
+        // footer fadeIn effect
+        var footer = $('.page-footer');
+        footer.bind(CartConst.ANIMATE_END_EVENT, function() {
+            footer.removeClass('animated fadeIn');
+        });
+        footer.addClass('animated fadeIn');
     });
 };
