@@ -59,7 +59,6 @@ app.config(['$routeProvider', '$locationProvider', '$routeSegmentProvider', rout
 var controllers = angular.module('Cart.Controllers', []);
 
 controllers.controller('CartMainCtrl', ['$scope', '$location', '$routeSegment', 'CartFixFooterService', ctrlSources.CartMainCtrl]);
-controllers.controller('CartBlogCtrl', ['$scope', ctrlSources.CartBlogCtrl]);
 controllers.controller('CartBlogListCtrl', ['$scope', ctrlSources.CartBlogListCtrl]);
 controllers.controller('CartBlogNewCtrl', ['$scope', ctrlSources.CartBlogNewCtrl]);
 controllers.controller('CartBlogUpdateCtrl', ['$scope', ctrlSources.CartBlogUpdateCtrl]);

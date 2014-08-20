@@ -2,7 +2,6 @@
 
 module.exports = {
     'CartMainCtrl':         require('./CartMainCtrl.js'),
-    'CartBlogCtrl':         require('./CartBlogCtrl.js'),
     'CartBlogListCtrl':     require('./CartBlogListCtrl.js'),
     'CartBlogNewCtrl':      require('./CartBlogNewCtrl.js'),
     'CartBlogUpdateCtrl':   require('./CartBlogUpdateCtrl.js'),

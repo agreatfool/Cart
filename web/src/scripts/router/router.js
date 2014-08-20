@@ -5,17 +5,17 @@ module.exports = function($routeProvider, $locationProvider, $routeSegmentProvid
     $routeSegmentProvider.options.autoLoadTemplates = true;
     $routeSegmentProvider.options.strictMode = true;
     $routeSegmentProvider.
-        when('/',                    'blog.list').
-        when('/new/:postId',         'blog.new').
-        when('/update/:postId',      'blog.update').
-        when('/:year/:month/:title', 'blog.view').
-        when('/category',            'blog.category').
-        when('/category/:category',  'blog.list').
-        when('/tag',                 'blog.tag').
-        when('/tag/:tag',            'blog.list').
-        when('/year/:datetime',      'blog.list').
-        when('/month/:datetime',     'blog.list').
-        when('/day/:datetime',       'blog.list').
+        when('/',                    'blog_list').
+        when('/new/:postId',         'blog_new').
+        when('/update/:postId',      'blog_update').
+        when('/:year/:month/:title', 'blog_view').
+        when('/category',            'blog_category').
+        when('/category/:category',  'blog_list').
+        when('/tag',                 'blog_tag').
+        when('/tag/:tag',            'blog_list').
+        when('/year/:datetime',      'blog_list').
+        when('/month/:datetime',     'blog_list').
+        when('/day/:datetime',       'blog_list').
         when('/search',              'search').
         when('/oauth2',              'oauth2').
         when('/login',               'login').
@@ -25,71 +25,65 @@ module.exports = function($routeProvider, $locationProvider, $routeSegmentProvid
         when('/error',               'error').
         when('/502',                 'error').
         // BLOG
-        segment('blog', {
-            'templateUrl': 'views/blog/home.html',
-            'controller': 'CartBlogCtrl'
-        }).
-        within().
-        segment('list', {
+        segment('blog_list', {
             'templateUrl': 'views/blog/list.html',
             'controller': 'CartBlogListCtrl'
         }).
-        segment('new', {
+        segment('blog_new', {
             'templateUrl': 'views/blog/edit.html',
             'controller': 'CartBlogNewCtrl',
             'dependencies': ['postId']
         }).
-        segment('update', {
+        segment('blog_update', {
             'templateUrl': 'views/blog/edit.html',
             'controller': 'CartBlogUpdateCtrl',
             'dependencies': ['postId']
         }).
-        segment('view', {
+        segment('blog_view', {
             'templateUrl': 'views/blog/view.html',
             'controller': 'CartBlogViewCtrl',
             'dependencies': ['year', 'month', 'title']
         }).
-        segment('category', {
+        segment('blog_category', {
             'templateUrl': 'views/blog/label.html',
             'controller': 'CartBlogCategoryCtrl'
         }).
-        segment('tag', {
+        segment('blog_tag', {
             'templateUrl': 'views/blog/label.html',
             'controller': 'CartBlogTagCtrl'
         }).
-        up().
         // SEARCH
         segment('search', {
-            'templateUrl': 'views/search/home.html',
+            'templateUrl': 'views/search/search.html',
             'controller': 'CartSearchCtrl'
         }).
         // OAUTH2
         segment('oauth2', {
-            'templateUrl': 'views/oauth2/home.html',
+            'templateUrl': 'views/oauth2/oauth2.html',
             'controller': 'CartOauthCtrl'
         }).
         // LOGIN
         segment('login', {
-            'templateUrl': 'views/login/home.html',
+            'templateUrl': 'views/login/login.html',
             'controller': 'CartLoginCtrl'
         }).
         // PROFILE
         segment('profile', {
-            'templateUrl': 'views/profile/home.html',
+            'templateUrl': 'views/profile/profile.html',
             'controller': 'CartProfileCtrl'
         }).
         // MASTER
         segment('master', {
-            'templateUrl': 'views/master/home.html',
+            'templateUrl': 'views/master/master.html',
             'controller': 'CartMasterCtrl'
         }).
         // 404
         segment('404', {
-            'templateUrl': 'views/404/home.html'
+            'templateUrl': 'views/404/404.html'
         }).
         // ERROR
         segment('error', {
-            'templateUrl': 'views/error/home.html'
+            'templateUrl': 'views/error/error.html'
         });
     $routeProvider.otherwise({ redirectTo: '/404' });
 };
