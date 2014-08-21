@@ -8,3 +8,4 @@ dependencies:
   path: any
   stack_trace: any
   wilt: any
+  redis_client: any
