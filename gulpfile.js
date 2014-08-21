@@ -78,7 +78,7 @@ var Task_Htmls = function() {
 };
 
 var Task_Images = function() {
-    return gulp.src(['web/src/images/**/*', '!web/src/images/packages/**/*'])
+    return gulp.src('web/src/images/**/*')
         .pipe(gulpif(production, cache(minimg({ optimizationLevel: 5, progressive: true, interlaced: true }))))
         .pipe(gulp.dest('web/public/img'));
 };
@@ -93,7 +93,7 @@ gulp.task('clean', function(done) {
 });
 
 gulp.task('lint-scripts', function() {
-    return gulp.src(['web/src/scripts/**/*.js', '!web/src/scripts/packages/**/*'])
+    return gulp.src('web/src/scripts/**/*.js')
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter(stylish))
         .on('error', handleError);
