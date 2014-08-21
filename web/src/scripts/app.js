@@ -26,6 +26,7 @@ require('angular-ui-calendar');
 global.moment = require('moment');
 global.pouchdb = require('pouchdb');
 global.md5 = require('blueimp-md5').md5;
+global.uuid = require('./../bower/node-uuid/uuid.js');
 
 // app sources
 var CartConst = require('./const/const.js');
@@ -42,11 +43,6 @@ var app = angular.module('Cart', [
     'ui.calendar',
     'Cart.Controllers', 'Cart.Services'
 ]);
-
-// STATUS:
-// 1. blog not inited
-// 2. user not login
-// 3. user login
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- ROUTE
