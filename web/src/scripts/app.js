@@ -73,6 +73,7 @@ controllers.controller('CartMasterCtrl', ['$scope', ctrlSources.CartMasterCtrl])
 var services = angular.module('Cart.Services', []);
 
 services.factory('CartAccessCtrlService', ['$http', '$q', serviceSources.CartAccessCtrlService]);
+services.factory('CartDataService', ['$http', '$q', serviceSources.CartDataService]);
 services.factory('CartFixFooterService', [function() {
     return { 'fixFooter': fixFooter };
 }]);
