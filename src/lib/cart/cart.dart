@@ -6,4 +6,5 @@ import 'dart:io';
 
 import '../pin/pin.dart';
 
+part 'const/const.dart';
 part 'model/model.dart';
