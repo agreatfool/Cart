@@ -11,19 +11,11 @@ main() {
 
   PinUtility.setCwdToRoot('../..');
 
-  Map setting = JSON.decode(new File('config/setting.json').readAsStringSync());
-  Map oauth = JSON.decode(new File('config/oauth.json').readAsStringSync());
-  Map credentials = {};
-  var credentialsFile = new File(oauth['web']['credentialsFilePath']);
-  if (credentialsFile.existsSync()) {
-    var fileContent = credentialsFile.readAsStringSync();
-    if (fileContent.isNotEmpty) {
-      try {
-        credentials = JSON.decode(fileContent);
-      } catch (e) {
-        PinLogger.instance.shout('[WebMain] Error in JSON parsing credentials data: ${fileContent}');
-      }
-    }
+  Map setting = PinUtility.readJsonFileSync('config/setting.json');
+  Map oauth = PinUtility.readJsonFileSync('config/oauth.json');
+  Map credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
+  if (credentials == null) {
+    credentials = {}; // credentials file is possible not created yet here
   }
 
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
@@ -48,7 +40,7 @@ main() {
   app.get('/oauth2next', (HttpContext ctx) {
     pinGoogleOAuth.processOAuthNext(ctx.params).then((Map done) {
       if (done['result']) {
-        credentials = JSON.decode(credentialsFile.readAsStringSync());
+        credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
         ctx.sendHtml('<h1>OAuth done!</h1>');
       } else {
         ctx.sendJson(done);
