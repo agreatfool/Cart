@@ -12,12 +12,6 @@ class CartModel {
     return _model;
   }
 
-  CartModel() {
-    _posts = PinUtility.readJsonFileSync('database/posts.json');
-    _categories = PinUtility.readJsonFileSync('database/categories.json');
-    _tags = PinUtility.readJsonFileSync('database/tags.json');
-  }
-
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* POSTS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -27,7 +21,7 @@ class CartModel {
    *   "title": string,
    *   "link": string,
    *   "created": timestamp,
-   *   "edited": timestamp,
+   *   "updated": timestamp,
    *   "author": string,
    *   "category": uuid,
    *   "tags": [uuid, uuid, ...]
@@ -37,25 +31,113 @@ class CartModel {
    *   uuid: post, ...
    * }
    */
-  Map<String, Map<String, dynamic>> _posts;
-
-  Map<String, Map<String, dynamic>> get posts => _posts;
-  set posts(Map<String, Map<String, dynamic>> postsMap) => _posts = postsMap;
+  Map<String, Map<String, dynamic>> posts = {};
+  List<String> postsOrderByCreated = [];
+  List<String> postsOrderByUpdated = [];
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* CATEGORIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Map<String, Map<String, dynamic>> _categories;
-
-  Map<String, Map<String, dynamic>> get categories => _categories;
-  set categories(Map<String, Map<String, dynamic>> categoriesMap) => _categories = categoriesMap;
+  /**
+   * category:
+   * {
+   *   "title": string,
+   *   "created": timestamp,
+   *   "updated": timestamp
+   * }
+   * categories:
+   * {
+   *   uuid: category, ...
+   * }
+   * category posts:
+   * {
+   *   categoryUuid: [postUuid, postUuid, ...] // order by created time
+   * }
+   */
+  Map<String, Map<String, dynamic>> categories = {};
+  Map<String, List<String>> categoryPosts = {};
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* TAGS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Map<String, Map<String, dynamic>> _tags;
+  /**
+   * tag:
+   * {
+   *   "title": string,
+   *   "created": timestamp,
+   *   "updated": timestamp
+   * }
+   * tags:
+   * {
+   *   uuid: tag, ...
+   * }
+   * tag posts:
+   * {
+   *   tagUuid: [postUuid, postUuid, ...] // order by created time
+   * }
+   */
+  Map<String, Map<String, dynamic>> tags = {};
+  Map<String, List<String>> tagPosts = {};
 
-  Map<String, Map<String, dynamic>> get tags => _tags;
-  set tags(Map<String, Map<String, dynamic>> tagsMap) => _tags = tagsMap;
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* INIT
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  CartModel() {
+    posts = PinUtility.readJsonFileSync('database/posts.json');
+    categories = PinUtility.readJsonFileSync('database/categories.json');
+    tags = PinUtility.readJsonFileSync('database/tags.json');
+
+    postsOrderByCreated = posts.keys.toList()..sort(_sortPostByCreated);
+    postsOrderByUpdated = posts.keys.toList()..sort(_sortPostByUpdated);
+    _buildCategoryAndTagPostsList();
+  }
+
+  int _sortPostByCreated(String uuidA, String uuidB) {
+    return _sortPostByProperty('created', uuidA, uuidB);
+  }
+
+  int _sortPostByUpdated(String uuidA, String uuidB) {
+    return _sortPostByProperty('updated', uuidA, uuidB);
+  }
+
+  int _sortPostByProperty(String propertyName, String uuidA, String uuidB) {
+    Map postA = posts[uuidA];
+    Map postB = posts[uuidB];
+
+    if (postA[propertyName] == postB[propertyName]) {
+      return 0;
+    } else if (postA[propertyName] > postB[propertyName]) {
+      return -1; // sort: DESC
+    } else {
+      return 1;
+    }
+  }
+
+  void _buildCategoryAndTagPostsList() {
+    if (postsOrderByCreated.length <= 0) {
+      return; // no need to run
+    }
+    postsOrderByCreated.forEach((postUuid) {
+      Map post = posts[postUuid];
+      String categoryUuid = post['category'];
+      List<String> tagsUuid = post['tags'];
+
+      // category
+      if (!categoryPosts.containsKey(categoryUuid)) {
+        categoryPosts[categoryUuid] = [postUuid];
+      } else {
+        categoryPosts[categoryUuid].add(postUuid);
+      }
+
+      // tag
+      tagsUuid.forEach((tagUuid) {
+        if (!tagPosts.containsKey(tagUuid)) {
+          tagPosts[tagUuid] = [postUuid];
+        } else {
+          tagPosts[tagUuid].add(postUuid);
+        }
+      });
+    });
+  }
 
 }
