@@ -41,7 +41,7 @@ class PinUtility {
   }
 
   static Future writeJsonFile(String path, Object json) {
-    Completer comp = new Completer();
+    final comp = new Completer();
     String jsonStr = '';
 
     try {
