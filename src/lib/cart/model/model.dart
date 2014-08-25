@@ -24,7 +24,8 @@ class CartModel {
    *   "updated": timestamp,
    *   "author": string,
    *   "category": uuid,
-   *   "tags": [uuid, uuid, ...]
+   *   "tags": [uuid, uuid, ...],
+   *   "attachments": ["filename", "filename", ...]
    * }
    * posts:
    * {
@@ -143,7 +144,7 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  void savePost(String uuid, String markdown, String html) {
+  void savePost(String uuid, String markdown, String html, List<String> attachList) {
 
   }
 
