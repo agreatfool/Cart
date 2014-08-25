@@ -24,6 +24,10 @@ main() {
     credentials = {}; // credentials file is possible not created yet here
   }
 
+  CartSystem.instance.setting = setting;
+  CartSystem.instance.oauth = oauth;
+  CartSystem.instance.credentials = credentials;
+
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
 
