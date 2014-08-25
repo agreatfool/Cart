@@ -14,8 +14,16 @@ class PinLogger {
     return _logger;
   }
 
+  void set level(Level value) {
+    _logger.level = value;
+  }
+
   static void _printLogRecord(LogRecord r) {
-    print("${r.loggerName} ${r.level} ${r.message}");
+    print(_formatLogRecord(r));
+  }
+
+  static String _formatLogRecord(LogRecord r) {
+    return "[${r.time}][${r.level}]: ${r.message}";
   }
 
 }
