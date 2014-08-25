@@ -144,12 +144,93 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future savePost(String uuid, String markdown, String html, List<String> attachList) {
+  Future savePost(String uuid, String markdown) {
+    // validate uuid
+    if (!PinUtility.isUuid(uuid)) {
+      PinLogger.instance.shout('[CartModel] savePost: uuid format invalid: ${uuid}}');
+      return new Future(null);
+    }
 
+    // parse headers
+    Map headers = _parsePostHeader(markdown);
+    if (headers == null) {
+      return new Future(null); // invalid headers format
+    }
+
+    // parse markdown to html & escape html
+    String html = markdownToHtml(markdown);
+    html = (const HtmlEscape()).convert(html);
+
+    if (posts.containsKey(uuid)) {
+      // update
+      return _updatePost(uuid, markdown, headers, html);
+    } else {
+      // add
+      return _addPost(uuid, markdown, headers, html);
+    }
   }
 
   Future removePost(String uuid) {
 
+  }
+
+  Future _addPost(String uuid, String markdown, Map headers, String html) {
+    int timestamp = PinTime.getTime();
+
+    Map post = {
+      'title': headers['title'],
+      'link': headers['link'],
+      'created': timestamp,
+      'updated': timestamp,
+      'author': CartSystem.instance.credentials['name'],
+      'category': headers['category'],
+      'tags': headers['tags'],
+      'attachments': headers['attachments']
+    };
+
+    // database: post
+    posts.addAll({ uuid: post });
+    postsOrderByCreated.add(uuid);
+    postsOrderByUpdated.add(uuid);
+
+    // database: category
+    _updateCategory(headers['category'], timestamp, isAddPost: true, postUuid: uuid);
+
+    // database: tag
+    _updateTags(headers['tags'], uuid, timestamp: timestamp);
+
+    // TODO save db files & sync with google drive
+  }
+
+  Future _updatePost(String uuid, String markdown, Map headers, String html) {
+    int timestamp = PinTime.getTime();
+
+    Map post = {
+        'title': headers['title'],
+        'link': headers['link'],
+        'updated': timestamp,
+        'category': headers['category'],
+        'tags': headers['tags'],
+        'attachments': headers['attachments']
+    };
+
+    // TODO
+  }
+
+  Map _parsePostHeader(String markdown) {
+    /**
+     * headers:
+     * {
+     *   "title": string,
+     *   "link": string,
+     *   "category": uuid, // category is created beforehand, so just uuid is enough
+     *   "tags": [{"uuid": uuid, "name": string}, ...] // tag can be created when post saving, so name is necessary here for creating
+     *   "attachments": ["filename", "filename", ...]
+     * }
+     */
+    // FIXME 检查头格式是否正确，不正确返回null
+    // attachments这个字段是从markdown内容中，分析![](...)格式分析出来的，不是直接写在markdown里的
+    return {};
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -163,23 +244,92 @@ class CartModel {
 
   }
 
-  void _updateCategory(String uuid, int updatedTime) {
+  void _updateCategory(String uuid, int updatedTime, {bool isAddPost: false, String postUuid: ''}) {
+    categories[uuid]['updated'] = updatedTime;
+    if (isAddPost) {
+      _pushPostToEndOfCategoryList(uuid, postUuid);
+    }
+  }
 
+  void _pushPostToEndOfCategoryList(String uuid, String postUuid) {
+    if (categoryPosts[uuid].contains(postUuid)) {
+      categoryPosts[uuid].remove(postUuid);
+    }
+    categoryPosts[uuid].add(postUuid);
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: TAG
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future addTag(String uuid, String name) {
+  Future addTag(String uuid, String name, {int timestamp: null, bool fileSyncImmediately: false}) {
+    final completer = new Completer();
 
+    if (timestamp == null) {
+      timestamp = PinTime.getTime();
+    }
+
+    tags.addAll({
+      uuid: {
+        'title': name,
+        'created': timestamp,
+        'updated': timestamp
+      }
+    });
+
+    if (fileSyncImmediately) {
+      PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags).then((_) {
+        completer.complete(null);
+      });
+    } else {
+      completer.complete(null);
+    }
+
+    return completer.future;
   }
 
-  Future removeTag(String uuid) {
+  Future removeTag(String uuid, {bool fileSyncImmediately: false}) {
+    if (tags.containsKey(uuid)) {
+      // TODO
+    }
+  }
 
+  void _updateTags(List<Map> headerTags, String postUuid, {int timestamp: null, isAddPost: false}) {
+    /**
+     * tags:
+     * [
+     *   {
+     *     "uuid": uuid,
+     *     "name": string
+     *   },
+     *   ...
+     * ]
+     */
+    if (headerTags.length > 0) {
+      if (timestamp == null) {
+        timestamp = PinTime.getTime();
+      }
+      headerTags.forEach((tagData) {
+        if (tags.containsKey(tagData['uuid'])) {
+          _updateTag(tagData['uuid'], timestamp);
+        } else {
+          addTag(tagData['uuid'], tagData['name']);
+        }
+        if (isAddPost) {
+          _pushPostToEndOfTagList(tagData['uuid'], postUuid);
+        }
+      });
+    }
   }
 
   void _updateTag(String uuid, int updatedTime) {
+    tags[uuid]['updated'] = updatedTime;
+  }
 
+  void _pushPostToEndOfTagList(String uuid, String postUuid) {
+    if (tagPosts[uuid].contains(postUuid)) {
+      tagPosts[uuid].remove(postUuid);
+    }
+    tagPosts[uuid].add(postUuid);
   }
 
 }
