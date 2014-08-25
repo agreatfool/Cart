@@ -197,7 +197,7 @@ class CartModel {
     _updateCategory(headers['category'], timestamp, isAddPost: true, postUuid: uuid);
 
     // database: tag
-    _updateTags(headers['tags'], uuid, timestamp: timestamp);
+    _updateTags(headers['tags'], timestamp, isAddPost: true, postUuid: uuid);
 
     // TODO save db files & sync with google drive
   }
@@ -293,7 +293,7 @@ class CartModel {
     }
   }
 
-  void _updateTags(List<Map> headerTags, String postUuid, {int timestamp: null, isAddPost: false}) {
+  void _updateTags(List<Map> headerTags, int timestamp, {isAddPost: false, String postUuid: ''}) {
     /**
      * tags:
      * [
