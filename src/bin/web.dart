@@ -9,8 +9,14 @@ import '../lib/cart/cart.dart';
 
 main() {
 
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* Set system root path
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   PinUtility.setCwdToRoot('../..');
 
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* Read config files & prepare google oauth libs
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Map setting = PinUtility.readJsonFileSync('config/setting.json');
   Map oauth = PinUtility.readJsonFileSync('config/oauth.json');
   Map credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
@@ -20,6 +26,11 @@ main() {
 
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
+
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* Initialize database models
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  CartModel.instance;
 
   bool isSignedIn(HttpContext ctx) {
     bool signedIn = true;
@@ -33,6 +44,9 @@ main() {
 
   var app = new Express();
 
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* ROUTERS
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   app.get('/oauth2', (HttpContext ctx) {
     ctx.res.redirect(Uri.parse(pinGoogleOAuth.getOAuthUrl()));
   });
@@ -48,6 +62,9 @@ main() {
     });
   });
 
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* SERVER
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   app.listen('127.0.0.1', setting['port']).then((_) {
     PinLogger.instance.fine('[WebMain] App server started, listening on http://127.0.0.1:${setting['port']} ...');
   });
