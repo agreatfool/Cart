@@ -13,6 +13,7 @@ import 'package:google_oauth2_client/google_oauth2_console.dart' as GoogleOAuth;
 import 'package:google_drive_v2_api/drive_v2_api_console.dart' as GoogleDrive;
 
 part 'utility/logger.dart';
+part 'utility/time.dart';
 part 'utility/utility.dart';
 
 part 'google/oauth.dart';
