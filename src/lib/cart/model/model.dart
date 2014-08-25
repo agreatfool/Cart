@@ -144,15 +144,42 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  void savePost(String uuid, String markdown, String html, List<String> attachList) {
+  Future savePost(String uuid, String markdown, String html, List<String> attachList) {
+
+  }
+
+  Future removePost(String uuid) {
 
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: CATEGORY
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  Future addCategory(String uuid, String name) {
+
+  }
+
+  Future removeCategory(String uuid) {
+
+  }
+
+  void _updateCategory(String uuid, int updatedTime) {
+
+  }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: TAG
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  Future addTag(String uuid, String name) {
+
+  }
+
+  Future removeTag(String uuid) {
+
+  }
+
+  void _updateTag(String uuid, int updatedTime) {
+
+  }
+
 }
