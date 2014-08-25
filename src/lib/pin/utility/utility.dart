@@ -40,4 +40,20 @@ class PinUtility {
     return data;
   }
 
+  static Future writeJsonFile(String path, Object json) {
+    Completer comp = new Completer();
+    String jsonStr = '';
+
+    try {
+      jsonStr = JSON.encode(json);
+    } catch (e) {
+      PinLogger.instance.shout('[PinUtility] writeJsonFile: Error in encoding JSON obj: {$json}');
+      comp.complete(); // complete it immediately, since it's just the place holder
+      return comp.future;
+    }
+
+    File file = new File(path);
+    return file.writeAsString(jsonStr);
+  }
+
 }
