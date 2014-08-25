@@ -14,7 +14,7 @@ class PinUtility {
     if (condition) {
       return;
     }
-    throw new FormatException('Wrong format: $message.');
+    throw new FormatException('Wrong format: {$message}.');
   }
 
   static Object readJsonFileSync(String path) {
