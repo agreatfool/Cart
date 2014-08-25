@@ -41,15 +41,13 @@ class PinUtility {
   }
 
   static Future writeJsonFile(String path, Object json) {
-    final comp = new Completer();
     String jsonStr = '';
 
     try {
       jsonStr = JSON.encode(json);
     } catch (e) {
       PinLogger.instance.shout('[PinUtility] writeJsonFile: Error in encoding JSON obj: {$json}');
-      comp.complete(); // complete it immediately, since it's just the place holder
-      return comp.future;
+      return new Future(null);
     }
 
     File file = new File(path);
