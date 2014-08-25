@@ -21,12 +21,15 @@ require('angular-route');
 require('angular-animate');
 require('angular-route-segment');
 require('angular-ui-calendar');
+require('ng-file-upload');
+require('./../bower/ng-file-upload/angular-file-upload-shim.js'); // also include it's shim
 
 // others
 global.moment = require('moment');
 global.pouchdb = require('pouchdb');
 global.md5 = require('blueimp-md5').md5;
 global.uuid = require('./../bower/node-uuid/uuid.js');
+global.marked = require('./../bower/marked/index.js');
 
 // app sources
 var CartConst = require('./const/const.js');
