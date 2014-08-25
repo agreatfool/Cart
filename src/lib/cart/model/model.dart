@@ -84,9 +84,9 @@ class CartModel {
   //-* INIT
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   CartModel() {
-    posts = PinUtility.readJsonFileSync('database/posts.json');
-    categories = PinUtility.readJsonFileSync('database/categories.json');
-    tags = PinUtility.readJsonFileSync('database/tags.json');
+    posts = PinUtility.readJsonFileSync(CartConst.DB_POSTS_PATH);
+    categories = PinUtility.readJsonFileSync(CartConst.DB_CATEGORIES_PATH);
+    tags = PinUtility.readJsonFileSync(CartConst.DB_TAGS_PATH);
 
     postsOrderByCreated = posts.keys.toList()..sort(_sortPostByCreated);
     postsOrderByUpdated = posts.keys.toList()..sort(_sortPostByUpdated);

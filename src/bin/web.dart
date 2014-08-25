@@ -17,8 +17,8 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* Read config files & prepare google oauth libs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Map setting = PinUtility.readJsonFileSync('config/setting.json');
-  Map oauth = PinUtility.readJsonFileSync('config/oauth.json');
+  Map setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
+  Map oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
   Map credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
   if (credentials == null) {
     credentials = {}; // credentials file is possible not created yet here
