@@ -189,9 +189,9 @@ class CartModel {
     };
 
     // database: post
-    posts.addAll({ uuid: post });
-    postsOrderByCreated.add(uuid);
-    postsOrderByUpdated.add(uuid);
+    posts[uuid] = post;
+    _pushPostToEndOfCreatedList(uuid);
+    _pushPostToEndOfUpdatedList(uuid);
 
     // database: category
     _updateCategory(headers['category'], timestamp, isAddPost: true, postUuid: uuid);
@@ -215,6 +215,10 @@ class CartModel {
     };
 
     // TODO
+    // FIXME 和add的逻辑近似？继续抽取相同逻辑出来
+    posts[uuid] = post;
+    _pushPostToEndOfCreatedList(uuid);
+    _pushPostToEndOfUpdatedList(uuid);
   }
 
   Map _parsePostHeader(String markdown) {
@@ -231,6 +235,20 @@ class CartModel {
     // FIXME 检查头格式是否正确，不正确返回null
     // attachments这个字段是从markdown内容中，分析![](...)格式分析出来的，不是直接写在markdown里的
     return {};
+  }
+
+  void _pushPostToEndOfCreatedList(String uuid) {
+    if (postsOrderByCreated.contains(uuid)) {
+      postsOrderByCreated.remove(uuid);
+    }
+    postsOrderByCreated.add(uuid);
+  }
+
+  void _pushPostToEndOfUpdatedList(String uuid) {
+    if (postsOrderByUpdated.contains(uuid)) {
+      postsOrderByUpdated.remove(uuid);
+    }
+    postsOrderByUpdated.add(uuid);
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
