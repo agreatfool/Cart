@@ -54,4 +54,8 @@ class PinUtility {
     return file.writeAsString(jsonStr);
   }
 
+  static bool isUuid(String uuid) {
+    return (new RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\$')).hasMatch(uuid);
+  }
+
 }
