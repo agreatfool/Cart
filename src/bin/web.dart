@@ -33,6 +33,8 @@ main() {
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
 
+  CartSystem.instance.drive = pinGoogleDrive;
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* Initialize database models
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
