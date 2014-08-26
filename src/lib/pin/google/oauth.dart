@@ -30,7 +30,7 @@ class PinGoogleOAuth {
     );
   }
 
-  PinGoogleOAuth.fromJson(Map json) {
+  PinGoogleOAuth.fromJson(HashMap json) {
     // validate keys
     PinUtility.validate(json.containsKey('identifier'), 'PinGoogleOAuth construct, necessary key not found: identifier');
     PinUtility.validate(json.containsKey('secret'), 'PinGoogleOAuth construct, necessary key not found: secret');
@@ -78,10 +78,10 @@ class PinGoogleOAuth {
     return url;
   }
 
-  Future<Map> processOAuthNext(Map data) {
+  Future<HashMap> processOAuthNext(HashMap data) {
     var completer = new Completer();
 
-    Map res = {
+    HashMap res = {
       'result': false,
       'message': ''
     };
@@ -102,7 +102,7 @@ class PinGoogleOAuth {
       ).then((LibHttp.Response response) {
         // token response got
         PinLogger.instance.fine('[PinGoogleOAuth] processOAuthNext auth response: ${response.body}');
-        Map authResponse;
+        HashMap authResponse;
         try {
           authResponse = JSON.decode(response.body);
         } catch (e) {
@@ -117,7 +117,7 @@ class PinGoogleOAuth {
             now.add(new Duration(seconds: authResponse['expires_in']));
             expiration = now.millisecondsSinceEpoch;
           }
-          Map credentials = {
+          HashMap credentials = {
               'accessToken': authResponse['access_token'],
               'refreshToken': authResponse['refresh_token'],
               'tokenEndpoint': GOOGLE_OAUTH_TOKEN_URL,

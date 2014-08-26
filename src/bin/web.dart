@@ -1,7 +1,9 @@
 library Cart;
 
 import 'dart:io';
+import 'dart:collection';
 import 'dart:convert';
+
 import 'package:express/express.dart';
 
 import '../lib/pin/pin.dart';
@@ -17,9 +19,9 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* Read config files & prepare google oauth libs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Map setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
-  Map oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
-  Map credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
+  HashMap setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
+  HashMap oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
+  HashMap credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
   if (credentials == null) {
     credentials = {}; // credentials file is possible not created yet here
   }
@@ -56,7 +58,7 @@ main() {
   });
 
   app.get('/oauth2next', (HttpContext ctx) {
-    pinGoogleOAuth.processOAuthNext(ctx.params).then((Map done) {
+    pinGoogleOAuth.processOAuthNext(ctx.params).then((HashMap done) {
       if (done['result']) {
         credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
         ctx.sendHtml('<h1>OAuth done!</h1>');

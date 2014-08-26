@@ -10,8 +10,8 @@ class CartSystem {
     }
   }
 
-  Map setting = {};
-  Map oauth = {};
-  Map credentials = {};
+  HashMap setting = {};
+  HashMap oauth = {};
+  HashMap credentials = {};
 
 }

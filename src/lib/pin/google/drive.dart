@@ -10,7 +10,7 @@ class PinGoogleDrive {
     _drive.makeAuthRequests = true;
   }
 
-  Future<Map> listFiles({Map queryParams: null}) {
+  Future<HashMap> listFiles({HashMap queryParams: null}) {
     return _drive.request('files', 'GET', queryParams: queryParams);
   }
 
