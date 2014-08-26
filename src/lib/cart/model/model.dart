@@ -252,12 +252,60 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: CATEGORY
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future addCategory(String uuid, String name) {
+  Future addCategory(String uuid, String name, {int timestamp: null, bool fileSyncImmediately: false}) {
+    final completer = new Completer();
 
+    if (timestamp == null) {
+      timestamp = PinTime.getTime();
+    }
+
+    categories.addAll({
+        uuid: {
+            'title': name,
+            'created': timestamp,
+            'updated': timestamp
+        }
+    });
+
+    if (fileSyncImmediately) {
+      PinUtility.writeJsonFile(CartConst.DB_CATEGORIES_PATH, tags)
+        .then((_) => completer.complete(null));
+    } else {
+      completer.complete(null);
+    }
+
+    return completer.future;
   }
 
-  Future removeCategory(String uuid) {
+  Future removeCategory(String uuid, {bool fileSyncImmediately: false}) {
+    final completer = new Completer();
 
+    if (categories.containsKey(uuid)) {
+      // prepare
+      var postRemoveUuidList = new List<String>();
+      postRemoveUuidList = categoryPosts[uuid];
+      // category
+      categories.remove(uuid);
+      categoryPosts.remove(uuid);
+      // posts
+      var postRemoveList = new List<Future>();
+      postRemoveUuidList.forEach((postUuid) {
+        postRemoveList.add(removePost(postUuid));
+      });
+      Future.wait(postRemoveList).then((_) {
+        if (fileSyncImmediately) {
+          PinUtility.writeJsonFile(CartConst.DB_CATEGORIES_PATH, tags)
+          .then((_) => PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, posts))
+          .then((_) => completer.complete(null));
+        } else {
+          completer.complete(null);
+        }
+      });
+    } else {
+      completer.complete(null);
+    }
+
+    return completer.future;
   }
 
   void _updateCategory(String uuid, int updatedTime, {bool isAddPost: false, String postUuid: ''}) {
