@@ -32,7 +32,7 @@ class CartModel {
    *   uuid: post, ...
    * }
    */
-  Map<String, Map<String, dynamic>> posts = {};
+  HashMap<String, HashMap<String, dynamic>> posts = {};
   List<String> postsOrderByCreated = [];
   List<String> postsOrderByUpdated = [];
 
@@ -55,8 +55,8 @@ class CartModel {
    *   categoryUuid: [postUuid, postUuid, ...] // order by created time
    * }
    */
-  Map<String, Map<String, dynamic>> categories = {};
-  Map<String, List<String>> categoryPosts = {};
+  HashMap<String, HashMap<String, dynamic>> categories = {};
+  HashMap<String, List<String>> categoryPosts = {};
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* TAGS
@@ -77,8 +77,8 @@ class CartModel {
    *   tagUuid: [postUuid, postUuid, ...] // order by created time
    * }
    */
-  Map<String, Map<String, dynamic>> tags = {};
-  Map<String, List<String>> tagPosts = {};
+  HashMap<String, HashMap<String, dynamic>> tags = {};
+  HashMap<String, List<String>> tagPosts = {};
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* INIT
@@ -102,8 +102,8 @@ class CartModel {
   }
 
   int _sortPostByProperty(String propertyName, String uuidA, String uuidB) {
-    Map postA = posts[uuidA];
-    Map postB = posts[uuidB];
+    HashMap postA = posts[uuidA];
+    HashMap postB = posts[uuidB];
 
     if (postA[propertyName] == postB[propertyName]) {
       return 0;
@@ -119,7 +119,7 @@ class CartModel {
       return; // no need to run
     }
     postsOrderByCreated.forEach((postUuid) {
-      Map post = posts[postUuid];
+      HashMap post = posts[postUuid];
       String categoryUuid = post['category'];
       List<String> tagsUuid = post['tags'];
 
@@ -152,7 +152,7 @@ class CartModel {
     }
 
     // parse headers
-    Map headers = _parsePostHeader(markdown);
+    HashMap headers = _parsePostHeader(markdown);
     if (headers == null) {
       return new Future(null); // invalid headers format
     }
@@ -174,10 +174,10 @@ class CartModel {
 
   }
 
-  Future _addPost(String uuid, String markdown, Map headers, String html) {
+  Future _addPost(String uuid, String markdown, HashMap headers, String html) {
     int timestamp = PinTime.getTime();
 
-    Map post = {
+    HashMap post = {
       'title': headers['title'],
       'link': headers['link'],
       'created': timestamp,
@@ -202,10 +202,10 @@ class CartModel {
     // TODO save db files & sync with google drive
   }
 
-  Future _updatePost(String uuid, String markdown, Map headers, String html) {
+  Future _updatePost(String uuid, String markdown, HashMap headers, String html) {
     int timestamp = PinTime.getTime();
 
-    Map post = {
+    HashMap post = {
         'title': headers['title'],
         'link': headers['link'],
         'updated': timestamp,
@@ -221,7 +221,7 @@ class CartModel {
     _pushPostToEndOfUpdatedList(uuid);
   }
 
-  Map _parsePostHeader(String markdown) {
+  HashMap _parsePostHeader(String markdown) {
     /**
      * headers:
      * {
@@ -311,7 +311,7 @@ class CartModel {
     }
   }
 
-  void _updateTags(List<Map> headerTags, int timestamp, {isAddPost: false, String postUuid: ''}) {
+  void _updateTags(List<HashMap> headerTags, int timestamp, {isAddPost: false, String postUuid: ''}) {
     /**
      * tags:
      * [
