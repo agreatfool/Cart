@@ -295,9 +295,8 @@ class CartModel {
     });
 
     if (fileSyncImmediately) {
-      PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags).then((_) {
-        completer.complete(null);
-      });
+      PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags)
+        .then((_) => completer.complete(null));
     } else {
       completer.complete(null);
     }
@@ -306,9 +305,30 @@ class CartModel {
   }
 
   Future removeTag(String uuid, {bool fileSyncImmediately: false}) {
+    final completer = new Completer();
+
     if (tags.containsKey(uuid)) {
-      // TODO
+      tags.remove(uuid);
+      tagPosts.remove(uuid);
+      // posts
+      var removePostUuids = new List<String>();
+      posts.forEach((postUuid, post) {
+        if (post['tags'].contains(uuid)) {
+          post['tags'].remove(uuid);
+          postsOrderByCreated.remove(uuid);
+          postsOrderByUpdated.remove(uuid);
+        }
+      });
+      if (fileSyncImmediately) {
+        PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags)
+          .then((_) => PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, posts))
+          .then((_) => completer.complete(null));
+      }
+    } else {
+      completer.complete(null);
     }
+
+    return completer.future;
   }
 
   void _updateTags(List<HashMap> headerTags, int timestamp, {isAddPost: false, String postUuid: ''}) {
