@@ -31,6 +31,14 @@ class CartModel {
    * {
    *   uuid: post, ...
    * }
+   * headers:
+   * {
+   *   "title": string,
+   *   "link": string,
+   *   "category": uuid, // category is created beforehand, so just uuid is enough
+   *   "tags": [{"uuid": uuid, "name": string}, ...] // tag can be created when post saving, so name is necessary here for creating
+   *   "attachments": ["filename", "filename", ...] // parsed from markdown code, not provided from client
+   * }
    */
   HashMap<String, HashMap<String, dynamic>> posts = {};
   List<String> postsOrderByCreated = [];
@@ -222,16 +230,6 @@ class CartModel {
   }
 
   HashMap _parsePostHeader(String markdown) {
-    /**
-     * headers:
-     * {
-     *   "title": string,
-     *   "link": string,
-     *   "category": uuid, // category is created beforehand, so just uuid is enough
-     *   "tags": [{"uuid": uuid, "name": string}, ...] // tag can be created when post saving, so name is necessary here for creating
-     *   "attachments": ["filename", "filename", ...]
-     * }
-     */
     // FIXME 检查头格式是否正确，不正确返回null
     // attachments这个字段是从markdown内容中，分析![](...)格式分析出来的，不是直接写在markdown里的
     return {};
@@ -311,7 +309,6 @@ class CartModel {
       tags.remove(uuid);
       tagPosts.remove(uuid);
       // posts
-      var removePostUuids = new List<String>();
       posts.forEach((String postUuid, HashMap post) {
         List<String> postTags = post['tags'];
         if (postTags.contains(uuid)) {
@@ -333,21 +330,12 @@ class CartModel {
   }
 
   void _updateTags(List<HashMap> headerTags, int timestamp, {isAddPost: false, String postUuid: ''}) {
-    /**
-     * tags:
-     * [
-     *   {
-     *     "uuid": uuid,
-     *     "name": string
-     *   },
-     *   ...
-     * ]
-     */
+    // headerTags: [ { "uuid": uuid, "name": string }, ... ]
     if (headerTags.length > 0) {
       if (timestamp == null) {
         timestamp = PinTime.getTime();
       }
-      headerTags.forEach((tagData) {
+      headerTags.forEach((HashMap tagData) {
         if (tags.containsKey(tagData['uuid'])) {
           _updateTag(tagData['uuid'], timestamp);
         } else {
