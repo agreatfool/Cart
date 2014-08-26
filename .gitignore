@@ -33,3 +33,6 @@ web/**/*/packages
 
 # SASS
 .sass-cache
+
+# LOGS
+logs
