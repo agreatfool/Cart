@@ -17,7 +17,7 @@ main() {
   PinUtility.setCwdToRoot('../..');
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  //-* Read config files & prepare google oauth libs
+  //-* Read config files & prepare google oauth libs & register system resources
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   HashMap setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
   HashMap oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
