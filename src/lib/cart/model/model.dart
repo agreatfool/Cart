@@ -312,9 +312,10 @@ class CartModel {
       tagPosts.remove(uuid);
       // posts
       var removePostUuids = new List<String>();
-      posts.forEach((postUuid, post) {
-        if (post['tags'].contains(uuid)) {
-          post['tags'].remove(uuid);
+      posts.forEach((String postUuid, HashMap post) {
+        List<String> postTags = post['tags'];
+        if (postTags.contains(uuid)) {
+          postTags.remove(uuid);
           postsOrderByCreated.remove(uuid);
           postsOrderByUpdated.remove(uuid);
         }
