@@ -8,6 +8,7 @@ class CartSystem {
     if (_instance == null) {
       _instance = new CartSystem();
     }
+    return _instance;
   }
 
   HashMap setting = {};
