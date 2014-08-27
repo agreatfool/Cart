@@ -55,4 +55,8 @@ class PinGoogleDrive {
     return _drive.request('files', 'GET', queryParams: queryParams);
   }
 
+  Future<HashMap> drive_get(String fileId) {
+    return _drive.request('files/${fileId}', 'GET');
+  }
+
 }
