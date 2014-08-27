@@ -5,6 +5,8 @@ class PinGoogleDrive {
   static const String qIsRootFiles = "'root' in parents";
   static const String qIsFolder = "mimeType = 'application/vnd.google-apps.folder'";
 
+  static const String mimeFolder = 'application/vnd.google-apps.folder';
+
   GoogleDrive.Drive _drive;
   PinGoogleOAuth _oauth;
 
