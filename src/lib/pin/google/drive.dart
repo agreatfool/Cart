@@ -48,6 +48,28 @@ class PinGoogleDrive {
     return completer.future;
   }
 
+  Future downloadFile(String fileId, String dir) {
+    final completer = new Completer();
+
+    drive_get(fileId).then((file) {
+      if (file['mimeType'] == mimeFolder
+        || !file.containsKey('downloadUrl')) {
+        completer.complete(false);
+      } else {
+        LibHttp.get(
+            file['downloadUrl'],
+            headers: {'Authorization': 'Bearer ' + _oauth.oauth2.credentials.accessToken}
+        ).then((response) {
+          new File(LibPath.join(dir, file['title']))
+            .writeAsBytes(response.bodyBytes)
+            .then((_) => completer.complete(_));
+        });
+      }
+    });
+
+    return completer.future;
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* DRIVE ORIGINAL APIs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
