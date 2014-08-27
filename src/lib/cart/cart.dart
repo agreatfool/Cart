@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:markdown/markdown.dart';
+import 'package:http/http.dart' as LibHttp;
+import 'package:path/path.dart' as LibPath;
 
 import '../pin/pin.dart';
 
