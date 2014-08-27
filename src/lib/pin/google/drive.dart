@@ -3,6 +3,7 @@ part of pin;
 class PinGoogleDrive {
 
   static const String qRootFiles = "'root' in parents";
+  static const String qFolder = "mimeType = 'application/vnd.google-apps.folder'";
 
   GoogleDrive.Drive _drive;
   PinGoogleOAuth _oauth;
