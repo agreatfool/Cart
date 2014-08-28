@@ -294,9 +294,10 @@ class CartModel {
       });
       Future.wait(postRemoveList).then((_) {
         if (fileSyncImmediately) {
-          PinUtility.writeJsonFile(CartConst.DB_CATEGORIES_PATH, tags)
-          .then((_) => PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, posts))
-          .then((_) => completer.complete(null));
+          Future.wait([
+              PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags),
+              PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, posts)
+          ]).then((_) => completer.complete(null));
         } else {
           completer.complete(null);
         }
@@ -366,9 +367,10 @@ class CartModel {
         }
       });
       if (fileSyncImmediately) {
-        PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags)
-          .then((_) => PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, posts))
-          .then((_) => completer.complete(null));
+        Future.wait([
+            PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, tags),
+            PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, posts)
+        ]).then((_) => completer.complete(null));
       }
     } else {
       completer.complete(null);
@@ -406,5 +408,9 @@ class CartModel {
     }
     tagPosts[uuid].add(postUuid);
   }
+
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* UTIL: GOOGLE DRIVER
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
 }
