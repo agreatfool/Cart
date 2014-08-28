@@ -18,51 +18,47 @@ class PinGoogleDrive {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* HIGH LEVEL APIs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future<List> listAll({HashMap queryParams: null}) {
-    var files = new List();
+  Future<List<GoogleDriveClient.File>> listAll({int maxResults: 100, List<String> queries: null}) {
+    var files = new List<GoogleDriveClient.File>();
     final completer = new Completer();
 
-    Future<HashMap> listPageOfFiles(HashMap response) {
+    Future<HashMap> listPageOfFiles(GoogleDriveClient.FileList response) {
       // handle response files data
-      List items = response['items'];
+      List items = response.items;
       if (items.length > 0) {
         files.addAll(items);
       }
-      if (!response.containsKey('nextPageToken')) {
+      if (response.nextPageToken == null) {
         // this is the final page, finish the future
         completer.complete(files);
       } else {
         // still has next page, retrieve it
-        HashMap params = {
-          'pageToken': response['nextPageToken']
-        };
-        params.addAll(queryParams);
-        drive_list(queryParams: params)
+        drive_list(maxResults: maxResults, pageToken: response.nextPageToken, queries: queries)
           .then((nextResponse) => listPageOfFiles(nextResponse));
       }
     }
 
-    drive_list(queryParams: queryParams)
-      .then((response) => listPageOfFiles(response));
+    drive_list(maxResults: maxResults, queries: queries)
+      .then((GoogleDriveClient.FileList response) => listPageOfFiles(response));
 
     return completer.future;
   }
 
-  Future downloadFile(String fileId, String dir) {
+  Future<bool> downloadFile(String fileId, String dir) {
     final completer = new Completer();
 
-    drive_get(fileId).then((file) {
-      if (file['mimeType'] == mimeFolder
-        || !file.containsKey('downloadUrl')) {
+    drive_get(fileId).then((GoogleDriveClient.File file) {
+      if (file.mimeType == mimeFolder
+        || file.downloadUrl == null) {
         completer.complete(false);
       } else {
         LibHttp.get(
-            file['downloadUrl'],
+            file.downloadUrl,
             headers: {'Authorization': 'Bearer ' + _oauth.oauth2.credentials.accessToken}
         ).then((response) {
-          new File(LibPath.join(dir, file['title']))
+          new File(LibPath.join(dir, file.title))
             .writeAsBytes(response.bodyBytes)
-            .then((_) => completer.complete(_));
+            .then((_) => completer.complete(true));
         });
       }
     });
@@ -73,12 +69,14 @@ class PinGoogleDrive {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* DRIVE ORIGINAL APIs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future<HashMap> drive_list({HashMap queryParams: null}) {
-    return _drive.request('files', 'GET', queryParams: queryParams);
+  Future<GoogleDriveClient.FileList> drive_list({
+    int maxResults: 100, String pageToken: null, List<String> queries: null
+  }) {
+    return _drive.files.list(maxResults: maxResults, q: queries.join(' and '), pageToken: pageToken);
   }
 
-  Future<HashMap> drive_get(String fileId) {
-    return _drive.request('files/${fileId}', 'GET');
+  Future<GoogleDriveClient.File> drive_get(String fileId) {
+    return _drive.files.get(fileId);
   }
 
 }
