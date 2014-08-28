@@ -79,4 +79,45 @@ class PinGoogleDrive {
     return _drive.files.get(fileId);
   }
 
+  Future drive_delete(String fileId) {
+    return _drive.files.delete(fileId);
+  }
+
+  Future<GoogleDriveClient.File> drive_trash(String fileId) {
+    return _drive.files.trash(fileId);
+  }
+
+  Future<GoogleDriveClient.File> drive_untrash(String fileId) {
+    return _drive.files.untrash(fileId);
+  }
+
+  Future<GoogleDriveClient.File> drive_insert(String path, {List<String> parents: null}) {
+    final completer = new Completer();
+
+    File originalFile = new File(path);
+    originalFile.exists().then((bool exists) {
+      if (!exists) {
+        completer.complete(null);
+      } else {
+        var metadata = {
+            'title': LibPath.basename(originalFile.path),
+        };
+        if (parents != null) {
+          List<HashMap> metaParents = [];
+          parents.forEach((String parentId) {
+            metaParents.add({'id': parentId});
+          });
+          metadata['parents'] = metaParents;
+        }
+
+        GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
+        _drive.files.insert(file).then((GoogleDriveClient.File newFile){
+          completer.complete(newFile);
+        });
+      }
+    });
+
+    return completer.future;
+  }
+
 }

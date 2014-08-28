@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as LibHttp;
 import 'package:path/path.dart' as LibPath;
 import 'package:logging/logging.dart';
