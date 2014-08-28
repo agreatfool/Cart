@@ -12,6 +12,7 @@ import 'package:logging/logging.dart';
 import 'package:oauth2/oauth2.dart' as OAuth2;
 import 'package:google_oauth2_client/google_oauth2_console.dart' as GoogleOAuth;
 import 'package:google_drive_v2_api/drive_v2_api_console.dart' as GoogleDrive;
+import "package:google_drive_v2_api/drive_v2_api_client.dart" as GoogleDriveClient show File, FileList;
 
 part 'utility/logger.dart';
 part 'utility/time.dart';
