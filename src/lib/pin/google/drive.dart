@@ -22,7 +22,7 @@ class PinGoogleDrive {
     var files = new List<GoogleDriveClient.File>();
     final completer = new Completer();
 
-    Future<HashMap> listPageOfFiles(GoogleDriveClient.FileList response) {
+    void listPageOfFiles(GoogleDriveClient.FileList response) {
       // handle response files data
       List items = response.items;
       if (items.length > 0) {
