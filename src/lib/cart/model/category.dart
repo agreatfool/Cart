@@ -1,6 +1,6 @@
 part of cart;
 
-class CartCategory extends Object implements Serializable {
+class CartCategory extends Object with Serializable {
 
   String uuid;
   String driveId;
@@ -29,7 +29,7 @@ class CartCategory extends Object implements Serializable {
 
 }
 
-class CartCategoryList extends Object implements Serializable {
+class CartCategoryList extends Object with Serializable {
 
   HashMap<String, CartCategory> list = {};
   HashMap<String, List<String>> categoryPosts = {}; // {categoryUuid: [postUuid, postUuid, ...], ...}
