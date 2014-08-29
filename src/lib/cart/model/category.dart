@@ -32,7 +32,7 @@ class CartCategory extends Object implements Serializable {
 class CartCategoryList extends Object implements Serializable {
 
   HashMap<String, CartCategory> list = {};
-  HashMap<String, List<String>> categoryPosts = {};
+  HashMap<String, List<String>> categoryPosts = {}; // {categoryUuid: [postUuid, postUuid, ...], ...}
 
 
   CartCategoryList(String path, CartPostList postList) {

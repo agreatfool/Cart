@@ -32,7 +32,7 @@ class CartTag extends Object implements Serializable {
 class CartTagList extends Object implements Serializable {
 
   HashMap<String, CartTag> list = {};
-  HashMap<String, List<String>> tagPosts = {};
+  HashMap<String, List<String>> tagPosts = {}; // {tagUuid: [postUuid, postUuid, ...], ...}
 
 
   CartTagList(String path, CartPostList postList) {
