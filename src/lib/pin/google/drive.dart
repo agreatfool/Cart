@@ -66,6 +66,24 @@ class PinGoogleDrive {
     return completer.future;
   }
 
+  Future<GoogleDriveClient.File> uploadFile(String path, {List<String> parents: null}) {
+    final completer = new Completer();
+
+    drive_insert(path, parents: parents).then((GoogleDriveClient.File newFile) {
+      if (newFile == null) {
+        completer.complete(null);
+      }
+
+      (new File(path)).readAsBytes().then((List<int> content) {
+        drive_update(newFile.id, content).then((GoogleDriveClient.File uploadedFile) {
+          completer.complete(uploadedFile);
+        });
+      });
+    });
+
+    return completer.future;
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* DRIVE ORIGINAL APIs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -115,6 +133,27 @@ class PinGoogleDrive {
           completer.complete(newFile);
         });
       }
+    });
+
+    return completer.future;
+  }
+
+  Future<GoogleDriveClient.File> drive_update(String fileId, dynamic content) {
+    final completer = new Completer();
+    String base64content;
+
+    if (content is String) {
+      base64content = CryptoUtils.bytesToBase64(content.codeUnits);
+    } else if (content is List<int>) {
+      base64content = CryptoUtils.bytesToBase64(content);
+    } else {
+      completer.complete(null);
+    }
+
+    _drive.files.get(fileId).then((GoogleDriveClient.File file) {
+      _drive.files.update(file, fileId, content: base64content).then((GoogleDriveClient.File updatedFile) {
+        completer.complete(updatedFile);
+      });
     });
 
     return completer.future;
