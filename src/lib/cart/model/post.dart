@@ -57,7 +57,7 @@ class CartPostList extends Object implements Serializable {
   List<String> postsOrderByCreated = []; // [uuid, ...]
   List<String> postsOrderByUpdated = []; // [uuid, ...]
 
-  CartPostList(String path) {
+  CartPostList() {
     HashMap posts = PinUtility.readJsonFileSync(CartConst.DB_POSTS_PATH);
 
     if (posts.length > 0) {
@@ -79,18 +79,34 @@ class CartPostList extends Object implements Serializable {
     }
   }
 
-  void save(CartPost post) {
+  void add(CartPost post) {
     list[post.uuid] = post;
+    _pushPostToEndOfCreatedList(post);
+    _pushPostToEndOfUpdatedList(post);
   }
 
-  void pushPostToEndOfCreatedList(CartPost post) {
+  void update(CartPost post) {
+    list[post.uuid] = post;
+    _pushPostToEndOfUpdatedList(post);
+  }
+
+  void remove(String uuid) {
+    if (!list.containsKey(uuid)) {
+      return;
+    }
+    list.remove(uuid);
+    postsOrderByCreated.remove(uuid);
+    postsOrderByUpdated.remove(uuid);
+  }
+
+  void _pushPostToEndOfCreatedList(CartPost post) {
     if (postsOrderByCreated.contains(post.uuid)) {
       postsOrderByCreated.remove(post.uuid);
     }
     postsOrderByCreated.add(post.uuid);
   }
 
-  void pushPostToEndOfUpdatedList(CartPost post) {
+  void _pushPostToEndOfUpdatedList(CartPost post) {
     if (postsOrderByUpdated.contains(post.uuid)) {
       postsOrderByUpdated.remove(post.uuid);
     }
@@ -132,12 +148,10 @@ class CartPostHeader {
   List<HashMap<String, String>> tags; // [{"uuid": uuid, "name": string}, ...]
   List<String> attachments; // ["filename", "filename", ...]
 
-  static CartPostHeader parseFromMarkdown(String markdown) {
+  bool valid = false;
+
+  CartPostHeader.fromMarkdown(String markdown) {
     // TODO
   }
-
-}
-
-class CartPostHeaders {
 
 }
