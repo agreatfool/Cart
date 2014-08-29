@@ -40,18 +40,22 @@ class PinUtility {
     return data;
   }
 
-  static Future writeJsonFile(String path, Object json) {
+  static Future<File> writeJsonFile(String path, Object json) {
+    final completer = new Completer();
     String jsonStr = '';
 
     try {
       jsonStr = JSON.encode(json);
     } catch (e) {
       PinLogger.instance.shout('[PinUtility] writeJsonFile: Error in encoding JSON obj: {$json}');
-      return new Future(null);
+      completer.complete(null);
     }
 
-    File file = new File(path);
-    return file.writeAsString(jsonStr);
+    (new File(path)).writeAsString(jsonStr).then((_) {
+      completer.complete(_);
+    });
+
+    return completer.future;
   }
 
   static bool isUuid(String uuid) {
