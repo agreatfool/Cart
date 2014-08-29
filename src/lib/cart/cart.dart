@@ -12,5 +12,10 @@ import 'package:path/path.dart' as LibPath;
 import '../pin/pin.dart';
 
 part 'const/const.dart';
+
+part 'model/category.dart';
 part 'model/model.dart';
+part 'model/post.dart';
+part 'model/tag.dart';
+
 part 'system.dart';

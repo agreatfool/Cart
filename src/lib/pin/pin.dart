@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:mirrors';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as LibHttp;
@@ -15,9 +16,10 @@ import 'package:google_oauth2_client/google_oauth2_console.dart' as GoogleOAuth;
 import 'package:google_drive_v2_api/drive_v2_api_console.dart' as GoogleDrive;
 import 'package:google_drive_v2_api/drive_v2_api_client.dart' as GoogleDriveClient show File, FileList;
 
-part 'utility/logger.dart';
-part 'utility/time.dart';
-part 'utility/utility.dart';
-
 part 'google/oauth.dart';
 part 'google/drive.dart';
+
+part 'utility/logger.dart';
+part 'utility/serializer.dart';
+part 'utility/time.dart';
+part 'utility/utility.dart';
