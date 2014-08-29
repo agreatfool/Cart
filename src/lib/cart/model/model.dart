@@ -190,7 +190,7 @@ class CartModel {
   //-* UTIL: SAVE DATABASE FILES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Future saveDatabase() {
-    Future.wait([
+    return Future.wait([
       posts.dump(),
       categories.dump(),
       tags.dump()
