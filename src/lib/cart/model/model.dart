@@ -158,6 +158,10 @@ class CartModel {
     return completer.future;
   }
 
+  Future removeCategory(String uuid) {
+
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: TAG
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -176,6 +180,10 @@ class CartModel {
     // TODO database files
 
     return completer.future;
+  }
+
+  Future removeTag(String uuid) {
+
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
