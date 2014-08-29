@@ -14,6 +14,7 @@ class CartSystem {
   HashMap setting = {};
   HashMap oauth = {};
   HashMap credentials = {};
+  HashMap session = {};
 
   PinGoogleDrive drive;
 

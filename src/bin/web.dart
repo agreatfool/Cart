@@ -26,6 +26,7 @@ main() {
     credentials = {}; // credentials file is possible not created yet here
   }
 
+  // FIXME session?
   CartSystem.instance.setting = setting;
   CartSystem.instance.oauth = oauth;
   CartSystem.instance.credentials = credentials;
