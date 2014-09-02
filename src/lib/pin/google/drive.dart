@@ -66,19 +66,35 @@ class PinGoogleDrive {
     return completer.future;
   }
 
-  Future<GoogleDriveClient.File> uploadFile(String path, {List<String> parents: null}) {
+  Future<GoogleDriveClient.File> uploadFile(String path, {String driveId: null, List<String> parents: null}) {
     final completer = new Completer();
+    File file = new File(path);
 
-    drive_insert(path, parents: parents).then((GoogleDriveClient.File newFile) {
-      if (newFile == null) {
-        completer.complete(null);
-      }
-
-      (new File(path)).readAsBytes().then((List<int> content) {
-        drive_update(newFile.id, content).then((GoogleDriveClient.File uploadedFile) {
-          completer.complete(uploadedFile);
-        });
+    Future upload(String path, String driveId) {
+      file.readAsBytes().then((List<int> content) {
+        return drive_update(driveId, content);
       });
+    }
+
+    file.exists().then((bool exists) {
+      if (!exists) {
+        PinLogger.instance.warning('[PinGoogleDrive] uploadFile: Target file does not exist: ${path}');
+        completer.complete(null);
+      } else {
+        if (driveId == null) {
+          // need to create file first, then update it
+          drive_insert(path, parents: parents).then((GoogleDriveClient.File newFile) {
+            upload(path, newFile.id).then((GoogleDriveClient.File uploadedFile) {
+              completer.complete(uploadedFile);
+            });
+          });
+        } else {
+          // file already exists, update it
+          upload(path, driveId).then((GoogleDriveClient.File uploadedFile) {
+            completer.complete(uploadedFile);
+          });
+        }
+      }
     });
 
     return completer.future;
