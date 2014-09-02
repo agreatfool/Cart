@@ -98,4 +98,23 @@ class PinUtility {
     return result;
   }
 
+  static String getVariableTypeName(dynamic obj) {
+    String result;
+
+    if (obj == null) {
+      result = 'null';
+    } else if (obj is int) {
+      result = 'int';
+    } else if (obj is String) {
+      result = 'String';
+    } else if (obj is double) {
+      result = 'double';
+    } else {
+      result = MirrorSystem.getName(reflect(obj).type.simpleName);
+    }
+
+    return result;
+
+  }
+
 }
