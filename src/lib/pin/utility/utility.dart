@@ -62,4 +62,40 @@ class PinUtility {
     return (new RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\$')).hasMatch(uuid);
   }
 
+  static dynamic serialize(dynamic obj) {
+    var result;
+
+    if (obj is List) {
+      // input is List
+      result = new List();
+      obj.forEach((element) {
+        result.add(serialize(element));
+      });
+    } else if (obj is Map) {
+      // input is Map
+      result = new Map();
+      obj.forEach((key, val) {
+        result[key] = serialize(val);
+      });
+    } else if (obj is int || obj is String || obj is double || obj == null) {
+      // input is simple value
+      result = obj;
+    } else {
+      // input is Class
+      result = new Map();
+      InstanceMirror instanceMirror = reflect(obj);
+      ClassMirror classMirror = instanceMirror.type;
+      Iterable<DeclarationMirror> declarations = classMirror.declarations.values.where((declarationMirror) {
+        return declarationMirror is VariableMirror;
+      });
+      declarations.forEach((DeclarationMirror declarationMirror) {
+        var key = MirrorSystem.getName(declarationMirror.simpleName);
+        var val = serialize(instanceMirror.getField(declarationMirror.simpleName).reflectee);
+        result.addAll({ key: val });
+      });
+    }
+
+    return result;
+  }
+
 }
