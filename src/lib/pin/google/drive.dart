@@ -115,6 +115,7 @@ class PinGoogleDrive {
     File originalFile = new File(path);
     originalFile.exists().then((bool exists) {
       if (!exists) {
+        PinLogger.instance.warning('[PinGoogleDrive] drive_insert: Target file does not exist: ${path}');
         completer.complete(null);
       } else {
         var metadata = {
@@ -147,6 +148,7 @@ class PinGoogleDrive {
     } else if (content is List<int>) {
       base64content = CryptoUtils.bytesToBase64(content);
     } else {
+      PinLogger.instance.warning('[PinGoogleDrive] drive_update: Invalid content type: ' + PinUtility.getVariableTypeName(content));
       completer.complete(null);
     }
 
