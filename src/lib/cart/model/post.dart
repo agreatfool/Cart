@@ -13,7 +13,7 @@ class CartPost extends Object with PinSerializable {
 
   String category; // uuid
   List<String> tags; // [uuid, uuid, ...]
-  List<String> attachments; // ["filename", "filename", ...]
+  List<CartPostAttachment> attachments;
 
   CartPost.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
@@ -140,13 +140,40 @@ class CartPostList extends Object with PinSerializable {
 
 }
 
+class CartPostAttachment extends Object with PinSerializable {
+  String uuid;
+  String driveId; // id of google drive
+
+  String title; // attachment file name
+  int created;
+  int updated;
+
+  CartPostAttachment.fromJson(HashMap<String, dynamic> json) {
+    if (json.containsKey('uuid')) {
+      uuid = json['uuid'];
+    }
+    if (json.containsKey('driveId')) {
+      driveId = json['driveId'];
+    }
+    if (json.containsKey('title')) {
+      title = json['title'];
+    }
+    if (json.containsKey('created')) {
+      created = json['created'];
+    }
+    if (json.containsKey('updated')) {
+      updated = json['updated'];
+    }
+  }
+}
+
 class CartPostHeader {
 
   String title;
   String link;
   String category; //uuid
   List<HashMap<String, String>> tags; // [{"uuid": uuid, "name": string}, ...]
-  List<String> attachments; // ["filename", "filename", ...]
+  List<HashMap<String, String>> attachments; // [{"uuid": uuid, "name": string}, ...]
 
   bool valid = false;
 
