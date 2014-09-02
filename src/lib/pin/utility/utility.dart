@@ -5,7 +5,7 @@ class PinUtility {
   static void setCwdToRoot([String relative = '']) {
     String root = LibPath.join(LibPath.dirname(Platform.script.toFilePath()), relative);
 
-    PinLogger.instance.fine('[PinUtility] Set Directory.current to: $root');
+    PinLogger.instance.fine('[PinUtility] Set "Directory.current" to: ${root}');
 
     Directory.current = root;
   }
@@ -14,11 +14,11 @@ class PinUtility {
     if (condition) {
       return;
     }
-    throw new FormatException('Wrong format: {$message}.');
+    throw new FormatException('Wrong format: ${message}.');
   }
 
-  static Object readJsonFileSync(String path) {
-    Object data;
+  static HashMap readJsonFileSync(String path) {
+    HashMap data = new HashMap();
 
     File file = new File(path);
     String fileContent = '';
@@ -26,28 +26,28 @@ class PinUtility {
     if (file.existsSync()) {
       fileContent = new File(path).readAsStringSync();
     } else {
-      PinLogger.instance.warning('[PinUtility] readJsonFileSync: Target file does not exist or is not file: {$path}');
+      PinLogger.instance.warning('[PinUtility] readJsonFileSync: Target file does not exist or is not file: ${path}');
     }
 
     if (fileContent.isNotEmpty) {
       try {
         data = JSON.decode(fileContent);
       } catch (e) {
-        PinLogger.instance.shout('[PinUtility] readJsonFileSync: Error in JSON parsing file: {$path}, content: {$fileContent}');
+        PinLogger.instance.shout('[PinUtility] readJsonFileSync: Error in JSON parsing file: ${path}, content: ${fileContent}');
       }
     }
 
     return data;
   }
 
-  static Future<File> writeJsonFile(String path, Object json) {
+  static Future<File> writeJsonFile(String path, Map json) {
     final completer = new Completer();
     String jsonStr = '';
 
     try {
       jsonStr = JSON.encode(json);
     } catch (e) {
-      PinLogger.instance.shout('[PinUtility] writeJsonFile: Error in encoding JSON obj: {$json}');
+      PinLogger.instance.shout('[PinUtility] writeJsonFile: Error in encoding JSON obj: ${json}');
       completer.complete(null);
     }
 
@@ -114,7 +114,46 @@ class PinUtility {
     }
 
     return result;
+  }
 
+  static bool checkDirExistsSync(String path, {bool createWhenNotExist: false}) {
+    bool result = false;
+    Directory dir = new Directory(path);
+
+    if (!dir.existsSync() && createWhenNotExist) {
+      try {
+        dir.createSync(recursive: true);
+        result = true;
+      } catch(e) {
+        PinLogger.instance.warning('[PinUtility] checkDirExistsSync: Create dir failed: ${path} with Exception: ${e}');
+      }
+    } else {
+      result = true;
+    }
+
+    return result;
+  }
+
+  static Future<bool> createDir(String path) {
+    final completer = new Completer();
+    Directory dir = new Directory(path);
+
+    dir.exists().then((bool exists) {
+      if (exists) {
+        completer.complete(true);
+      } else {
+        dir.create(recursive: true).then(() {
+          completer.complete(true);
+        }).catchError((e) {
+          handleError(e);
+          completer.complete(false);
+        });
+      }
+    });
+  }
+
+  static void handleError(e) {
+    PinLogger.instance.shout('Error: ${e}');
   }
 
 }
