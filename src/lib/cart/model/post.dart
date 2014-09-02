@@ -1,6 +1,6 @@
 part of cart;
 
-class CartPost extends Object with Serializable {
+class CartPost extends Object with PinSerializable {
 
   String uuid;
   String driveId; // id of google drive
@@ -50,7 +50,7 @@ class CartPost extends Object with Serializable {
 
 }
 
-class CartPostList extends Object with Serializable {
+class CartPostList extends Object with PinSerializable {
 
   HashMap<String, CartPost> list = {};
 
