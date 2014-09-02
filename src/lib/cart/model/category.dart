@@ -14,16 +14,16 @@ class CartCategory extends Object with PinSerializable {
       uuid = json['uuid'];
     }
     if (json.containsKey('driveId')) {
-      uuid = json['driveId'];
+      driveId = json['driveId'];
     }
     if (json.containsKey('title')) {
-      uuid = json['title'];
+      title = json['title'];
     }
     if (json.containsKey('created')) {
-      uuid = json['created'];
+      created = json['created'];
     }
     if (json.containsKey('updated')) {
-      uuid = json['updated'];
+      updated = json['updated'];
     }
   }
 

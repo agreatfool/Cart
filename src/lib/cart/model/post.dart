@@ -20,31 +20,31 @@ class CartPost extends Object with PinSerializable {
       uuid = json['uuid'];
     }
     if (json.containsKey('driveId')) {
-      uuid = json['driveId'];
+      driveId = json['driveId'];
     }
     if (json.containsKey('title')) {
-      uuid = json['title'];
+      title = json['title'];
     }
     if (json.containsKey('link')) {
-      uuid = json['link'];
+      link = json['link'];
     }
     if (json.containsKey('created')) {
-      uuid = json['created'];
+      created = json['created'];
     }
     if (json.containsKey('updated')) {
-      uuid = json['updated'];
+      updated = json['updated'];
     }
     if (json.containsKey('author')) {
-      uuid = json['author'];
+      author = json['author'];
     }
     if (json.containsKey('category')) {
-      uuid = json['category'];
+      category = json['category'];
     }
     if (json.containsKey('tags')) {
-      uuid = json['tags'];
+      tags = json['tags'];
     }
     if (json.containsKey('attachments')) {
-      uuid = json['attachments'];
+      attachments = json['attachments'];
     }
   }
 
