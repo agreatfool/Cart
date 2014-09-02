@@ -1,6 +1,6 @@
 part of pin;
 
-abstract class Serializable {
+abstract class PinSerializable {
 
   Map toJson() {
     return PinUtility.serialize(this);
