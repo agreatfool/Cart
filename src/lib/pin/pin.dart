@@ -20,6 +20,6 @@ part 'google/oauth.dart';
 part 'google/drive.dart';
 
 part 'utility/logger.dart';
-part 'utility/serializer.dart';
+part 'utility/serializable.dart';
 part 'utility/time.dart';
 part 'utility/utility.dart';
