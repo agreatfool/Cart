@@ -65,7 +65,10 @@ class PinUtility {
   static dynamic serialize(dynamic obj) {
     var result;
 
-    if (obj is List) {
+    if (obj is int || obj is String || obj is double || obj == null) {
+      // input is simple value
+      result = obj;
+    } else if (obj is List) {
       // input is List
       result = new List();
       obj.forEach((element) {
@@ -77,9 +80,6 @@ class PinUtility {
       obj.forEach((key, val) {
         result[key] = serialize(val);
       });
-    } else if (obj is int || obj is String || obj is double || obj == null) {
-      // input is simple value
-      result = obj;
     } else {
       // input is Class
       result = new Map();
