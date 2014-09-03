@@ -13,7 +13,7 @@ class CartPost extends Object with PinSerializable {
 
   String category; // uuid
   List<String> tags; // [uuid, uuid, ...]
-  List<CartPostAttachment> attachments;
+  HashMap<String, CartPostAttachment> attachments;
 
   CartPost.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
@@ -45,6 +45,28 @@ class CartPost extends Object with PinSerializable {
     }
     if (json.containsKey('attachments')) {
       attachments = json['attachments'];
+    }
+  }
+
+  void addTagUuid(String uuid) {
+    tags.add(uuid);
+  }
+
+  void addAttachment(CartPostAttachment attachment) {
+    attachments.addAll({ attachment.uuid: attachment });
+  }
+
+  void updateAttachment(CartPostAttachment attachment) {
+    if (attachments.containsKey(attachment.uuid)) {
+      attachments[attachment.uuid] = attachment;
+    }
+  }
+
+  CartPostAttachment findAttachment(String uuid) {
+    if (attachments.containsKey(uuid)) {
+      return attachments[uuid];
+    } else {
+      return null;
     }
   }
 

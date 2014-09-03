@@ -15,11 +15,19 @@ class CartModel {
   CartPostList posts;
   CartCategoryList categories;
   CartTagList tags;
+  PinGoogleDrive _drive;
 
   CartModel() {
+    // init data classes
     posts = new CartPostList();
     categories = new CartCategoryList(posts);
     tags = new CartTagList(posts);
+
+    // check web public dir
+    PinUtility.checkDirExistsSync(CartConst.WWW_POST_PATH, createWhenNotExist: true);
+
+    // handle
+    _drive = CartSystem.instance.drive;
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -69,24 +77,19 @@ class CartModel {
       'created': timestamp,
       'updated': timestamp,
       'author': CartSystem.instance.session['name'],
-      'category': header.category,
-      'tags': header.tags,
-      'attachments': header.attachments
+      'category': header.category
     };
     var post = new CartPost.fromJson(data);
 
-    // database: post
-    posts.add(post);
-
     // database: category
-    var category = categories.find(post.category);
+    CartCategory category = categories.find(post.category);
     category.updated = timestamp;
     categories.update(category);
     categories.addPostIntoCategory(post.category, uuid);
 
-    // database: tag
+    // database: tags
     header.tags.forEach((HashMap<String, String> tagData) {
-      var tag = tags.find(tagData['uuid']);
+      CartTag tag = tags.find(tagData['uuid']);
       if (tag != null) {
         tag.updated = timestamp;
         tags.update(tag);
@@ -99,10 +102,28 @@ class CartModel {
         });
         tags.add(tag);
       }
+      post.addTagUuid(tagData['uuid']);
       tags.addPostIntoTag(tagData['uuid'], uuid);
     });
 
-    // TODO save db files & sync with google drive
+    // database: attachments
+    header.attachments.forEach((HashMap<String, String> attachmentData) {
+      var attachment = new CartPostAttachment.fromJson({
+          "uuid": attachmentData['uuid'],
+          "title": attachmentData['name'],
+          "created": timestamp,
+          "updated": timestamp
+      });
+      post.addAttachment(attachment);
+    });
+
+    // database: post
+    posts.add(post);
+
+    // create html file & save db files & sync with google drive
+    _uploadPost(post, markdown, html).then((_) {
+      completer.complete();
+    });
 
     return completer.future;
   }
@@ -119,7 +140,7 @@ class CartModel {
         'tags': header.tags,
         'attachments': header.attachments
     };
-    var post = posts.find(uuid);
+    CartPost post = posts.find(uuid);
     post.title = header.title;
     post.link = header.link;
     post.updated = timestamp;
@@ -168,7 +189,7 @@ class CartModel {
   Future addTag(String uuid, String name) {
     final completer = new Completer();
 
-    var timestamp = PinTime.getTime();
+    int timestamp = PinTime.getTime();
 
     var tag = new CartTag.fromJson({
         "title": name,
@@ -200,5 +221,67 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTIL: GOOGLE DRIVER
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  Future _uploadPost(CartPost post, String markdown, String html) {
+    final completer = new Completer();
+    String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, post.uuid);
+    String mdPath = LibPath.join(postBaseDir, post.uuid + '.md');
+    String htmlPath = LibPath.join(postBaseDir, post.uuid + '.html');
+
+    PinUtility.createDir(postBaseDir)
+    .then((bool created) {
+      // check & create local base dir first
+      if (!created) {
+        PinLogger.instance.shout('[CartModel] _uploadPost: Create dir failed: ${postBaseDir}');
+        completer.complete(false);
+      }
+      return new Future.value(created);
+    })
+    .then((_) {
+      // update or create local markdown & html files
+      return Future.wait([
+          (new File(mdPath)).writeAsString(markdown),
+          (new File(htmlPath)).writeAsString(html)
+      ]);
+    })
+    .then((_) {
+      // upload markdown file
+      final completer = new Completer();
+      CartCategory category = categories.find(post.category);
+      _drive.uploadFile(mdPath, driveId: post.driveId, parents: [category.driveId]).then((GoogleDriveClient.File file) {
+        post.driveId = file.id; // new post has no drive id, update it
+        posts.update(post);
+        completer.complete(file);
+      });
+      return completer.future;
+    })
+    .then((_) {
+      // upload attachments
+      final completer = new Completer();
+      var uploadList = new List<Future>(); // store upload futures
+      var attachmentList = new List<CartPostAttachment>(); // store upload attachments
+      post.attachments.forEach((String attachmentUuid, CartPostAttachment attachment) {
+        if (attachment.driveId == null) {
+          // need to be uploaded
+          attachmentList.add(attachment);
+          uploadList.add(_drive.uploadFile(LibPath.join(postBaseDir, attachment.title), parents: [post.category]));
+        }
+      });
+      Future.wait(uploadList).then((List<GoogleDriveClient.File> responses) {
+        attachmentList.forEach((CartPostAttachment attachment) {
+          GoogleDriveClient.File file = responses.removeAt(0);
+          attachment.driveId = file.id;
+          post.updateAttachment(attachment);
+        });
+        completer.complete();
+      });
+      return completer.future;
+    })
+    .then((_) {
+      // finish process
+      completer.complete(true);
+    });
+
+    return completer.future;
+  }
 
 }
