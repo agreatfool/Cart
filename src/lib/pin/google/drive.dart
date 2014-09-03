@@ -70,10 +70,14 @@ class PinGoogleDrive {
     final completer = new Completer();
     File file = new File(path);
 
-    Future upload(String path, String driveId) {
+    Future<GoogleDriveClient.File> upload(String path, String driveId) {
+      final completer = new Completer();
       file.readAsBytes().then((List<int> content) {
-        return drive_update(driveId, content);
+        drive_update(driveId, content).then((GoogleDriveClient.File updatedFile) {
+          completer.complete(updatedFile);
+        });
       });
+      return completer.future;
     }
 
     file.exists().then((bool exists) {
