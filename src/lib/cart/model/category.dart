@@ -67,6 +67,19 @@ class CartCategoryList extends Object with PinSerializable {
     }
   }
 
+  void addNewCategory(String uuid, String name, {int timestamp: null}) {
+    if (timestamp == null) {
+      timestamp = PinTime.getTime();
+    }
+    var category = new CartCategoryList.fromJson({
+        "uuid": uuid,
+        "title": name,
+        "created": timestamp,
+        "updated": timestamp
+    });
+    add(category);
+  }
+
   void add(CartCategory category) {
     if (!list.containsKey(category.uuid)) {
       update(category);
