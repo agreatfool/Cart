@@ -30,6 +30,7 @@ main() {
   CartSystem.instance.setting = setting;
   CartSystem.instance.oauth = oauth;
   CartSystem.instance.credentials = credentials;
+  CartSystem.instance.googleDriveRootFolder = credentials['googleDriveRootFolder']; // google drive id string
 
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
