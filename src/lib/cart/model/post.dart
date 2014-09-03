@@ -170,7 +170,7 @@ class CartPost extends Object with PinSerializable {
     attsToBeRemoved.forEach((String attUuid) {
       CartPostAttachment attachment = findAttachment(attUuid);
       removeAttachment(attachment);
-      CartSystem.instance.drive.drive_delete(attachment.driveId); // delete it without listening to the results
+      CartSystem.instance.drive.drive_trash(attachment.driveId); // delete it without listening to the results
     });
     attsToBeAdded.forEach((String attUuid) {
       String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, uuid);
