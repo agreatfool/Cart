@@ -215,6 +215,29 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTIL: GOOGLE DRIVER
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  Future<String> searchBlogRootFolder() {
+    final completer = new Completer();
+    String rootFolderName = CartSystem.instance.setting['googleDriveRootFolder'];
+
+    _drive.drive_list(maxResults: 1, queries: [
+        PinGoogleDrive.qIsRootFiles,
+        PinGoogleDrive.qIsFolder,
+        "title = '${rootFolderName}'"
+    ]).then((GoogleDriveClient.FileList files) {
+      if (files.items.length <= 0) {
+        // no necessary root blog folder, create it
+        _drive.drive_folder(rootFolderName).then((GoogleDriveClient.File file) {
+          completer.complete(file.id);
+        });
+      } else {
+        GoogleDriveClient.File file = files.items.removeAt(0); // shall only contains 1 item
+        completer.complete(file.id);
+      }
+    });
+
+    return completer.future;
+  }
+
   Future _uploadPost(CartPost post, String markdown, String html) {
     final completer = new Completer();
     String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, post.uuid);

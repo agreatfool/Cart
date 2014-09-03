@@ -1,3 +1,4 @@
 {
-    "port": 18090
+    "port": 18090,
+    "googleDriveRootFolder": "CART_BLOG"
 }
