@@ -52,6 +52,23 @@ class CartPost extends Object with PinSerializable {
     tags.add(uuid);
   }
 
+  void removeTagUuid(String uuid) {
+    tags.remove(uuid);
+  }
+
+  void addNewAttachment(String uuid, String name, {int timestamp: null}) {
+    if (timestamp == null) {
+      timestamp = PinTime.getTime();
+    }
+    var attachment = new CartPostAttachment.fromJson({
+        "uuid": uuid,
+        "title": name,
+        "created": timestamp,
+        "updated": timestamp
+    });
+    addAttachment(attachment);
+  }
+
   void addAttachment(CartPostAttachment attachment) {
     attachments.addAll({ attachment.uuid: attachment });
   }
@@ -60,6 +77,10 @@ class CartPost extends Object with PinSerializable {
     if (attachments.containsKey(attachment.uuid)) {
       attachments[attachment.uuid] = attachment;
     }
+  }
+
+  void removeAttachment(CartPostAttachment attachment) {
+    attachments.remove(attachment.uuid);
   }
 
   CartPostAttachment findAttachment(String uuid) {
