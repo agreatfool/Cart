@@ -68,7 +68,9 @@ class CartCategoryList extends Object with PinSerializable {
   }
 
   void add(CartCategory category) {
-    update(category);
+    if (!list.containsKey(category.uuid)) {
+      update(category);
+    }
   }
 
   void update(CartCategory category) {

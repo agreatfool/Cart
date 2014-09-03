@@ -72,7 +72,9 @@ class CartTagList extends Object with PinSerializable {
   }
 
   void add(CartTag tag) {
-    update(tag);
+    if (!list.containsKey(tag.uuid)) {
+      update(tag);
+    }
   }
 
   void update(CartTag tag) {
