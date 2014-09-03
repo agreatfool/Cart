@@ -41,6 +41,7 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   CartModel.instance;
 
+  // FIXME DUMMY?
   bool isSignedIn(HttpContext ctx) {
     bool signedIn = true;
 
