@@ -16,6 +16,8 @@ class CartSystem {
   HashMap credentials = {};
   HashMap session = {};
 
+  String googleDriveRootFolder; // google drive id string
+
   PinGoogleDrive drive;
 
 }
