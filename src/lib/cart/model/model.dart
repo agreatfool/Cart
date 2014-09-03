@@ -171,13 +171,43 @@ class CartModel {
 
     categories.addNewCategory(uuid, name, timestamp: timestamp);
 
-    // TODO database files & drive
+    _drive.drive_folder(name, parents: [CartSystem.instance.googleDriveRootFolder])
+    .then((GoogleDriveClient.File file) {
+      return new Future.value(file.id);
+    })
+    .then((String driveId) {
+      CartCategory category = categories.find(uuid);
+      category.driveId = driveId;
+      categories.update(category);
+      return _saveDatabase();
+    })
+    .then((_) {
+      completer.complete(_);
+    });
 
     return completer.future;
   }
 
   Future removeCategory(String uuid) {
+    final completer = new Completer();
 
+    CartCategory category = categories.find(uuid);
+    if (category == null) {
+      PinLogger.instance.warning('[CartModel] removeCategory: Category not found, uuid: ${uuid}');
+      completer.complete(null);
+    }
+
+    categories.remove(uuid, posts, tags);
+
+    _drive.drive_trash(category.driveId)
+    .then((GoogleDriveClient.File file) {
+      return _saveDatabase();
+    })
+    .then((_) {
+      completer.complete(_);
+    });
+
+    return completer.future;
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

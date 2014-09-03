@@ -91,20 +91,22 @@ class CartCategoryList extends Object with PinSerializable {
     list[category.uuid] = category;
   }
 
-  List<String> remove(String uuid, CartPostList postList) {
+  void remove(String uuid, CartPostList postList, CartTagList tagList) {
     if (!list.containsKey(uuid)) {
       return;
     }
-    var postRemoveUuidList = getPostListViaCategory(uuid);
+    List<String> postRemoveUuidList = getPostListViaCategory(uuid);
     // category
     list.remove(uuid);
     categoryPosts.remove(uuid);
     // posts
     postRemoveUuidList.forEach((String postUuid) {
-      postList.remove(postList);
+      CartPost post = postList.find(postUuid);
+      post.tags.forEach((String tagUuid) {
+        tagList.removePostFromTag(tagUuid, postUuid);
+      });
+      postList.remove(postUuid);
     });
-
-    return postRemoveUuidList;
   }
 
   List<String> getPostListViaCategory(String uuid) {
