@@ -129,6 +129,28 @@ class PinGoogleDrive {
     return _drive.files.untrash(fileId);
   }
 
+  Future<GoogleDriveClient.File> drive_folder(String name, {List<String> parents: null}) {
+    final completer = new Completer();
+
+    var metadata = {
+        "title": name,
+        "mimeType": "application/vnd.google-apps.folder"
+    };
+    if (parents != null) {
+      List<HashMap> metaParents = [];
+      parents.forEach((String parentId) {
+        metaParents.add({'id': parentId});
+      });
+      metadata['parents'] = metaParents;
+    }
+    GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
+    _drive.files.insert(file).then((GoogleDriveClient.File newFile){
+      completer.complete(newFile);
+    });
+
+    return completer.future;
+  }
+
   Future<GoogleDriveClient.File> drive_insert(String path, {List<String> parents: null}) {
     final completer = new Completer();
 
@@ -139,7 +161,7 @@ class PinGoogleDrive {
         completer.complete(null);
       } else {
         var metadata = {
-            'title': LibPath.basename(originalFile.path),
+            "title": LibPath.basename(originalFile.path),
         };
         if (parents != null) {
           List<HashMap> metaParents = [];
