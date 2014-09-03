@@ -37,25 +37,26 @@ class CartCategoryList extends Object with PinSerializable {
   CartCategoryList(CartPostList postList) {
     HashMap categories = PinUtility.readJsonFileSync(CartConst.DB_CATEGORIES_PATH);
 
-    if (categories.length > 0) {
-      categories.forEach((String uuid, HashMap json) {
-        var category = new CartCategory.fromJson(json);
-        list.addAll({uuid: category});
+    if (categories.length <= 0) {
+      return;
+    }
+    categories.forEach((String uuid, HashMap json) {
+      var category = new CartCategory.fromJson(json);
+      list.addAll({uuid: category});
+    });
+
+    if (postList.list.length > 0) {
+      postList.postsOrderByCreated.forEach((postUuid) {
+        CartPost post = postList.find(postUuid);
+        String categoryUuid = post.category;
+
+        // category
+        if (!categoryPosts.containsKey(categoryUuid)) {
+          categoryPosts[categoryUuid] = [postUuid];
+        } else {
+          categoryPosts[categoryUuid].add(postUuid);
+        }
       });
-
-      if (postList.list.length > 0) {
-        postList.postsOrderByCreated.forEach((postUuid) {
-          CartPost post = postList.find(postUuid);
-          String categoryUuid = post.category;
-
-          // category
-          if (!categoryPosts.containsKey(categoryUuid)) {
-            categoryPosts[categoryUuid] = [postUuid];
-          } else {
-            categoryPosts[categoryUuid].add(postUuid);
-          }
-        });
-      }
     }
   }
 

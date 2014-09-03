@@ -37,29 +37,30 @@ class CartTagList extends Object with PinSerializable {
   CartTagList(CartPostList postList) {
     HashMap tags = PinUtility.readJsonFileSync(CartConst.DB_TAGS_PATH);
 
-    if (tags.length > 0) {
-      tags.forEach((String uuid, HashMap json) {
-        var tag = new CartTag.fromJson(json);
-        list.addAll({uuid: tag});
+    if (tags.length <= 0) {
+      return;
+    }
+    tags.forEach((String uuid, HashMap json) {
+      var tag = new CartTag.fromJson(json);
+      list.addAll({uuid: tag});
+    });
+
+    if (postList.list.length > 0) {
+      postList.postsOrderByCreated.forEach((postUuid) {
+        CartPost post = postList.find(postUuid);
+        List<String> tagsUuid = post.tags;
+
+        // tag
+        if (tagsUuid.length > 0) {
+          tagsUuid.forEach((tagUuid) {
+            if (!tagPosts.containsKey(tagUuid)) {
+              tagPosts[tagUuid] = [postUuid];
+            } else {
+              tagPosts[tagUuid].add(postUuid);
+            }
+          });
+        }
       });
-
-      if (postList.list.length > 0) {
-        postList.postsOrderByCreated.forEach((postUuid) {
-          CartPost post = postList.find(postUuid);
-          List<String> tagsUuid = post.tags;
-
-          // tag
-          if (tagsUuid.length > 0) {
-            tagsUuid.forEach((tagUuid) {
-              if (!tagPosts.containsKey(tagUuid)) {
-                tagPosts[tagUuid] = [postUuid];
-              } else {
-                tagPosts[tagUuid].add(postUuid);
-              }
-            });
-          }
-        });
-      }
     }
   }
 
