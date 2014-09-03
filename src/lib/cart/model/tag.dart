@@ -95,7 +95,7 @@ class CartTagList extends Object with PinSerializable {
   }
 
   void addPostIntoTag(String uuid, String postUuid) {
-    if (tagPosts.containsKey(uuid)) {
+    if (tagPosts.containsKey(uuid) && !tagPosts[uuid].contains(postUuid)) {
       tagPosts[uuid].add(postUuid);
     }
   }

@@ -103,7 +103,7 @@ class CartCategoryList extends Object with PinSerializable {
   }
 
   void addPostIntoCategory(String uuid, String postUuid) {
-    if (categoryPosts.containsKey(uuid)) {
+    if (categoryPosts.containsKey(uuid) && !categoryPosts[uuid].contains(postUuid)) {
       categoryPosts[uuid].add(postUuid);
     }
   }
