@@ -91,6 +91,106 @@ class CartPost extends Object with PinSerializable {
     }
   }
 
+  void checkPostTagsChange(CartTagList tagList, CartPostHeader header) {
+    var tagsToBeRemoved = new List<String>();
+    var tagsToBeAdded = new List<String>();
+
+    tags.forEach((String tagUuid) {
+      var tagFound = false;
+      header.tags.forEach((HashMap<String, String> tagData) {
+        if (tagData['uuid'] == tagUuid) {
+          tagFound = true;
+        }
+      });
+      if (!tagFound) {
+        // old tag no longer exists in the post
+        tagsToBeRemoved.add(tagUuid);
+      }
+    });
+    header.tags.forEach((HashMap<String, String> tagData) {
+      var tagFound = false;
+      tags.forEach((String tagUuid) {
+        if (tagData['uuid'] == tagUuid) {
+          tagFound = true;
+        }
+      });
+      if (!tagFound) {
+        // new tag does not exist in the post
+        tagsToBeAdded.add(tagData['uuid']);
+      }
+    });
+    tagsToBeRemoved.forEach((String tagUuid) {
+      removeTagUuid(tagUuid);
+      tagList.removePostFromTag(tagUuid, uuid);
+    });
+    tagsToBeAdded.forEach((String tagUuid) {
+      addTagUuid(tagUuid);
+      tagList.addPostIntoTag(tagUuid, uuid);
+      List tagDatas = header.tags.where((HashMap<String, String> tagData) {
+        if (tagData['uuid'] == tagUuid) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      String tagName = tagDatas.removeAt(0)['name'];
+      tagList.addNewTag(tagUuid, tagName);
+    });
+  }
+
+  HashMap<String, Future> checkPostAttachmentsChange(CartPostHeader header) {
+    var attsToBeRemoved = new List<String>();
+    var attsToBeAdded = new List<String>();
+    var processFutures = new HashMap<String, Future>();
+
+    attachments.forEach((String attUuid, CartPostAttachment attachment) {
+      var attFound = false;
+      header.attachments.forEach((HashMap<String, String> attData) {
+        if (attData['uuid'] == attUuid) {
+          attFound = true;
+        }
+      });
+      if (!attFound) {
+        // old attachment no longer exists in the post
+        attsToBeRemoved.add(attUuid);
+      }
+    });
+    header.attachments.forEach((HashMap<String, String> attData) {
+      var attFound = false;
+      attachments.forEach((String attUuid, CartPostAttachment attachment) {
+        if (attData['uuid'] == attUuid) {
+          attFound = true;
+        }
+      });
+      if (!attFound) {
+        // new attachment does not exist in the post
+        attsToBeAdded.add(attData['uuid']);
+      }
+    });
+    attsToBeRemoved.forEach((String attUuid) {
+      CartPostAttachment attachment = findAttachment(attUuid);
+      removeAttachment(attachment);
+      CartSystem.instance.drive.drive_delete(attachment.driveId); // delete it without listening to the results
+    });
+    attsToBeAdded.forEach((String attUuid) {
+      String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, uuid);
+      List attDatas = header.attachments.where((HashMap<String, String> attData) {
+        if (attData['uuid'] == attUuid) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      String attName = attDatas.removeAt(0)['name'];
+      addNewAttachment(attUuid, attName);
+      processFutures.addAll({
+          attUuid: CartSystem.instance.drive.uploadFile(LibPath.join(postBaseDir, attName), parents: [category])
+      });
+    });
+
+    return processFutures;
+  }
+
 }
 
 class CartPostList extends Object with PinSerializable {

@@ -94,13 +94,7 @@ class CartModel {
         tag.updated = timestamp;
         tags.update(tag);
       } else {
-        tag = new CartTag.fromJson({
-            "uuid": tagData['uuid'],
-            "title": tagData['name'],
-            "created": timestamp,
-            "updated": timestamp
-        });
-        tags.add(tag);
+        tags.addNewTag(tagData['uuid'], tagData['name'], timestamp: timestamp);
       }
       post.addTagUuid(tagData['uuid']);
       tags.addPostIntoTag(tagData['uuid'], uuid);
@@ -108,21 +102,17 @@ class CartModel {
 
     // database: attachments
     header.attachments.forEach((HashMap<String, String> attachmentData) {
-      var attachment = new CartPostAttachment.fromJson({
-          "uuid": attachmentData['uuid'],
-          "title": attachmentData['name'],
-          "created": timestamp,
-          "updated": timestamp
-      });
-      post.addAttachment(attachment);
+      post.addNewAttachment(attachmentData['uuid'], attachmentData['name'], timestamp: timestamp);
     });
 
     // database: post
     posts.add(post);
 
-    // create html file & save db files & sync with google drive
-    _uploadPost(post, markdown, html).then((_) {
-      completer.complete();
+    // save db files & create html file & sync with google drive
+    _saveDatabase().then((_) {
+      _uploadPost(post, markdown, html).then((_) {
+        completer.complete();
+      });
     });
 
     return completer.future;
@@ -132,14 +122,6 @@ class CartModel {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
-    HashMap data = {
-        'title': header.title,
-        'link': header.link,
-        'updated': timestamp,
-        'category': header.category,
-        'tags': header.tags,
-        'attachments': header.attachments
-    };
     CartPost post = posts.find(uuid);
     post.title = header.title;
     post.link = header.link;
@@ -151,10 +133,30 @@ class CartModel {
       post.category = header.category;
     }
 
-    // TODO
     // tags check
+    post.checkPostTagsChange(tags, header);
 
     // attachments check
+    HashMap<String, Future> processList = post.checkPostAttachmentsChange(header);
+    List<String> addedAttList = processList.keys;
+    List<Future> addedAttFutures = processList.values;
+
+    Future.wait(addedAttFutures)
+    .then((List<GoogleDriveClient.File> responses) {
+      // upload all attachments
+      addedAttList.forEach((String attUuid) {
+        CartPostAttachment attachment = post.findAttachment(attUuid);
+        GoogleDriveClient.File file = responses.removeAt(0);
+        attachment.driveId = file.id;
+        post.updateAttachment(attachment);
+      });
+      return new Future.value(true);
+    })
+    .then((_) {
+      _saveDatabase().then((_) {
+        completer.complete();
+      });
+    });
 
     return completer.future;
   }
@@ -167,12 +169,7 @@ class CartModel {
 
     var timestamp = PinTime.getTime();
 
-    var category = new CartCategoryList.fromJson({
-        "title": name,
-        "created": timestamp,
-        "updated": timestamp
-    });
-    categories.add(category);
+    categories.addNewCategory(uuid, name, timestamp: timestamp);
 
     // TODO database files & drive
 
@@ -191,14 +188,11 @@ class CartModel {
 
     int timestamp = PinTime.getTime();
 
-    var tag = new CartTag.fromJson({
-        "title": name,
-        "created": timestamp,
-        "updated": timestamp
-    });
-    tags.add(tag);
+    tags.addNewTag(uuid, name, timestamp: timestamp);
 
-    // TODO database files
+    tags.dump().then((_) {
+      completer.complete(_);
+    });
 
     return completer.future;
   }
