@@ -153,9 +153,10 @@ class CartModel {
       return new Future.value(true);
     })
     .then((_) {
-      _saveDatabase().then((_) {
-        completer.complete();
-      });
+      return _saveDatabase();
+    })
+    .then((_) {
+      completer.complete();
     });
 
     return completer.future;
