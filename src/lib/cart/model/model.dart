@@ -229,7 +229,15 @@ class CartModel {
   }
 
   Future removeTag(String uuid) {
+    final completer = new Completer();
 
+    tags.remove(uuid, posts);
+
+    tags.dump().then((_) {
+      completer.complete(_);
+    });
+
+    return completer.future;
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
