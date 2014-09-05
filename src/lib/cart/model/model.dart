@@ -64,7 +64,13 @@ class CartModel {
   }
 
   Future removePost(String uuid) {
+    final completer = new Completer();
 
+    // validate uuid
+    if (!PinUtility.isUuid(uuid)) {
+      PinLogger.instance.shout('[CartModel] removePost: uuid format invalid: ${uuid}}');
+      completer.complete(null);
+    }
   }
 
   Future _addPost(String uuid, String markdown, CartPostHeader header, String html) {
@@ -168,6 +174,12 @@ class CartModel {
   Future addCategory(String uuid, String name) {
     final completer = new Completer();
 
+    // validate uuid
+    if (!PinUtility.isUuid(uuid)) {
+      PinLogger.instance.shout('[CartModel] addCategory: uuid format invalid: ${uuid}}');
+      completer.complete(null);
+    }
+
     var timestamp = PinTime.getTime();
 
     categories.addNewCategory(uuid, name, timestamp: timestamp);
@@ -191,6 +203,12 @@ class CartModel {
 
   Future removeCategory(String uuid) {
     final completer = new Completer();
+
+    // validate uuid
+    if (!PinUtility.isUuid(uuid)) {
+      PinLogger.instance.shout('[CartModel] removeCategory: uuid format invalid: ${uuid}}');
+      completer.complete(null);
+    }
 
     CartCategory category = categories.find(uuid);
     if (category == null) {
@@ -217,6 +235,12 @@ class CartModel {
   Future addTag(String uuid, String name) {
     final completer = new Completer();
 
+    // validate uuid
+    if (!PinUtility.isUuid(uuid)) {
+      PinLogger.instance.shout('[CartModel] addTag: uuid format invalid: ${uuid}}');
+      completer.complete(null);
+    }
+
     int timestamp = PinTime.getTime();
 
     tags.addNewTag(uuid, name, timestamp: timestamp);
@@ -230,6 +254,12 @@ class CartModel {
 
   Future removeTag(String uuid) {
     final completer = new Completer();
+
+    // validate uuid
+    if (!PinUtility.isUuid(uuid)) {
+      PinLogger.instance.shout('[CartModel] removeTag: uuid format invalid: ${uuid}}');
+      completer.complete(null);
+    }
 
     tags.remove(uuid, posts);
 
