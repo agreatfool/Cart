@@ -320,7 +320,7 @@ class CartPostHeader {
 
   bool valid = false;
 
-  CartPostHeader.fromMarkdown(String markdown) {
+  static CartPostHeader parseFromMarkdown(String markdown) {
     // TODO
   }
 

@@ -43,7 +43,7 @@ class CartModel {
     }
 
     // parse headers
-    var header = new CartPostHeader.fromMarkdown(markdown);
+    CartPostHeader header = CartPostHeader.parseFromMarkdown(markdown);
     if (header == null) {
       completer.complete(null); // invalid headers format
     }
