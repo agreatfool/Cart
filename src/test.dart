@@ -7,19 +7,28 @@ import 'package:stack_trace/stack_trace.dart' as LibTrace;
 main() {
 
   Future doItLater() {
-    throw 'error!!!';
+    var e = new Exception('error!!!');
+    throw e;
     return new Future.value(123);
+//    return new Future.value(e);
   }
 
   void handleError(e) {
     print(e);
   }
 
-  doItLater().then((_) {
-    print('normal end');
-  }, onError: (e) {
-    print('Error: ');
+  try {
+    doItLater().then((_) {
+      print('normal end');
+    }, onError: (e) {
+      print('Error: ');
+      print(e);
+    }).catchError(handleError);
+  } catch (e) {
+    print('catch outside');
     print(e);
-  }).catchError(handleError);
+  }
+
+
 
 }
