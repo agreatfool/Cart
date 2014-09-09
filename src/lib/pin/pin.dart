@@ -14,6 +14,7 @@ import 'package:http/http.dart' as LibHttp;
 import 'package:logging/logging.dart';
 import 'package:oauth2/oauth2.dart' as OAuth2;
 import 'package:path/path.dart' as LibPath;
+import 'package:stack_trace/stack_trace.dart' as LibTrace;
 
 part 'google/oauth.dart';
 part 'google/drive.dart';

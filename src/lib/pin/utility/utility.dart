@@ -152,8 +152,15 @@ class PinUtility {
     });
   }
 
-  static void handleError(e) {
+  static void handleError(Exception e, StackTrace trace, {String message: null}) {
+    if (message != null) {
+      PinLogger.instance.shout(message);
+    }
     PinLogger.instance.shout('Error: ${e}');
+    if (trace != null) {
+      String traceStr = LibTrace.Trace.format(trace);
+      PinLogger.instance.shout('StackTrace: ${traceStr}');
+    }
   }
 
 }
