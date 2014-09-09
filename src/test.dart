@@ -17,6 +17,9 @@ main() {
 
   doItLater().then((_) {
     print('normal end');
+  }, onError: (e) {
+    print('Error: ');
+    print(e);
   }).catchError(handleError);
 
 }
