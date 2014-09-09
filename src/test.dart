@@ -7,35 +7,30 @@ import 'package:stack_trace/stack_trace.dart' as LibTrace;
 main() {
 
   Future doItLater() {
-    var e = new Exception('error!!!');
-//    throw e;
-//    return new Future.value(123);
-//    return new Future.value(e);
-    return new Future.error(e);
+    return new Future.value('doItLater');
   }
 
-  void handleError(e) {
-    print(e);
-  }
-
-  try {
-    doItLater().then((_) {
-      throw 'another error!!!';
-      print('normal end');
+  Future doItWithError() {
+    try {
+      throw new Exception('error!!!');
+    } catch (e, trace) {
+      return new Future.error(e, trace);
     }
-//    , onError: (e) {
-//      print('Error: ');
-//      print(e);
-//    }
-    ).catchError(handleError);
-//    (new File('/Users/jonathan/Downloads/dummy.txt')).readAsString()
-//    .then((_) {
-//      print('done');
-//    })
-//    .catchError(handleError);
-  } catch (e) {
-    print('catch outside');
-    print(e);
+    return new Future.value('doItWithError');
   }
+
+  void handleError(e, trace) {
+    print(e);
+    if (trace != null) {
+      print(trace);
+    }
+  }
+
+    doItLater().then((_) {
+      print(_);
+      return doItWithError().then((_) {
+        print('finally done: ${_}');
+      });
+    }).catchError(handleError);
 
 }
