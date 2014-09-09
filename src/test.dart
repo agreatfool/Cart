@@ -27,6 +27,7 @@ main() {
   }
 
     doItLater().then((_) {
+      throw new Exception('error in then!');
       print(_);
       return doItWithError().then((_) {
         print('finally done: ${_}');
