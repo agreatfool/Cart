@@ -24,7 +24,11 @@ class PinUtility {
     String fileContent = '';
 
     if (file.existsSync()) {
-      fileContent = new File(path).readAsStringSync();
+      try {
+        fileContent = new File(path).readAsStringSync();
+      } catch (e, trace) {
+        handleError(e, trace);
+      }
     } else {
       PinLogger.instance.warning('[PinUtility] readJsonFileSync: Target file does not exist or is not file: ${path}');
     }
@@ -32,8 +36,8 @@ class PinUtility {
     if (fileContent.isNotEmpty) {
       try {
         data = JSON.decode(fileContent);
-      } catch (e) {
-        PinLogger.instance.shout('[PinUtility] readJsonFileSync: Error in JSON parsing file: ${path}, content: ${fileContent}');
+      } catch (e, trace) {
+        handleError(e, trace, message: '[PinUtility] readJsonFileSync: Error in JSON parsing file: ${path}, content: ${fileContent}');
       }
     }
 
@@ -46,13 +50,18 @@ class PinUtility {
 
     try {
       jsonStr = JSON.encode(json);
-    } catch (e) {
-      PinLogger.instance.shout('[PinUtility] writeJsonFile: Error in encoding JSON obj: ${json}');
-      completer.complete(null);
+    } catch (e, trace) {
+      handleError(e, trace, message: '[PinUtility] writeJsonFile: Error in encoding JSON obj: ${json}');
+      completer.completeError(e, trace);
     }
 
-    (new File(path)).writeAsString(jsonStr).then((_) {
+    (new File(path)).writeAsString(jsonStr)
+    .then((_) {
       completer.complete(_);
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
     });
 
     return completer.future;
@@ -124,8 +133,8 @@ class PinUtility {
       try {
         dir.createSync(recursive: true);
         result = true;
-      } catch(e) {
-        PinLogger.instance.warning('[PinUtility] checkDirExistsSync: Create dir failed: ${path} with Exception: ${e}');
+      } catch(e, trace) {
+        handleError(e, trace, message: '[PinUtility] checkDirExistsSync: Create dir failed: ${path} with Exception: ${e}');
       }
     } else {
       result = true;
@@ -142,14 +151,18 @@ class PinUtility {
       if (exists) {
         completer.complete(true);
       } else {
-        dir.create(recursive: true).then(() {
+        dir.create(recursive: true)
+        .then(() {
           completer.complete(true);
-        }).catchError((e) {
-          handleError(e);
-          completer.complete(false);
+        })
+        .catchError((e, trace) {
+          handleError(e, trace);
+          completer.completeError(e, trace);
         });
       }
     });
+
+    return completer.future;
   }
 
   static void handleError(Exception e, StackTrace trace, {String message: null}) {
