@@ -127,9 +127,16 @@ class PinGoogleOAuth {
           if (authResponse.containsKey('id_token')) {
             credentials['idToken'] = authResponse['id_token'];
           }
-          var decoder = new JsonEncoder.withIndent('    ');
-          new File(_credentialsFilePath).writeAsString(decoder.convert(credentials)).then((_) {
+          final decoder = new JsonEncoder.withIndent('    ');
+          (new File(_credentialsFilePath))
+          .writeAsString(decoder.convert(credentials))
+          .then((_) {
             res['result'] = true;
+            completer.complete(res);
+          })
+          .catchError((e, trace) {
+            PinUtility.handleError(e, trace);
+            res['message'] = 'Error: Failed to write credentials into file';
             completer.complete(res);
           });
         } else if (authResponse.containsKey('error')) {
