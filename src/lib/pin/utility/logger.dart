@@ -27,7 +27,14 @@ class PinLogger {
   }
 
   static void _fileLogRecord(LogRecord r) {
-    _file.writeAsString(_formatLogRecord(r) + '\n', mode: FileMode.APPEND);
+    _file
+    .writeAsString(_formatLogRecord(r) + '\n', mode: FileMode.APPEND)
+    .catchError((e, trace) {
+      print('Error: ${e}');
+      if (trace != null) {
+        print('StackTrace: ${trace}');
+      }
+    });
   }
 
   static String _formatLogRecord(LogRecord r) {
