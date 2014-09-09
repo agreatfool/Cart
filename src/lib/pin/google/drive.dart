@@ -34,12 +34,20 @@ class PinGoogleDrive {
       } else {
         // still has next page, retrieve it
         drive_list(maxResults: maxResults, pageToken: response.nextPageToken, queries: queries)
-          .then((nextResponse) => listPageOfFiles(nextResponse));
+        .then((nextResponse) => listPageOfFiles(nextResponse))
+        .catchError((e, trace) {
+          PinUtility.handleError(e, trace);
+          completer.completeError(e, trace);
+        });
       }
     }
 
     drive_list(maxResults: maxResults, queries: queries)
-      .then((GoogleDriveClient.FileList response) => listPageOfFiles(response));
+    .then((GoogleDriveClient.FileList response) => listPageOfFiles(response))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
 
     return completer.future;
   }
@@ -47,20 +55,26 @@ class PinGoogleDrive {
   Future<bool> downloadFile(String fileId, String dir) {
     final completer = new Completer();
 
-    drive_get(fileId).then((GoogleDriveClient.File file) {
+    String fileTitle = '';
+
+    drive_get(fileId)
+    .then((GoogleDriveClient.File file) {
       if (file.mimeType == mimeFolder
         || file.downloadUrl == null) {
-        completer.complete(false);
+        throw new Exception('[PinGoogleDrive] downloadFile: Wrong file type: ${file.mimeType}');
       } else {
-        LibHttp.get(
+        fileTitle = file.title;
+        return LibHttp.get(
             file.downloadUrl,
             headers: {'Authorization': 'Bearer ' + _oauth.oauth2.credentials.accessToken}
-        ).then((response) {
-          new File(LibPath.join(dir, file.title))
-            .writeAsBytes(response.bodyBytes)
-            .then((_) => completer.complete(true));
-        });
+        );
       }
+    })
+    .then((response) => (new File(LibPath.join(dir, fileTitle))).writeAsBytes(response.bodyBytes))
+    .then((_) => completer.complete(true))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
     });
 
     return completer.future;
@@ -70,35 +84,32 @@ class PinGoogleDrive {
     final completer = new Completer();
     File file = new File(path);
 
-    Future<GoogleDriveClient.File> upload(String path, String driveId) {
-      final completer = new Completer();
-      file.readAsBytes().then((List<int> content) {
-        drive_update(driveId, content).then((GoogleDriveClient.File updatedFile) {
-          completer.complete(updatedFile);
-        });
-      });
-      return completer.future;
-    }
-
-    file.exists().then((bool exists) {
+    file.exists()
+    .then((bool exists) {
       if (!exists) {
-        PinLogger.instance.warning('[PinGoogleDrive] uploadFile: Target file does not exist: ${path}');
-        completer.complete(null);
+        throw new Exception('[PinGoogleDrive] uploadFile: Target file does not exist: ${path}');
       } else {
         if (driveId == null) {
           // need to create file first, then update it
-          drive_insert(path, parents: parents).then((GoogleDriveClient.File newFile) {
-            upload(path, newFile.id).then((GoogleDriveClient.File uploadedFile) {
-              completer.complete(uploadedFile);
-            });
-          });
+          return drive_insert(path, parents: parents);
         } else {
           // file already exists, update it
-          upload(path, driveId).then((GoogleDriveClient.File uploadedFile) {
-            completer.complete(uploadedFile);
-          });
+          return new Future.value(null);
         }
       }
+    })
+    .then((GoogleDriveClient.File newFile) {
+      if (newFile != null) {
+        // means last step is insert new file
+        driveId = newFile.id;
+      }
+      return file.readAsBytes();
+    })
+    .then((List<int> content) => drive_update(driveId, content))
+    .then((GoogleDriveClient.File uploadedFile) => completer.complete(uploadedFile))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
     });
 
     return completer.future;
@@ -143,9 +154,15 @@ class PinGoogleDrive {
       });
       metadata['parents'] = metaParents;
     }
+
     GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
-    _drive.files.insert(file).then((GoogleDriveClient.File newFile){
+    _drive.files.insert(file)
+    .then((GoogleDriveClient.File newFile){
       completer.complete(newFile);
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
     });
 
     return completer.future;
@@ -157,8 +174,12 @@ class PinGoogleDrive {
     File originalFile = new File(path);
     originalFile.exists().then((bool exists) {
       if (!exists) {
-        PinLogger.instance.warning('[PinGoogleDrive] drive_insert: Target file does not exist: ${path}');
-        completer.complete(null);
+        try {
+          throw new Exception('[PinGoogleDrive] drive_insert: Target file does not exist: ${path}');
+        } catch (e, trace) {
+          PinUtility.handleError(e, trace);
+          completer.completeError(e, trace);
+        }
       } else {
         var metadata = {
             "title": LibPath.basename(originalFile.path),
@@ -172,8 +193,13 @@ class PinGoogleDrive {
         }
 
         GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
-        _drive.files.insert(file).then((GoogleDriveClient.File newFile){
+        _drive.files.insert(file)
+        .then((GoogleDriveClient.File newFile){
           completer.complete(newFile);
+        })
+        .catchError((e, trace) {
+          PinUtility.handleError(e, trace);
+          completer.completeError(e, trace);
         });
       }
     });
@@ -190,14 +216,24 @@ class PinGoogleDrive {
     } else if (content is List<int>) {
       base64content = CryptoUtils.bytesToBase64(content);
     } else {
-      PinLogger.instance.warning('[PinGoogleDrive] drive_update: Invalid content type: ' + PinUtility.getVariableTypeName(content));
-      completer.complete(null);
+      try {
+        throw new Exception('[PinGoogleDrive] drive_update: Invalid content type: ' + PinUtility.getVariableTypeName(content));
+      } catch (e, trace) {
+        PinUtility.handleError(e, trace);
+        completer.completeError(e, trace);
+      }
     }
 
-    _drive.files.get(fileId).then((GoogleDriveClient.File file) {
-      _drive.files.update(file, fileId, content: base64content).then((GoogleDriveClient.File updatedFile) {
-        completer.complete(updatedFile);
-      });
+    _drive.files.get(fileId)
+    .then((GoogleDriveClient.File file) {
+      return _drive.files.update(file, fileId, content: base64content);
+    })
+    .then((GoogleDriveClient.File updatedFile) {
+      completer.complete(updatedFile);
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
     });
 
     return completer.future;
