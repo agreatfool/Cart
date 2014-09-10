@@ -75,6 +75,8 @@ class CartModel {
       PinLogger.instance.shout('[CartModel] removePost: uuid format invalid: ${uuid}}');
       completer.complete(null);
     }
+
+    // TODO
   }
 
   Future _addPost(String uuid, String markdown, CartPostHeader header, String html) {
