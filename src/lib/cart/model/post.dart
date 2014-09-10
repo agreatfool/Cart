@@ -233,7 +233,7 @@ class CartPostList extends Object with PinSerializable {
     _pushPostToEndOfUpdatedList(post);
   }
 
-  void remove(String uuid) {
+  void remove(String uuid, CartCategoryList categoryList, CartTagList tagList) { // FIXME
     if (!list.containsKey(uuid)) {
       return;
     }
