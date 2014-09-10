@@ -22,9 +22,6 @@ main() {
   HashMap setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
   HashMap oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
   HashMap credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
-  if (credentials == null) {
-    credentials = {}; // credentials file is possible not created yet here
-  }
 
   // FIXME session?
   CartSystem.instance.setting = setting;
