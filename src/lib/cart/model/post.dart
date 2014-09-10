@@ -237,9 +237,23 @@ class CartPostList extends Object with PinSerializable {
     if (!list.containsKey(uuid)) {
       return;
     }
+    CartPost post = find(uuid);
+
+    // posts
     list.remove(uuid);
     postsOrderByCreated.remove(uuid);
     postsOrderByUpdated.remove(uuid);
+
+    // category
+    categoryList.removePostFromCategory(post.category, post.uuid);
+
+    // tags
+    if (post.tags.length <= 0) {
+      return;
+    }
+    post.tags.forEach((String tagUuid) {
+      tagList.removePostFromTag(tagUuid, post.uuid);
+    });
   }
 
   void _pushPostToEndOfCreatedList(CartPost post) {

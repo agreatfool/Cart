@@ -73,14 +73,41 @@ class CartModel {
 
   Future removePost(String uuid) {
     final completer = new Completer();
+    CartPost post = null;
 
-    // validate uuid
-    if (!PinUtility.isUuid(uuid)) {
-      PinLogger.instance.shout('[CartModel] removePost: uuid format invalid: ${uuid}}');
-      completer.complete(null);
+    try {
+      // validate uuid
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartModel] removePost: uuid format invalid: ${uuid}}');
+      }
+      // validate post
+      post = posts.find(uuid);
+      if (post == null) {
+        throw new Exception('[CartModel] removePost: post not found: ${uuid}');
+      }
+    } catch (e, trace) {
+      PinUtility.handleError(e, trace);
+      return new Future.error(e, trace);
     }
 
-    // TODO
+    posts.remove(uuid, categories, tags);
+
+    var driveIoList = new List<Future>();
+    driveIoList.add(_drive.drive_trash(post.driveId));
+    if (post.attachments.length > 0) {
+      post.attachments.forEach((String attUuid, CartPostAttachment attachment) {
+        driveIoList.add(_drive.drive_trash(attachment.driveId));
+      });
+    }
+
+    Future.wait(driveIoList)
+    .then((_) => completer.complete(true))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
   }
 
   Future _addPost(String uuid, String markdown, CartPostHeader header, String html) {
