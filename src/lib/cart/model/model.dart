@@ -34,33 +34,37 @@ class CartModel {
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Future savePost(String uuid, String markdown) {
-    final completer = new Completer();
+    Future saveResult = null;
+    CartPostHeader header = null;
+    String html = '';
 
-    // validate uuid
-    if (!PinUtility.isUuid(uuid)) {
-      PinLogger.instance.shout('[CartModel] savePost: uuid format invalid: ${uuid}}');
-      completer.complete(null);
+    try {
+      // validate uuid
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartModel] savePost: uuid format invalid: ${uuid}}');
+      }
+      // parse headers
+      header = CartPostHeader.parseFromMarkdown(markdown);
+      if (header == null) {
+        throw new Exception('[CartModel] savePost: invalid headers format: ${uuid}}');
+      }
+      // parse markdown to html & escape html
+      html = (const HtmlEscape()).convert(markdownToHtml(markdown));
+
+      // execute
+      if (posts.find(uuid) != null) {
+        // update
+        saveResult = _updatePost(uuid, markdown, header, html);
+      } else {
+        // add
+        saveResult = _addPost(uuid, markdown, header, html);
+      }
+    } catch (e, trace) {
+      PinUtility.handleError(e, trace);
+      saveResult = new Future.error(e, trace);
     }
 
-    // parse headers
-    CartPostHeader header = CartPostHeader.parseFromMarkdown(markdown);
-    if (header == null) {
-      completer.complete(null); // invalid headers format
-    }
-
-    // parse markdown to html & escape html
-    String html = markdownToHtml(markdown);
-    html = (const HtmlEscape()).convert(html);
-
-    if (posts.find(uuid) != null) {
-      // update
-      _updatePost(uuid, markdown, header, html).then((_) => completer.complete(_));
-    } else {
-      // add
-      _addPost(uuid, markdown, header, html).then((_) => completer.complete(_));
-    }
-
-    return completer.future;
+    return saveResult;
   }
 
   Future removePost(String uuid) {
