@@ -8,7 +8,6 @@ class CartCategory extends Object with PinSerializable {
   String title;
   int created;
   int updated;
-  bool isPublic = false;
 
   CartCategory.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
@@ -25,9 +24,6 @@ class CartCategory extends Object with PinSerializable {
     }
     if (json.containsKey('updated')) {
       updated = json['updated'];
-    }
-    if (json.containsKey('isPublic')) {
-      isPublic = json['isPublic'];
     }
   }
 
