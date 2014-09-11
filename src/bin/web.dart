@@ -40,25 +40,13 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   CartModel.instance;
 
-  // FIXME DUMMY?
-  bool isSignedIn(HttpContext ctx) {
-    bool signedIn = true;
-
-    if (!signedIn) {
-      ctx.res.redirect(new Uri(path: '/'));
-    }
-
-    return signedIn;
-  }
-
-  var app = new Express();
-
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* ROUTERS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  app.get('/api/index', (HttpContext ctx) => CartAction.handleIndex(ctx));
-  app.get('/api/oauth2', (HttpContext ctx)  => CartAction.handleOauth2(ctx));
-  app.get('/api/oauth2next', (HttpContext ctx) => CartAction.handleOauth2(ctx));
+  var app = new Express();
+  app.get('/api/index',       (HttpContext ctx) => CartAction.handleIndex(ctx));
+  app.get('/api/oauth2',      (HttpContext ctx) => CartAction.handleOauth2(ctx));
+  app.get('/api/oauth2next',  (HttpContext ctx) => CartAction.handleOauth2(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER

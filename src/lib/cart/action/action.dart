@@ -3,11 +3,29 @@ part of cart;
 class CartAction {
 
   static handleIndex(HttpContext ctx) {
-    ctx.sendJson({
-        "posts": CartModel.instance.posts.toJson(),
-        "categories": CartModel.instance.categories.toJson(),
-        "tags": CartModel.instance.tags.toJson()
-    });
+    HashMap<String, Map> indexData = {
+        "posts": {},
+        "categories": {},
+        "tags": {}
+    };
+
+    Map postList = CartModel.instance.posts.toJson()['list'];
+    Map categoryList = CartModel.instance.categories.toJson()['list'];
+    Map tagList = CartModel.instance.tags.toJson()['list'];
+
+    if (_isMaster(ctx)) {
+      indexData['posts'] = postList;
+    } else {
+      postList.forEach((String postUuid, Map post) {
+        if (post['isPublic']) {
+          indexData['posts'].addAll({postUuid: post});
+        }
+      });
+    }
+    indexData['categories'] = categoryList;
+    indexData['tags'] = tagList;
+
+    ctx.sendJson(indexData);
     ctx.end();
   }
 
@@ -27,6 +45,16 @@ class CartAction {
       PinUtility.handleError(e, trace);
       ctx.res.redirect(Uri.parse('/error'));
     });
+  }
+
+  static bool _isMaster(HttpContext ctx) {
+    bool isMaster = false;
+    String tokenKey = CartConst.SESSION_TOKEN_KEY;
+    if (ctx.req.session.containsKey(tokenKey)
+    && ctx.req.session[tokenKey] == CartSystem.instance.session[tokenKey]) {
+      isMaster = true;
+    }
+    return isMaster;
   }
 
 }

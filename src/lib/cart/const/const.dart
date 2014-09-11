@@ -15,4 +15,7 @@ class CartConst {
   static const String WWW_POST_PUB_PATH = 'web/public/post';
   static const String WWW_POST_DATA_PATH = 'web/post';
 
+  // KEY
+  static const String SESSION_TOKEN_KEY = 'CART-TOKEN';
+
 }
