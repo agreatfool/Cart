@@ -94,15 +94,21 @@ class CartModel {
 
     posts.remove(uuid, categories, tags);
 
-    var driveIoList = new List<Future>();
-    driveIoList.add(_drive.drive_trash(post.driveId));
+    String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, post.uuid);
+    var ioList = new List<Future>();
+    // post
+    ioList.add((new File(LibPath.join(postBaseDir, post.uuid + '.md'))).delete());
+    ioList.add((new File(LibPath.join(postBaseDir, post.uuid + '.html'))).delete());
+    ioList.add(_drive.drive_trash(post.driveId));
+    // attachments
     if (post.attachments.length > 0) {
       post.attachments.forEach((String attUuid, CartPostAttachment attachment) {
-        driveIoList.add(_drive.drive_trash(attachment.driveId));
+        ioList.add((new File(LibPath.join(postBaseDir, attachment.title))).delete());
+        ioList.add(_drive.drive_trash(attachment.driveId));
       });
     }
 
-    Future.wait(driveIoList)
+    Future.wait(ioList)
     .then((_) => completer.complete(true))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
