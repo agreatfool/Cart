@@ -107,6 +107,20 @@ class PinUtility {
     return result;
   }
 
+  static dynamic getObjVariableValue(dynamic obj, String variableName) {
+    var value = null;
+
+    try {
+      InstanceMirror fieldMirror = reflect(obj).getField(new Symbol(variableName));
+      value = fieldMirror.reflectee;
+    } catch (e, trace) {
+      PinUtility.handleError(e, trace);
+      throw e;
+    }
+
+    return value;
+  }
+
   static String getVariableTypeName(dynamic obj) {
     String result;
 
