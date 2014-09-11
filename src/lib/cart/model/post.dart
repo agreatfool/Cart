@@ -279,12 +279,15 @@ class CartPostList extends Object with PinSerializable {
   }
 
   int _sortPostByProperty(String propertyName, String uuidA, String uuidB) {
-    HashMap postA = list[uuidA];
-    HashMap postB = list[uuidB];
+    CartPost postA = list[uuidA];
+    CartPost postB = list[uuidB];
 
-    if (postA[propertyName] == postB[propertyName]) {
+    var valueA = PinUtility.getObjVariableValue(postA, propertyName);
+    var valueB = PinUtility.getObjVariableValue(postB, propertyName);
+
+    if (valueA == valueB) {
       return 0;
-    } else if (postA[propertyName] > postB[propertyName]) {
+    } else if (valueA > valueB) {
       return -1; // sort: DESC
     } else {
       return 1;
