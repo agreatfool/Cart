@@ -20,6 +20,7 @@ require('angular');
 require('angular-route');
 require('angular-animate');
 require('angular-route-segment');
+require('angular-cookies');
 require('angular-ui-calendar');
 require('ng-file-upload');
 require('./../bower/ng-file-upload/angular-file-upload-shim.js'); // also include it's shim
@@ -41,7 +42,7 @@ var serviceSources = require('./service/services.js');
 //- APP
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var app = angular.module('Cart', [
-    'ngRoute', 'ngAnimate',
+    'ngRoute', 'ngAnimate', 'ngCookies',
     'route-segment', 'view-segment',
     'ui.calendar',
     'Cart.Controllers', 'Cart.Services'
@@ -75,7 +76,7 @@ controllers.controller('CartMasterCtrl', ['$scope', ctrlSources.CartMasterCtrl])
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var services = angular.module('Cart.Services', []);
 
-services.factory('CartAccessCtrlService', ['$http', '$q', serviceSources.CartAccessCtrlService]);
+services.factory('CartAccessCtrlService', ['$http', '$q', '$cookies', serviceSources.CartAccessCtrlService]);
 services.factory('CartDataService', ['$http', '$q', serviceSources.CartDataService]);
 services.factory('CartFixFooterService', [function() {
     return { 'fixFooter': fixFooter };

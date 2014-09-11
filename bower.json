@@ -39,6 +39,7 @@
     "font-awesome": "~4.1.0",
     "node-uuid": "~1.4.1",
     "ng-file-upload": "~1.6.5",
-    "marked": "~0.3.2"
+    "marked": "~0.3.2",
+    "angular-cookies": "~1.2.24"
   }
 }
