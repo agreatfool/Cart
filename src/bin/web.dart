@@ -55,18 +55,29 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* ROUTERS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  app.get('/oauth2', (HttpContext ctx) {
-    ctx.res.redirect(Uri.parse(pinGoogleOAuth.getOAuthUrl()));
+  app.get('/api/index', (HttpContext ctx) {
+    ctx.sendJson({
+        "posts": CartModel.instance.posts.toJson(),
+        "categories": CartModel.instance.categories.toJson(),
+        "tags": CartModel.instance.tags.toJson()
+    });
   });
 
-  app.get('/oauth2next', (HttpContext ctx) {
-    pinGoogleOAuth.processOAuthNext(ctx.params).then((HashMap done) {
+  app.get('/api/oauth2', (HttpContext ctx) {
+    ctx.sendText(pinGoogleOAuth.getOAuthUrl());
+  });
+
+  app.get('/api/oauth2next', (HttpContext ctx) {
+    pinGoogleOAuth.processOAuthNext(ctx.params)
+    .then((HashMap done) {
       if (done['result']) {
         credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
-        ctx.sendHtml('<h1>OAuth done!</h1>');
-      } else {
-        ctx.sendJson(done);
       }
+      ctx.res.redirect(Uri.parse('/oauth2'));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.res.redirect(Uri.parse('/error'));
     });
   });
 
