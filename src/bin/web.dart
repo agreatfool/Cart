@@ -56,17 +56,9 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* ROUTERS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  app.get('/api/index', (HttpContext ctx) {
-    CartAction.handleIndex(ctx);
-  });
-
-  app.get('/api/oauth2', (HttpContext ctx) {
-    CartAction.handleOauth2(ctx);
-  });
-
-  app.get('/api/oauth2next', (HttpContext ctx) {
-    CartAction.handleOauth2(ctx);
-  });
+  app.get('/api/index', (HttpContext ctx) => CartAction.handleIndex(ctx));
+  app.get('/api/oauth2', (HttpContext ctx)  => CartAction.handleOauth2(ctx));
+  app.get('/api/oauth2next', (HttpContext ctx) => CartAction.handleOauth2(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER
