@@ -13,7 +13,7 @@ class CartAction {
     Map categoryList = CartModel.instance.categories.toJson()['list'];
     Map tagList = CartModel.instance.tags.toJson()['list'];
 
-    if (_isMaster(ctx)) {
+    if (isMaster(ctx)) {
       indexData['posts'] = postList;
     } else {
       postList.forEach((String postUuid, Map post) {
@@ -47,7 +47,10 @@ class CartAction {
     });
   }
 
-  static bool _isMaster(HttpContext ctx) {
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* UTILITIES
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  static bool isMaster(HttpContext ctx) {
     bool isMaster = false;
     String tokenKey = CartConst.SESSION_TOKEN_KEY;
     if (ctx.req.session.containsKey(tokenKey)
