@@ -30,6 +30,8 @@ class CartModel {
     _drive = CartSystem.instance.drive;
   }
 
+  // FIXME posts list shall have some privilege control, some posts shall only be available to logged in user
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
