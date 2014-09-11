@@ -10,6 +10,7 @@ class CartPost extends Object with PinSerializable {
   int created;
   int updated;
   String author;
+  bool isPublic = false;
 
   String category; // uuid
   List<String> tags; // [uuid, uuid, ...]
@@ -37,6 +38,9 @@ class CartPost extends Object with PinSerializable {
     if (json.containsKey('author')) {
       author = json['author'];
     }
+    if (json.containsKey('isPublic')) {
+      isPublic = json['isPublic'];
+    }
     if (json.containsKey('category')) {
       category = json['category'];
     }
@@ -49,6 +53,9 @@ class CartPost extends Object with PinSerializable {
   }
 
   void addTagUuid(String uuid) {
+    if (tags.contains(uuid)) {
+      return;
+    }
     tags.add(uuid);
   }
 
@@ -57,6 +64,9 @@ class CartPost extends Object with PinSerializable {
   }
 
   void addNewAttachment(String uuid, String name, {int timestamp: null}) {
+    if (attachments.containsKey(uuid)) {
+      return;
+    }
     if (timestamp == null) {
       timestamp = PinTime.getTime();
     }
@@ -70,13 +80,17 @@ class CartPost extends Object with PinSerializable {
   }
 
   void addAttachment(CartPostAttachment attachment) {
+    if (attachments.containsKey(uuid)) {
+      return;
+    }
     attachments.addAll({ attachment.uuid: attachment });
   }
 
   void updateAttachment(CartPostAttachment attachment) {
-    if (attachments.containsKey(attachment.uuid)) {
-      attachments[attachment.uuid] = attachment;
+    if (!attachments.containsKey(attachment.uuid)) {
+      return;
     }
+    attachments[attachment.uuid] = attachment;
   }
 
   void removeAttachment(CartPostAttachment attachment) {
@@ -95,6 +109,7 @@ class CartPost extends Object with PinSerializable {
     var tagsToBeRemoved = new List<String>();
     var tagsToBeAdded = new List<String>();
 
+    // filter
     tags.forEach((String tagUuid) {
       var tagFound = false;
       header.tags.forEach((HashMap<String, String> tagData) {
@@ -119,15 +134,15 @@ class CartPost extends Object with PinSerializable {
         tagsToBeAdded.add(tagData['uuid']);
       }
     });
+
+    // action
     tagsToBeRemoved.forEach((String tagUuid) {
       removeTagUuid(tagUuid);
-      tagList.removePostFromTag(tagUuid, uuid);
     });
     tagsToBeAdded.forEach((String tagUuid) {
       addTagUuid(tagUuid);
-      tagList.addPostIntoTag(tagUuid, uuid);
       List tagDatas = header.tags.where((HashMap<String, String> tagData) {
-        if (tagData['uuid'] == tagUuid) {
+        if (tagData['uuid'] == tagUuid) { // find tagData of the tag added with tagUuid
           return true;
         } else {
           return false;
@@ -143,6 +158,7 @@ class CartPost extends Object with PinSerializable {
     var attsToBeAdded = new List<String>();
     var processFutures = new HashMap<String, Future>();
 
+    // filter
     attachments.forEach((String attUuid, CartPostAttachment attachment) {
       var attFound = false;
       header.attachments.forEach((HashMap<String, String> attData) {
@@ -167,6 +183,8 @@ class CartPost extends Object with PinSerializable {
         attsToBeAdded.add(attData['uuid']);
       }
     });
+
+    // action
     attsToBeRemoved.forEach((String attUuid) {
       CartPostAttachment attachment = findAttachment(attUuid);
       removeAttachment(attachment);
@@ -175,7 +193,7 @@ class CartPost extends Object with PinSerializable {
     });
     attsToBeAdded.forEach((String attUuid) {
       List attDatas = header.attachments.where((HashMap<String, String> attData) {
-        if (attData['uuid'] == attUuid) {
+        if (attData['uuid'] == attUuid) { // find attData of the attachment added with attUuid
           return true;
         } else {
           return false;
@@ -197,21 +215,16 @@ class CartPostList extends Object with PinSerializable {
 
   HashMap<String, CartPost> list = {};
 
-  List<String> postsOrderByCreated = []; // [uuid, ...]
-  List<String> postsOrderByUpdated = []; // [uuid, ...]
-
   CartPostList() {
     HashMap posts = PinUtility.readJsonFileSync(CartConst.DB_POSTS_PATH);
 
-    if (posts.length > 0) {
-      posts.forEach((String uuid, HashMap json) {
-        var post = new CartPost.fromJson(json);
-        list.addAll({uuid: post});
-      });
-
-      postsOrderByCreated = posts.keys.toList()..sort(_sortPostByCreated);
-      postsOrderByUpdated = posts.keys.toList()..sort(_sortPostByUpdated);
+    if (posts.length <= 0) {
+      return;
     }
+    posts.forEach((String uuid, HashMap json) {
+      var post = new CartPost.fromJson(json);
+      list.addAll({uuid: post});
+    });
   }
 
   CartPost find(String uuid) {
@@ -223,79 +236,36 @@ class CartPostList extends Object with PinSerializable {
   }
 
   void add(CartPost post) {
+    if (list.containsKey(post.uuid)) {
+      return;
+    }
     list[post.uuid] = post;
-    _pushPostToEndOfCreatedList(post);
-    _pushPostToEndOfUpdatedList(post);
   }
 
   void update(CartPost post) {
+    if (!list.containsKey(post.uuid)) {
+      return;
+    }
     list[post.uuid] = post;
-    _pushPostToEndOfUpdatedList(post);
   }
 
-  void remove(String uuid, CartCategoryList categoryList, CartTagList tagList) { // FIXME
-    if (!list.containsKey(uuid)) {
-      return;
-    }
-    CartPost post = find(uuid);
-
-    // posts
+  void remove(String uuid) {
     list.remove(uuid);
-    postsOrderByCreated.remove(uuid);
-    postsOrderByUpdated.remove(uuid);
+  }
 
-    // category
-    categoryList.removePostFromCategory(post.category, post.uuid);
-
-    // tags
-    if (post.tags.length <= 0) {
+  void removePostsViaCategory(String categoryUuid) {
+    if (list.length <= 0) {
       return;
     }
-    post.tags.forEach((String tagUuid) {
-      tagList.removePostFromTag(tagUuid, post.uuid);
+    list.forEach((String postUuid, CartPost post) {
+      if (post.category == categoryUuid) {
+        remove(postUuid);
+      }
     });
   }
 
-  void _pushPostToEndOfCreatedList(CartPost post) {
-    if (postsOrderByCreated.contains(post.uuid)) {
-      postsOrderByCreated.remove(post.uuid);
-    }
-    postsOrderByCreated.add(post.uuid);
-  }
-
-  void _pushPostToEndOfUpdatedList(CartPost post) {
-    if (postsOrderByUpdated.contains(post.uuid)) {
-      postsOrderByUpdated.remove(post.uuid);
-    }
-    postsOrderByUpdated.add(post.uuid);
-  }
-
-  int _sortPostByCreated(String uuidA, String uuidB) {
-    return _sortPostByProperty('created', uuidA, uuidB);
-  }
-
-  int _sortPostByUpdated(String uuidA, String uuidB) {
-    return _sortPostByProperty('updated', uuidA, uuidB);
-  }
-
-  int _sortPostByProperty(String propertyName, String uuidA, String uuidB) {
-    CartPost postA = list[uuidA];
-    CartPost postB = list[uuidB];
-
-    var valueA = PinUtility.getObjVariableValue(postA, propertyName);
-    var valueB = PinUtility.getObjVariableValue(postB, propertyName);
-
-    if (valueA == valueB) {
-      return 0;
-    } else if (valueA > valueB) {
-      return -1; // sort: DESC
-    } else {
-      return 1;
-    }
-  }
-
   Future<File> dump() {
-    return PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, toJson());
+    return PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, toJson()['list']);
   }
 
 }
@@ -335,10 +305,10 @@ class CartPostHeader {
   List<HashMap<String, String>> tags; // [{"uuid": uuid, "name": string}, ...]
   List<HashMap<String, String>> attachments; // [{"uuid": uuid, "name": string}, ...]
 
-  bool valid = false;
+  bool isPublic = false;
 
   static CartPostHeader parseFromMarkdown(String markdown) {
-    // TODO
+    // TODO return null, if format is invalid
   }
 
 }

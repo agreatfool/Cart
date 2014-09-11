@@ -8,6 +8,7 @@ class CartCategory extends Object with PinSerializable {
   String title;
   int created;
   int updated;
+  bool isPublic = false;
 
   CartCategory.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
@@ -25,6 +26,9 @@ class CartCategory extends Object with PinSerializable {
     if (json.containsKey('updated')) {
       updated = json['updated'];
     }
+    if (json.containsKey('isPublic')) {
+      isPublic = json['isPublic'];
+    }
   }
 
 }
@@ -32,7 +36,6 @@ class CartCategory extends Object with PinSerializable {
 class CartCategoryList extends Object with PinSerializable {
 
   HashMap<String, CartCategory> list = {};
-  HashMap<String, List<String>> categoryPosts = {}; // {categoryUuid: [postUuid, postUuid, ...], ...}
 
   CartCategoryList(CartPostList postList) {
     HashMap categories = PinUtility.readJsonFileSync(CartConst.DB_CATEGORIES_PATH);
@@ -44,20 +47,6 @@ class CartCategoryList extends Object with PinSerializable {
       var category = new CartCategory.fromJson(json);
       list.addAll({uuid: category});
     });
-
-    if (postList.list.length > 0) {
-      postList.postsOrderByCreated.forEach((postUuid) {
-        CartPost post = postList.find(postUuid);
-        String categoryUuid = post.category;
-
-        // category
-        if (!categoryPosts.containsKey(categoryUuid)) {
-          categoryPosts[categoryUuid] = [postUuid];
-        } else {
-          categoryPosts[categoryUuid].add(postUuid);
-        }
-      });
-    }
   }
 
   CartCategory find(String uuid) {
@@ -69,6 +58,9 @@ class CartCategoryList extends Object with PinSerializable {
   }
 
   void addNewCategory(String uuid, String name, {int timestamp: null}) {
+    if (list.containsKey(uuid)) {
+      return;
+    }
     if (timestamp == null) {
       timestamp = PinTime.getTime();
     }
@@ -82,56 +74,31 @@ class CartCategoryList extends Object with PinSerializable {
   }
 
   void add(CartCategory category) {
-    if (!list.containsKey(category.uuid)) {
-      update(category);
+    if (list.containsKey(category.uuid)) {
+      return;
     }
-  }
-
-  void update(CartCategory category) {
     list[category.uuid] = category;
   }
 
-  void remove(String uuid, CartPostList postList, CartTagList tagList) {
+  void update(CartCategory category) {
+    if (!list.containsKey(category.uuid)) {
+      return;
+    }
+    list[category.uuid] = category;
+  }
+
+  void remove(String uuid, CartPostList postList) {
     if (!list.containsKey(uuid)) {
       return;
     }
-    List<String> postRemoveUuidList = getPostListViaCategory(uuid);
     // category
     list.remove(uuid);
-    categoryPosts.remove(uuid);
     // posts
-    postRemoveUuidList.forEach((String postUuid) {
-      CartPost post = postList.find(postUuid);
-      post.tags.forEach((String tagUuid) {
-        tagList.removePostFromTag(tagUuid, postUuid);
-      });
-      postList.remove(postUuid);
-    });
-  }
-
-  List<String> getPostListViaCategory(String uuid) {
-    return categoryPosts[uuid];
-  }
-
-  void switchPostCategory(String fromCategoryUuid, String toCategoryUuid, String postUuid) {
-    removePostFromCategory(fromCategoryUuid, postUuid);
-    addPostIntoCategory(toCategoryUuid, postUuid);
-  }
-
-  void addPostIntoCategory(String uuid, String postUuid) {
-    if (categoryPosts.containsKey(uuid) && !categoryPosts[uuid].contains(postUuid)) {
-      categoryPosts[uuid].add(postUuid);
-    }
-  }
-
-  void removePostFromCategory(String uuid, String postUuid) {
-    if (categoryPosts.containsKey(uuid)) {
-      categoryPosts[uuid].remove(postUuid);
-    }
+    postList.removePostsViaCategory(uuid);
   }
 
   Future<File> dump() {
-    return PinUtility.writeJsonFile(CartConst.DB_CATEGORIES_PATH, toJson());
+    return PinUtility.writeJsonFile(CartConst.DB_CATEGORIES_PATH, toJson()['list']);
   }
 
 }

@@ -32,7 +32,6 @@ class CartTag extends Object with PinSerializable {
 class CartTagList extends Object with PinSerializable {
 
   HashMap<String, CartTag> list = {};
-  HashMap<String, List<String>> tagPosts = {}; // {tagUuid: [postUuid, postUuid, ...], ...}
 
   CartTagList(CartPostList postList) {
     HashMap tags = PinUtility.readJsonFileSync(CartConst.DB_TAGS_PATH);
@@ -44,24 +43,6 @@ class CartTagList extends Object with PinSerializable {
       var tag = new CartTag.fromJson(json);
       list.addAll({uuid: tag});
     });
-
-    if (postList.list.length > 0) {
-      postList.postsOrderByCreated.forEach((postUuid) {
-        CartPost post = postList.find(postUuid);
-        List<String> tagsUuid = post.tags;
-
-        // tag
-        if (tagsUuid.length > 0) {
-          tagsUuid.forEach((tagUuid) {
-            if (!tagPosts.containsKey(tagUuid)) {
-              tagPosts[tagUuid] = [postUuid];
-            } else {
-              tagPosts[tagUuid].add(postUuid);
-            }
-          });
-        }
-      });
-    }
   }
 
   CartTag find(String uuid) {
@@ -73,6 +54,9 @@ class CartTagList extends Object with PinSerializable {
   }
 
   void addNewTag(String uuid, String name, {int timestamp: null}) {
+    if (list.containsKey(uuid)) {
+      return;
+    }
     if (timestamp == null) {
       timestamp = PinTime.getTime();
     }
@@ -86,12 +70,16 @@ class CartTagList extends Object with PinSerializable {
   }
 
   void add(CartTag tag) {
-    if (!list.containsKey(tag.uuid)) {
-      update(tag);
+    if (list.containsKey(tag.uuid)) {
+      return;
     }
+    list[tag.uuid] = tag;
   }
 
   void update(CartTag tag) {
+    if (!list.containsKey(tag.uuid)) {
+      return;
+    }
     list[tag.uuid] = tag;
   }
 
@@ -101,29 +89,13 @@ class CartTagList extends Object with PinSerializable {
     }
     // tag
     list.remove(uuid);
-    tagPosts.remove(uuid);
     // posts
     postList.list.forEach((String postUuid, CartPost post) {
       post.tags.remove(uuid);
     });
   }
 
-  void addPostIntoTag(String uuid, String postUuid) {
-    if (tagPosts.containsKey(uuid) && !tagPosts[uuid].contains(postUuid)) {
-      tagPosts[uuid].add(postUuid);
-    }
-  }
-
-  void removePostFromTag(String uuid, String postUuid) {
-    if (tagPosts.containsKey(uuid)) {
-      tagPosts[uuid].remove(postUuid);
-    }
-  }
-
-  void updateTagsWhenAddPost(
-      List<HashMap<String, String>> tagsUuid,
-      {int timestamp: null, isAddPostAction: false, String postUuid: ''}
-  ) {
+  void updateTagsWhenAddPost(List<HashMap<String, String>> tagsUuid, {int timestamp: null}) {
     if (tagsUuid.length <= 0) {
       return;
     }
@@ -132,7 +104,7 @@ class CartTagList extends Object with PinSerializable {
     }
 
     tagsUuid.forEach((HashMap<String, String> tagData) {
-      var tag = find(tagData['uuid']);
+      CartTag tag = find(tagData['uuid']);
       if (tag != null) {
         tag.updated = timestamp;
         update(tag);
@@ -145,14 +117,11 @@ class CartTagList extends Object with PinSerializable {
         });
         add(tag);
       }
-      if (isAddPostAction) {
-        tagPosts[tag.uuid].add(postUuid);
-      }
     });
   }
 
   Future<File> dump() {
-    return PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, toJson());
+    return PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, toJson()['list']);
   }
 
 }

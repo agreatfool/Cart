@@ -93,7 +93,7 @@ class CartModel {
       return new Future.error(e, trace);
     }
 
-    posts.remove(uuid, categories, tags);
+    posts.remove(uuid);
 
     String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
     var ioList = new List<Future>();
@@ -137,7 +137,6 @@ class CartModel {
     CartCategory category = categories.find(post.category);
     category.updated = timestamp;
     categories.update(category);
-    categories.addPostIntoCategory(post.category, uuid);
 
     // database: tags
     header.tags.forEach((HashMap<String, String> tagData) {
@@ -149,7 +148,6 @@ class CartModel {
         tags.addNewTag(tagData['uuid'], tagData['name'], timestamp: timestamp);
       }
       post.addTagUuid(tagData['uuid']);
-      tags.addPostIntoTag(tagData['uuid'], uuid);
     });
 
     // database: attachments
@@ -183,13 +181,8 @@ class CartModel {
     CartPost post = posts.find(uuid);
     post.title = header.title;
     post.link = header.link;
+    post.category = header.category;
     post.updated = timestamp;
-
-    // category check
-    if (post.category != header.category) {
-      categories.switchPostCategory(post.category, header.category, uuid);
-      post.category = header.category;
-    }
 
     // tags check
     post.checkPostTagsChange(tags, header);
@@ -276,7 +269,7 @@ class CartModel {
       if (category == null) {
         throw new Exception('[CartModel] removeCategory: Category not found, uuid: ${uuid}');
       }
-      categories.remove(uuid, posts, tags);
+      categories.remove(uuid, posts);
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
       return new Future.error(e, trace);
@@ -382,8 +375,7 @@ class CartModel {
     ])
     .then((GoogleDriveClient.FileList files) {
       if (files.items.length <= 0) {
-        // no necessary root blog folder, create it
-        return _drive.drive_folder(rootFolderName);
+        return _drive.drive_folder(rootFolderName); // no necessary root blog folder, create it
       } else {
         return new Future.value(files.items.removeAt(0)); // shall only contains 1 item
       }
