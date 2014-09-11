@@ -25,12 +25,16 @@ class CartAction {
     indexData['categories'] = categoryList;
     indexData['tags'] = tagList;
 
-    ctx.sendJson(indexData);
+    ctx.sendJson(buildResponse(indexData));
     ctx.end();
   }
 
   static handleOauth2(HttpContext ctx) {
-    ctx.sendText(CartSystem.oauth2.getOAuthUrl());
+    if (CartSystem.instance.credentials.length > 0) {
+      ctx.sendJson(buildResponse('Already authorized!', valid: false));
+    } else {
+      ctx.sendJson(buildResponse(CartSystem.oauth2.getOAuthUrl()));
+    }
   }
 
   static handleOauth2Next(HttpContext ctx) {
@@ -58,6 +62,13 @@ class CartAction {
       isMaster = true;
     }
     return isMaster;
+  }
+
+  static Map buildResponse(Map message, {bool valid: true}) {
+    return {
+        "valid": valid,
+        "message": message
+    };
   }
 
 }
