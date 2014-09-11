@@ -11,7 +11,8 @@ class CartConst {
   static const String DB_CATEGORIES_PATH = 'database/categories.json';
   static const String DB_TAGS_PATH = 'database/tags.json';
 
-  // WWW PUBLIC
-  static const String WWW_POST_PATH = 'web/public/post';
+  // WWW
+  static const String WWW_POST_PUB_PATH = 'web/public/post';
+  static const String WWW_POST_DATA_PATH = 'web/post';
 
 }

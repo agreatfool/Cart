@@ -23,8 +23,9 @@ class CartModel {
     categories = new CartCategoryList(posts);
     tags = new CartTagList(posts);
 
-    // check web public dir
-    PinUtility.checkDirExistsSync(CartConst.WWW_POST_PATH, createWhenNotExist: true);
+    // check web public dir & post data dir
+    PinUtility.checkDirExistsSync(CartConst.WWW_POST_PUB_PATH, createWhenNotExist: true);
+    PinUtility.checkDirExistsSync(CartConst.WWW_POST_DATA_PATH, createWhenNotExist: true);
 
     // handle
     _drive = CartSystem.instance.drive;
@@ -94,16 +95,16 @@ class CartModel {
 
     posts.remove(uuid, categories, tags);
 
-    String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, post.uuid);
+    String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
     var ioList = new List<Future>();
     // post
-    ioList.add((new File(LibPath.join(postBaseDir, post.uuid + '.md'))).delete());
-    ioList.add((new File(LibPath.join(postBaseDir, post.uuid + '.html'))).delete());
+    ioList.add((new File(LibPath.join(postBaseDataDir, post.uuid + '.md'))).delete());
+    ioList.add((new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).delete());
     ioList.add(_drive.drive_trash(post.driveId));
     // attachments
     if (post.attachments.length > 0) {
       post.attachments.forEach((String attUuid, CartPostAttachment attachment) {
-        ioList.add((new File(LibPath.join(postBaseDir, attachment.title))).delete());
+        ioList.add((new File(LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid, attachment.title))).delete());
         ioList.add(_drive.drive_trash(attachment.driveId));
       });
     }
@@ -400,16 +401,22 @@ class CartModel {
 
   Future _uploadPost(CartPost post, String markdown, String html) {
     final completer = new Completer();
-    String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, post.uuid);
-    String mdPath = LibPath.join(postBaseDir, post.uuid + '.md');
-    String htmlPath = LibPath.join(postBaseDir, post.uuid + '.html');
+    String postBasePubDir = LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid);
+    String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
+    String mdPath = LibPath.join(postBaseDataDir, post.uuid + '.md');
     var attachmentUploadList = new List<Future>(); // store upload futures
     var attachmentList = new List<CartPostAttachment>(); // store upload attachments
 
-    PinUtility.createDir(postBaseDir) // check & create local base dir first
+    PinUtility.createDir(postBasePubDir) // check & create local base public dir
     .then((bool created) {
       if (!created) {
-        throw new Exception('[CartModel] _uploadPost: Create dir failed: ${postBaseDir}');
+        throw new Exception('[CartModel] _uploadPost: Create dir failed: ${postBasePubDir}');
+      }
+      return PinUtility.createDir(postBaseDataDir);
+    })
+    .then((bool created) { // check & create local base data dir
+      if (!created) {
+        throw new Exception('[CartModel] _uploadPost: Create dir failed: ${postBaseDataDir}');
       }
       return new Future.value(true);
     })
@@ -417,7 +424,7 @@ class CartModel {
       // update or create local markdown & html files
       return Future.wait([
           (new File(mdPath)).writeAsString(markdown),
-          (new File(htmlPath)).writeAsString(html)
+          (new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).writeAsString(html)
       ]);
     })
     .then((_) {
@@ -439,7 +446,7 @@ class CartModel {
         if (attachment.driveId == null) {
           // need to be uploaded
           attachmentList.add(attachment);
-          attachmentUploadList.add(_drive.uploadFile(LibPath.join(postBaseDir, attachment.title), parents: [post.category]));
+          attachmentUploadList.add(_drive.uploadFile(LibPath.join(postBasePubDir, attachment.title), parents: [post.category]));
         }
       });
       return Future.wait(attachmentUploadList);

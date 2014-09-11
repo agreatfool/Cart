@@ -171,10 +171,9 @@ class CartPost extends Object with PinSerializable {
       CartPostAttachment attachment = findAttachment(attUuid);
       removeAttachment(attachment);
       CartSystem.instance.drive.drive_trash(attachment.driveId); // delete it without listening to the results
-      (new File(LibPath.join(CartConst.WWW_POST_PATH, uuid, attachment.title))).delete(); // also delete local files
+      (new File(LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attachment.title))).delete(); // also delete local files
     });
     attsToBeAdded.forEach((String attUuid) {
-      String postBaseDir = LibPath.join(CartConst.WWW_POST_PATH, uuid);
       List attDatas = header.attachments.where((HashMap<String, String> attData) {
         if (attData['uuid'] == attUuid) {
           return true;
@@ -185,7 +184,7 @@ class CartPost extends Object with PinSerializable {
       String attName = attDatas.removeAt(0)['name'];
       addNewAttachment(attUuid, attName);
       processFutures.addAll({
-          attUuid: CartSystem.instance.drive.uploadFile(LibPath.join(postBaseDir, attName), parents: [category])
+          attUuid: CartSystem.instance.drive.uploadFile(LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attName), parents: [category])
       });
     });
 
