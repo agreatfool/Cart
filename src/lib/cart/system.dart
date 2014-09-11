@@ -19,5 +19,6 @@ class CartSystem {
   String googleDriveRootFolder; // google drive id string
 
   PinGoogleDrive drive;
+  PinGoogleOAuth oauth2;
 
 }

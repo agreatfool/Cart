@@ -33,6 +33,7 @@ main() {
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
 
   CartSystem.instance.drive = pinGoogleDrive;
+  CartSystem.instance.oauth2 = pinGoogleOAuth;
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* Initialize database models
@@ -56,29 +57,15 @@ main() {
   //-* ROUTERS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   app.get('/api/index', (HttpContext ctx) {
-    ctx.sendJson({
-        "posts": CartModel.instance.posts.toJson(),
-        "categories": CartModel.instance.categories.toJson(),
-        "tags": CartModel.instance.tags.toJson()
-    });
+    CartAction.handleIndex(ctx);
   });
 
   app.get('/api/oauth2', (HttpContext ctx) {
-    ctx.sendText(pinGoogleOAuth.getOAuthUrl());
+    CartAction.handleOauth2(ctx);
   });
 
   app.get('/api/oauth2next', (HttpContext ctx) {
-    pinGoogleOAuth.processOAuthNext(ctx.params)
-    .then((HashMap done) {
-      if (done['result']) {
-        credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
-      }
-      ctx.res.redirect(Uri.parse('/oauth2'));
-    })
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      ctx.res.redirect(Uri.parse('/error'));
-    });
+    CartAction.handleOauth2(ctx);
   });
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
