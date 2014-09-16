@@ -42,8 +42,13 @@ class CartAction {
     .then((HashMap done) {
       if (done['result']) {
         CartSystem.instance.credentials = PinUtility.readJsonFileSync(CartSystem.instance.oauth['web']['credentialsFilePath']);
+        return _updateSessionToken(ctx);
+      } else {
+        throw new Exception('[CartAction] handleOauth2Next: Oauth failed, ${done['message']}');
       }
-      ctx.res.redirect(Uri.parse('/oauth2'));
+    })
+    .then((_) {
+      ctx.res.redirect(Uri.parse('/master'));
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -69,6 +74,15 @@ class CartAction {
         "valid": valid,
         "message": message
     };
+  }
+
+  static Future<File> _updateSessionToken(HttpContext ctx) {
+    String token = PinUtility.uuid();
+    ctx.req.session[CartConst.SESSION_TOKEN_KEY] = token;
+    HashMap session = { CartConst.SESSION_TOKEN_KEY: token };
+    CartSystem.instance.session = session;
+    final decoder = new JsonEncoder.withIndent('    ');
+    return (new File(CartConst.CONFIG_SESSION_PATH)).writeAsString(decoder.convert(session));
   }
 
 }
