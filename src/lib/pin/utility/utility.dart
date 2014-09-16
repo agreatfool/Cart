@@ -190,4 +190,8 @@ class PinUtility {
     }
   }
 
+  static String uuid() {
+    return (new Uuid()).v4();
+  }
+
 }
