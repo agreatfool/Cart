@@ -60,7 +60,7 @@ class PinUtility {
       completer.complete(_);
     })
     .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
+      handleError(e, trace);
       completer.completeError(e, trace);
     });
 
@@ -114,7 +114,7 @@ class PinUtility {
       InstanceMirror fieldMirror = reflect(obj).getField(new Symbol(variableName));
       value = fieldMirror.reflectee;
     } catch (e, trace) {
-      PinUtility.handleError(e, trace);
+      handleError(e, trace);
       throw e;
     }
 
