@@ -1,8 +1,6 @@
 'use strict';
 
-/* global $ */
-var CartConst = require('../const/const.js');
-
+/* global $, CartConst */
 module.exports = function($scope, $location, $routeSegment, footerService) {
     console.log('CartMainCtrl');
 
