@@ -34,10 +34,13 @@ global.uuid = require('./../bower/node-uuid/uuid.js');
 global.marked = require('./../bower/marked/index.js');
 
 // app sources
-var CartConst = require('./const/const.js');
+global.CartConst = require('./const/const.js');
 var routerSource = require('./router/router.js');
 var ctrlSources = require('./controller/controllers.js');
 var serviceSources = require('./service/services.js');
+
+// app utility
+global.CartUtility = require('./utility.js');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- APP
