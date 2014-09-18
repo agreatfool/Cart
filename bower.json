@@ -40,6 +40,7 @@
     "node-uuid": "~1.4.1",
     "ng-file-upload": "~1.6.5",
     "marked": "~0.3.2",
-    "angular-cookies": "~1.2.24"
+    "angular-cookies": "~1.2.24",
+    "pnotify": "~2.0.1"
   }
 }

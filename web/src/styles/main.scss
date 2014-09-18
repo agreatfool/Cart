@@ -1,13 +1,13 @@
 @import "partials/def/def";
 
+@import "partials/global/angular";
 @import "partials/global/global";
 @import "partials/global/nav";
+@import "partials/global/notify";
 @import "partials/global/page";
+@import "partials/global/spinner";
 @import "partials/global/tag";
-@import "partials/global/angular";
 
 @import "partials/page/page_landing";
 @import "partials/page/page_blog_list";
 @import "partials/page/page_search";
-
-@import "partials/spinner/spinner";
