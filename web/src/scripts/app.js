@@ -34,7 +34,7 @@ global.marked = require('./../bower/marked/index.js');
 
 // app sources
 var CartConst = require('./const/const.js');
-var routerSrouce = require('./router/router.js');
+var routerSource = require('./router/router.js');
 var ctrlSources = require('./controller/controllers.js');
 var serviceSources = require('./service/services.js');
 
@@ -51,7 +51,7 @@ var app = angular.module('Cart', [
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- ROUTE
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-app.config(['$routeProvider', '$locationProvider', '$routeSegmentProvider', routerSrouce]);
+app.config(['$routeProvider', '$locationProvider', '$routeSegmentProvider', routerSource]);
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- CONTROLLER
