@@ -76,7 +76,7 @@ class CartAction {
     bool isMaster = false;
     String tokenKey = CartConst.SESSION_TOKEN_KEY;
     if (ctx.req.session.containsKey(tokenKey)
-    && ctx.req.session[tokenKey] == CartSystem.instance.session[tokenKey]) {
+      && ctx.req.session[tokenKey] == CartSystem.instance.session[tokenKey]) {
       isMaster = true;
     }
     return isMaster;
