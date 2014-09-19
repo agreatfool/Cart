@@ -42,7 +42,7 @@ CartUtility.prototype.notify = function(title, text, type, duration) {
         type = 'info';
     }
     if (typeof duration === 'undefined' || duration === '' || duration === null) {
-        duration = 5000; // 5s
+        duration = 3000; // 3s
     }
 
     var options = {
@@ -55,9 +55,35 @@ CartUtility.prototype.notify = function(title, text, type, duration) {
         stack: this.pnotifyStack
     };
     if (type === 'error') {
-        options['hide'] = false;
+        options.hide = false;
     }
 
     new PNotify(options);
 };
+
+CartUtility.prototype.handleResponse = function(result, notify) {
+    if (typeof notify !== 'boolean') {
+        notify = true;
+    }
+    if (_.isObject(result) && result.hasOwnProperty('valid') && result.valid === false) {
+        // request failed with normal framework exception
+        if (notify) { // show failure msg box
+            this.notify('REQ Failed', result.message, 'error');
+        }
+        return false;
+    } else if (!_.isObject(result) || (_.isObject(result) && !result.hasOwnProperty('valid'))) {
+        // request failed without normal framework exception
+        if (notify) { // show failure msg box
+            this.notify('REQ Failed');
+        }
+        return false;
+    } else {
+        // request done
+        if (notify) { // show success msg box, and hide automatically
+            this.notify('REQ Succeed!', JSON.stringify(result.message));
+        }
+        return true;
+    }
+};
+
 module.exports = new CartUtility();
