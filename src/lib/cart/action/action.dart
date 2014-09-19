@@ -56,6 +56,19 @@ class CartAction {
     });
   }
 
+  static handleIsAuthed(HttpContext ctx) {
+    var isAuthed = false;
+
+    if (CartSystem.instance.credentials.length > 0) {
+      isAuthed = true;
+    }
+
+    ctx.sendJson(buildResponse({
+      "isAuthed": isAuthed
+    }));
+    ctx.end();
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTILITIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
