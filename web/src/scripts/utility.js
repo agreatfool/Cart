@@ -3,7 +3,7 @@
 /* global _, $, PNotify */
 var CartUtility = function() {
     this.spinTasksCount = 0;
-    this.pnotifyStack = {"dir1": "up", "dir2": "right", "push": "bottom", "spacing1": 0, "spacing2": 0};
+    this.pnotifyStack = {'dir1': 'up', 'dir2': 'right', 'push': 'bottom', 'spacing1': 0, 'spacing2': 0};
 };
 
 CartUtility.prototype.spinShow = function(promise) {
@@ -31,6 +31,12 @@ CartUtility.prototype.spinHide = function() {
 };
 
 CartUtility.prototype.notify = function(title, text, type, duration) {
+    if (typeof title === 'undefined') {
+        title = 'title';
+    }
+    if (typeof text === 'undefined') {
+        text = '';
+    }
     if (typeof type === 'undefined' || type === '' || type === null) {
         type = 'info';
     }
@@ -44,7 +50,7 @@ CartUtility.prototype.notify = function(title, text, type, duration) {
         type: type,
         delay: duration,
         addclass: 'stack-bar-bottom',
-        width: "70%",
+        width: '70%',
         stack: this.pnotifyStack
     };
     if (type === 'error') {
