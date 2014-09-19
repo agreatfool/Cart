@@ -116,7 +116,8 @@ gulp.task('styles_move', function() {
         'web/src/bower/css-social-buttons/css/**/*',
         'web/src/bower/animate.css/animate.min.css',
         'web/src/bower/fullcalendar/fullcalendar.css',
-        'web/src/bower/pnotify/pnotify.core.css'
+        'web/src/bower/pnotify/pnotify.core.css',
+        'web/src/bower/pnotify/pnotify.buttons.css'
     ], { base: 'web/src/bower' })
     .pipe(gulp.dest('web/public/css'));
 });
