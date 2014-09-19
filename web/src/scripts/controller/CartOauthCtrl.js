@@ -5,6 +5,10 @@ module.exports = function ($scope, $location, $service) {
 
     $scope.hasBeenInited = false;
 
+    $scope.startOauthProcess = function() {
+
+    };
+
     $service.isBlogAuthed().then(function(result) {
         if (result.isAuthed) {
             $location.url('/master');
