@@ -20,6 +20,7 @@ CartUtility.prototype.spinShow = function(promise) {
             self.spinHide();
         }, 300);
     }
+    return promise;
 };
 
 CartUtility.prototype.spinHide = function() {
