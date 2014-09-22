@@ -33,7 +33,9 @@ class CartAction {
     if (CartSystem.instance.credentials.length > 0) {
       ctx.sendJson(buildResponse('Already authorized!', valid: false));
     } else {
-      ctx.sendJson(buildResponse(CartSystem.oauth2.getOAuthUrl()));
+      ctx.sendJson(buildResponse({
+        "url": CartSystem.instance.oauth2.getOAuthUrl()
+      }));
     }
   }
 
