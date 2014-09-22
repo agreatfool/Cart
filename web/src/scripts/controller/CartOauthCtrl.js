@@ -6,7 +6,9 @@ module.exports = function ($scope, $location, $service) {
     $scope.hasBeenInited = false;
 
     $scope.startOauthProcess = function() {
-
+        $service.getOauthUrl().then(function(result) {
+            window.location.href = result.url;
+        });
     };
 
     $service.isBlogAuthed().then(function(result) {
