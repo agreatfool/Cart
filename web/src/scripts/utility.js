@@ -61,25 +61,29 @@ CartUtility.prototype.notify = function(title, text, type, duration) {
     new PNotify(options);
 };
 
-CartUtility.prototype.handleResponse = function(result, notify) {
-    if (typeof notify !== 'boolean') {
-        notify = true;
+CartUtility.prototype.handleResponse = function(result, notifySuccess, notifyError) {
+    if (typeof notifySuccess !== 'boolean') {
+        notifySuccess = false; // default not display the succeed message
     }
+    if (typeof notifyError !== 'boolean') {
+        notifyError = true; // default display the failure message
+    }
+
     if (_.isObject(result) && result.hasOwnProperty('valid') && result.valid === false) {
         // request failed with normal framework exception
-        if (notify) { // show failure msg box
+        if (notifyError) { // show failure msg box
             this.notify('REQ Failed', result.message, 'error');
         }
         return false;
     } else if (!_.isObject(result) || (_.isObject(result) && !result.hasOwnProperty('valid'))) {
         // request failed without normal framework exception
-        if (notify) { // show failure msg box
+        if (notifyError) { // show failure msg box
             this.notify('REQ Failed');
         }
         return false;
     } else {
         // request done
-        if (notify) { // show success msg box, and hide automatically
+        if (notifySuccess) { // show success msg box, and hide automatically
             this.notify('REQ Succeed!', JSON.stringify(result.message));
         }
         return true;
