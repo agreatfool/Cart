@@ -1,4 +1,6 @@
 {
+    "host": "cart.com",
     "port": 18090,
-    "googleDriveRootFolder": "CART_BLOG"
+    "googleDriveRootFolder": "CART_BLOG",
+    "cookieLive": 1296000
 }
