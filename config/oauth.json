@@ -6,7 +6,7 @@
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/drive"
         ],
-        "redirectUrl": "http://enblog.com/api/oauth2next",
+        "redirectUrl": "http://cart.com/api/oauth2next",
         "credentialsFilePath": "config/credentials.json"
     }
 }
