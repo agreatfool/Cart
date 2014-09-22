@@ -77,10 +77,15 @@ class CartAction {
   static bool isMaster(HttpContext ctx) {
     bool isMaster = false;
     String tokenKey = CartConst.SESSION_TOKEN_KEY;
-    if (ctx.req.session.containsKey(tokenKey)
-      && ctx.req.session[tokenKey] == CartSystem.instance.session[tokenKey]) {
-      isMaster = true;
+
+    if (ctx.req.cookies.length > 0) {
+      ctx.req.cookies.forEach((Cookie cookie) {
+        if (cookie.name == tokenKey && cookie.value == CartSystem.instance.session[tokenKey]) {
+          isMaster = true;
+        }
+      });
     }
+
     return isMaster;
   }
 
