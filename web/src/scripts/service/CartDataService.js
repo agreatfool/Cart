@@ -1,8 +1,31 @@
 'use strict';
 
-/* global pouchdb */
+/* global CartUtility */
 module.exports = function($http, $q) {
-    return {
+    var posts = {};
+    var categories = {};
+    var tags = {};
 
+    var getIndexData = function() {
+        var deferred = $q.defer();
+        $http({
+            method: "GET",
+            url: '/api/index',
+            headers: {"Content-type": "application/x-www-form-urlencoded"}
+        }).success(function(result) {
+            if (CartUtility.handleResponse(result)) {
+                posts = result.message.posts;
+                categories = result.message.categories;
+                tags = result.message.tags;
+                deferred.resolve(result.message);
+            } else {
+                deferred.reject();
+            }
+        });
+        return CartUtility.spinShow(deferred.promise);
+    };
+
+    return {
+        'getIndexData': getIndexData
     };
 };

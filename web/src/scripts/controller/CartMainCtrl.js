@@ -47,4 +47,12 @@ module.exports = function($scope, $location, $routeSegment, footerService, dataS
         });
         footer.addClass('animated fadeIn');
     });
+
+    // get init index data
+    dataService.getIndexData().then(function() {
+        console.log('getIndexData done!');
+    }, function() {
+        // rejected, shall be some error
+        $location.url('/error');
+    });
 };
