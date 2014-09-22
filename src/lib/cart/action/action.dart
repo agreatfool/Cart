@@ -38,7 +38,7 @@ class CartAction {
   }
 
   static handleOauth2Next(HttpContext ctx) {
-    CartSystem.oauth2.processOAuthNext(ctx.params)
+    CartSystem.instance.oauth2.processOAuthNext(ctx.params)
     .then((HashMap done) {
       if (done['result']) {
         CartSystem.instance.credentials = PinUtility.readJsonFileSync(CartSystem.instance.oauth['web']['credentialsFilePath']);
