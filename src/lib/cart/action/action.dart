@@ -93,11 +93,21 @@ class CartAction {
 
   static Future<File> _updateSessionToken(HttpContext ctx) {
     String token = PinUtility.uuid();
-    ctx.req.session[CartConst.SESSION_TOKEN_KEY] = token;
-    HashMap session = { CartConst.SESSION_TOKEN_KEY: token };
-    CartSystem.instance.session = session;
+
+    _setCookie(ctx, CartConst.SESSION_TOKEN_KEY, token);
+
     final decoder = new JsonEncoder.withIndent('    ');
-    return (new File(CartConst.CONFIG_SESSION_PATH)).writeAsString(decoder.convert(session));
+    return (new File(CartConst.CONFIG_SESSION_PATH)).writeAsString(decoder.convert({
+        CartConst.SESSION_TOKEN_KEY: token
+    }));
+  }
+
+  static void _setCookie(HttpContext ctx, String name, String value) {
+    var expires = new DateTime.now();
+    expires = expires.add(new Duration(seconds: CartSystem.instance.setting['cookieLive']));
+
+    var cookie = '${name}=${value}; Domain=${CartSystem.instance.setting['host']}; Expires=${PinTime.formatRFC2616(expires)}; Path=/';
+    ctx.res.headers.add('set-cookie', cookie);
   }
 
 }
