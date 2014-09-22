@@ -6,7 +6,7 @@ module.exports = function($scope, $location, $routeSegment, footerService) {
 
     $scope.segment = $routeSegment;
     $scope.location = $location;
-    $scope.rootPath = $location.path().split('/')[1];
+    $scope.rootPath = $location.path().split('/')[1]; // for nav highlight
     $scope.indexPaths = ['', 'new', 'update', 'year', 'month', 'day'];
 
     $scope.pageGoTo = function(page) {
