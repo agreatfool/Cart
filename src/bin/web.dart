@@ -22,12 +22,13 @@ main() {
   HashMap setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
   HashMap oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
   HashMap credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
+  HashMap session = PinUtility.readJsonFileSync(CartConst.CONFIG_SESSION_PATH);
 
-  // FIXME session?
   CartSystem.instance.setting = setting;
   CartSystem.instance.oauth = oauth;
   CartSystem.instance.credentials = credentials;
   CartSystem.instance.googleDriveRootFolder = credentials['googleDriveRootFolder']; // google drive id string
+  CartSystem.instance.session = session;
 
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
