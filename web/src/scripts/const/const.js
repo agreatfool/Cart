@@ -13,4 +13,7 @@ CartConst.NAV_TRIGGER_HINT_Y = 150;
 CartConst.PAGE_HEADER_HEIGHT = 80;
 CartConst.PAGE_FOOTER_HEIGHT = 100;
 
+// cookie token
+CartConst.TOKEN_NAME = 'CART-TOKEN';
+
 module.exports = CartConst;

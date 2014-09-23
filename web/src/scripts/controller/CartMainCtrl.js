@@ -1,7 +1,7 @@
 'use strict';
 
 /* global $, CartConst */
-module.exports = function($scope, $location, $routeSegment, footerService, dataService) {
+module.exports = function($scope, $location, $routeSegment, $footerService, $dataService, $accessService) {
     console.log('CartMainCtrl');
 
     $scope.segment = $routeSegment;
@@ -35,11 +35,15 @@ module.exports = function($scope, $location, $routeSegment, footerService, dataS
     };
 
     // route change event, when location changed
-    $scope.$on('$routeChangeStart', function() {
+    $scope.$on('$routeChangeStart', function(event, next, current) {
+        // validate accessible
+        if (!$accessService.isUrlAccessibleForUser(next.originalPath)) {
+            $location.url('/error');
+        }
         // reset the rootPath in url
         $scope.rootPath = $location.path().split('/')[1];
         // detect footer pos
-        footerService.fixFooter();
+        $footerService.fixFooter();
         // footer fadeIn effect
         var footer = $('.page-footer');
         footer.bind(CartConst.ANIMATE_END_EVENT, function() {
@@ -49,8 +53,8 @@ module.exports = function($scope, $location, $routeSegment, footerService, dataS
     });
 
     // get init index data
-    dataService.getIndexData().then(function() {
-        console.log('getIndexData done!');
+    $dataService.getIndexData().then(function() {
+        // succeeded, do nothing
     }, function() {
         // rejected, shall be some error
         $location.url('/error');

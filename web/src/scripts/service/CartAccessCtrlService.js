@@ -1,8 +1,9 @@
 'use strict';
 
-/* global CartUtility */
+/* global _, CartUtility, CartConst */
 module.exports = function($http, $q, $cookies) {
-    var token = '';
+    var isUserMaster = null; // boolean, initialized with null
+    var masterUrls = ['master', 'new', 'update'];
 
     var isBlogAuthed = function() {
         var deferred = $q.defer();
@@ -36,8 +37,35 @@ module.exports = function($http, $q, $cookies) {
         return CartUtility.spinShow(deferred.promise);
     };
 
+    var isMaster = function() {
+        if (isUserMaster !== null) {
+            return isUserMaster;
+        }
+        isUserMaster = ($cookies.hasOwnProperty(CartConst.TOKEN_NAME) && $cookies[CartConst.TOKEN_NAME] !== '');
+        return isUserMaster;
+    };
+
+    var isUrlAccessibleForUser = function(url) {
+        var accessible = true;
+        var rootPath = null;
+        var split = url.split('/');
+        _.forEach(split, function(element) {
+            if (typeof element === 'string' && element !== '' && element !== null && rootPath === null) {
+                rootPath = element;
+            }
+        });
+
+        if (!isMaster() && masterUrls.indexOf(rootPath) !== -1) {
+            accessible = false;
+        }
+
+        return accessible;
+    };
+
     return {
         'isBlogAuthed': isBlogAuthed,
-        'getOauthUrl': getOauthUrl
+        'getOauthUrl': getOauthUrl,
+        'isMaster': isMaster,
+        'isUrlAccessibleForUser': isUrlAccessibleForUser
     };
 };
