@@ -31,6 +31,7 @@ class CartAction {
 
   static handleOauth2(HttpContext ctx) {
     if (CartSystem.instance.credentials.length > 0) {
+      PinLogger.instance.shout('[CartAction] handleOauth2: Already authorized!');
       ctx.sendJson(buildResponse('Already authorized!', valid: false));
     } else {
       ctx.sendJson(buildResponse({
