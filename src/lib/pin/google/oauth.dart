@@ -4,6 +4,7 @@ class PinGoogleOAuth {
 
   static const String GOOGLE_OAUTH_URL = 'https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force';
   static const String GOOGLE_OAUTH_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token';
+  static const String GOOGLE_OAUTH_TOKEN_PARSE_URL = 'https://www.googleapis.com/oauth2/v1/tokeninfo';
 
   static const String SCOPE_EMAIL = 'https://www.googleapis.com/auth/userinfo.email';
   static const String SCOPE_DRIVE_ALL = 'https://www.googleapis.com/auth/drive';
@@ -127,18 +128,9 @@ class PinGoogleOAuth {
           if (authResponse.containsKey('id_token')) {
             credentials['idToken'] = authResponse['id_token'];
           }
-          final decoder = new JsonEncoder.withIndent('    ');
-          (new File(_credentialsFilePath))
-          .writeAsString(decoder.convert(credentials))
-          .then((_) {
-            res['result'] = true;
-            completer.complete(res);
-          })
-          .catchError((e, trace) {
-            PinUtility.handleError(e, trace);
-            res['message'] = 'Error: Failed to write credentials into file';
-            completer.complete(res);
-          });
+          res['result'] = true;
+          res['message'] = credentials;
+          completer.complete(res);
         } else if (authResponse.containsKey('error')) {
           // error
           res['message'] = 'Error: ${authResponse['error']}';
@@ -158,6 +150,38 @@ class PinGoogleOAuth {
       res['message'] = 'Error: Unrecognized oauth response';
       completer.complete(res);
     }
+
+    return completer.future;
+  }
+
+  Future<HashMap> decodeIdToken(String idToken) {
+    final completer = new Completer();
+
+    HashMap res = {
+        'result': false,
+        'message': ''
+    };
+
+    LibHttp.get(
+        GOOGLE_OAUTH_TOKEN_PARSE_URL + '?id_token=${idToken}'
+    ).then((LibHttp.Response response) {
+      PinLogger.instance.fine('[PinGoogleOAuth] decodeIdToken response: ${response.body}');
+      HashMap decodedResponse;
+      try {
+        decodedResponse = JSON.decode(response.body);
+      } catch (e) {
+        res['message'] = response.body;
+        completer.complete(res);
+      }
+      if (decodedResponse.containsKey('error')) {
+        res['message'] = decodedResponse['error'] + ': ' + decodedResponse['error_description'];
+        completer.complete(res);
+      } else {
+        res['result'] = true;
+        res['message'] = decodedResponse;
+        completer.complete(res);
+      }
+    });
 
     return completer.future;
   }
