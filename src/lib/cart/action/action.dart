@@ -106,6 +106,23 @@ class CartAction {
     ctx.end();
   }
 
+  static handleLogout(HttpContext ctx) {
+    if (isMaster(ctx)) {
+      _removeSessionToken(ctx)
+      .then((_) {
+        ctx.sendJson(buildResponse({}));
+        ctx.end();
+      })
+      .catchError((e, trace) {
+        PinUtility.handleError(e, trace);
+        ctx.res.redirect(Uri.parse('/error'));
+      });
+    } else {
+      ctx.sendJson(buildResponse({ "message": "No privilege to logout!" }, valid: false));
+      ctx.end();
+    }
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTILITIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -117,10 +134,7 @@ class CartAction {
     if (CartSystem.instance.session.length > 0
       && CartSystem.instance.session[CartConst.SESSION_EXPIRES_KEY] < now.millisecondsSinceEpoch) {
       // saved session has expired, remove it
-      CartSystem.instance.session = {};
-      (new File('config/session.json')).writeAsString(JSON.encode({})).catchError((e, trace) {
-        PinUtility.handleError(e, trace);
-      });
+      _removeSessionToken(ctx);
     }
 
     if (ctx.req.cookies.length > 0) {
@@ -153,6 +167,13 @@ class CartAction {
         CartConst.SESSION_TOKEN_KEY: token,
         CartConst.SESSION_EXPIRES_KEY: expires.millisecondsSinceEpoch
     }));
+
+  static Future<File> _removeSessionToken(HttpContext ctx) {
+    _setCookie(ctx, CartConst.SESSION_TOKEN_KEY, '');
+    CartSystem.instance.session = {};
+    return (new File(CartConst.CONFIG_SESSION_PATH)).writeAsString(JSON.encode({})).catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+    });
   }
 
   static void _setCookie(HttpContext ctx, String name, String value, {DateTime expires: null}) {

@@ -49,6 +49,7 @@ main() {
   app.get('/api/oauth2',      (HttpContext ctx) => CartAction.handleOauth2(ctx));
   app.get('/api/oauth2next',  (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
   app.get('/api/isauthed',    (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
+  app.get('/api/logout',      (HttpContext ctx) => CartAction.handleLogout(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER

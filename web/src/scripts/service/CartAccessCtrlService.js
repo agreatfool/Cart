@@ -57,10 +57,27 @@ module.exports = function($http, $q, $cookies) {
         return accessible;
     };
 
+    var logout = function() {
+        var deferred = $q.defer();
+        $http({
+            method: "GET",
+            url: '/api/logout',
+            headers: {"Content-type": "application/x-www-form-urlencoded"}
+        }).success(function(result) {
+            if (CartUtility.handleResponse(result)) {
+                deferred.resolve(result.message);
+            } else {
+                deferred.reject();
+            }
+        });
+        return CartUtility.spinShow(deferred.promise);
+    };
+
     return {
         'isBlogAuthed': isBlogAuthed,
         'getOauthUrl': getOauthUrl,
         'isMaster': isMaster,
-        'isUrlAccessibleForUser': isUrlAccessibleForUser
+        'isUrlAccessibleForUser': isUrlAccessibleForUser,
+        'logout': logout
     };
 };
