@@ -110,8 +110,18 @@ class CartAction {
   //-* UTILITIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   static bool isMaster(HttpContext ctx) {
-    bool isMaster = false;
+    var isMaster = false;
     String tokenKey = CartConst.SESSION_TOKEN_KEY;
+    var now = new DateTime.now();
+
+    if (CartSystem.instance.session.length > 0
+      && CartSystem.instance.session[CartConst.SESSION_EXPIRES_KEY] < now.millisecondsSinceEpoch) {
+      // saved session has expired, remove it
+      CartSystem.instance.session = {};
+      (new File('config/session.json')).writeAsString(JSON.encode({})).catchError((e, trace) {
+        PinUtility.handleError(e, trace);
+      });
+    }
 
     if (ctx.req.cookies.length > 0) {
       ctx.req.cookies.forEach((Cookie cookie) {
