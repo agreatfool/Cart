@@ -2,7 +2,6 @@
 
 /* global _, CartUtility, CartConst */
 module.exports = function($http, $q, $cookies) {
-    var isUserMaster = null; // boolean, initialized with null
     var masterUrls = ['master', 'new', 'update'];
 
     var isBlogAuthed = function() {
@@ -38,11 +37,7 @@ module.exports = function($http, $q, $cookies) {
     };
 
     var isMaster = function() {
-        if (isUserMaster !== null) {
-            return isUserMaster;
-        }
-        isUserMaster = ($cookies.hasOwnProperty(CartConst.TOKEN_NAME) && $cookies[CartConst.TOKEN_NAME] !== '');
-        return isUserMaster;
+        return ($cookies.hasOwnProperty(CartConst.TOKEN_NAME) && $cookies[CartConst.TOKEN_NAME] !== '');
     };
 
     var isUrlAccessibleForUser = function(url) {
