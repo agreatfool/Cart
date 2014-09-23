@@ -18,5 +18,6 @@ class CartConst {
 
   // KEY
   static const String SESSION_TOKEN_KEY = 'CART-TOKEN';
+  static const String SESSION_EXPIRES_KEY = 'TOKEN-EXPIRES';
 
 }
