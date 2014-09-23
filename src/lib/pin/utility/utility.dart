@@ -179,7 +179,7 @@ class PinUtility {
     return completer.future;
   }
 
-  static void handleError(Exception e, StackTrace trace, {String message: null}) {
+  static void handleError(dynamic e, StackTrace trace, {String message: null}) {
     if (message != null) {
       PinLogger.instance.shout(message);
     }
