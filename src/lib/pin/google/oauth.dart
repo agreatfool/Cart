@@ -79,7 +79,7 @@ class PinGoogleOAuth {
   }
 
   Future<HashMap> processOAuthNext(HashMap data) {
-    var completer = new Completer();
+    final completer = new Completer();
 
     HashMap res = {
       'result': false,
