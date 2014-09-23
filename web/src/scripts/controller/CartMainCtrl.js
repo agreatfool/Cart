@@ -1,7 +1,7 @@
 'use strict';
 
 /* global $, CartConst */
-module.exports = function($scope, $location, $routeSegment, $footerService, $dataService, $accessService) {
+module.exports = function($scope, $location, $cookies, $window, $routeSegment, $footerService, $dataService, $accessService) {
     console.log('CartMainCtrl');
 
     $scope.segment = $routeSegment;
@@ -26,9 +26,10 @@ module.exports = function($scope, $location, $routeSegment, $footerService, $dat
     };
 
     $scope.loginToggle = function() {
-        var alreadyLogin = false;
-        if (alreadyLogin) { // already login
+        if ($scope.isMaster) { // already login
             // logout
+            delete $cookies[CartConst.TOKEN_NAME];
+            $window.location.href = $window.location.protocol + '//' + $window.location.host;
         } else {
             // redirect to login page
             $location.url('/login');
@@ -37,12 +38,16 @@ module.exports = function($scope, $location, $routeSegment, $footerService, $dat
 
     // route change event, when location changed
     $scope.$on('$routeChangeStart', function(event, next, current) {
-        // validate accessible
-        if (!$accessService.isUrlAccessibleForUser(next.originalPath)) {
-            $location.url('/error');
-        }
         // reset the rootPath in url
         $scope.rootPath = $location.path().split('/')[1];
+        // validate accessible
+        var validateUrl = $scope.rootPath;
+        if (typeof next !== 'undefined' && next.hasOwnProperty('originalPath')) {
+            validateUrl = next.originalPath;
+        }
+        if (!$accessService.isUrlAccessibleForUser(validateUrl)) {
+            $location.url('/error');
+        }
         // detect footer pos
         $footerService.fixFooter();
         // footer fadeIn effect
