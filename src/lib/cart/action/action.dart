@@ -148,7 +148,7 @@ class CartAction {
     return isMaster;
   }
 
-  static Map buildResponse(dynamic message, {bool valid: true}) {
+  static Map buildResponse(HashMap message, {bool valid: true}) {
     return {
         "valid": valid,
         "message": message
