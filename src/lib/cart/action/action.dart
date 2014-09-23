@@ -112,7 +112,7 @@ class CartAction {
     var expires = new DateTime.now();
     expires = expires.add(new Duration(seconds: CartSystem.instance.setting['cookieLive']));
 
-    var cookie = '${name}=${value}; Domain=${CartSystem.instance.setting['host']}; Expires=${PinTime.formatRFC2616(expires)}; Path=/';
+    var cookie = '${name}=${value}; Expires=${PinTime.formatRFC2616(expires)}; Path=/';
     ctx.res.headers.add('set-cookie', cookie);
   }
 
