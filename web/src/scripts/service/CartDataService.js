@@ -6,7 +6,7 @@ module.exports = function($http, $q) {
     var categories = {};
     var tags = {};
 
-    var getIndexData = function() {
+    var getInitData = function() {
         var deferred = $q.defer();
         $http({
             method: "GET",
@@ -26,6 +26,6 @@ module.exports = function($http, $q) {
     };
 
     return {
-        'getIndexData': getIndexData
+        'getInitData': getInitData
     };
 };

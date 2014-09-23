@@ -54,7 +54,7 @@ module.exports = function($scope, $location, $routeSegment, $footerService, $dat
     });
 
     // get init index data
-    $dataService.getIndexData().then(function() {
+    $dataService.getInitData().then(function() {
         // succeeded, do nothing
     }, function() {
         // rejected, shall be some error
