@@ -1,19 +1,22 @@
 'use strict';
 
-module.exports = function ($scope, $location, $service) {
+module.exports = function ($scope, $location, $accessService) {
     console.log('CartOauthCtrl');
 
     $scope.hasBeenInited = false;
 
     $scope.startOauthProcess = function() {
-        $service.getOauthUrl().then(function(result) {
+        $accessService.getOauthUrl().then(function(result) {
             window.location.href = result.url;
         });
     };
 
-    $service.isBlogAuthed().then(function(result) {
-        if (result.isAuthed) {
+    $accessService.isBlogAuthed().then(function(result) {
+        var isMaster = $accessService.isMaster();
+        if (result.isAuthed && isMaster) {
             $location.url('/master');
+        } else if (result.isAuthed && !isMaster) {
+            $location.url('/login');
         } else {
             $scope.hasBeenInited = true;
         }
