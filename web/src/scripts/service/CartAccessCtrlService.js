@@ -60,7 +60,7 @@ module.exports = function($http, $q, $cookies) {
     var logout = function() {
         var deferred = $q.defer();
         $http({
-            method: "GET",
+            method: "POST",
             url: '/api/logout',
             headers: {"Content-type": "application/x-www-form-urlencoded"}
         }).success(function(result) {

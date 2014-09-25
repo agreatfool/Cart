@@ -9,8 +9,8 @@ module.exports = function($http, $q) {
     var getInitData = function() {
         var deferred = $q.defer();
         $http({
-            method: "GET",
-            url: '/api/index',
+            method: "POST",
+            url: '/api/init',
             headers: {"Content-type": "application/x-www-form-urlencoded"}
         }).success(function(result) {
             if (CartUtility.handleResponse(result)) {
