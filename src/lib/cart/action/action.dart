@@ -2,7 +2,7 @@ part of cart;
 
 class CartAction {
 
-  static handleIndex(HttpContext ctx) {
+  static handleDataInit(HttpContext ctx) {
     HashMap<String, Map> indexData = {
         "posts": {},
         "categories": {},
