@@ -72,7 +72,7 @@ controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCa
 controllers.controller('CartBlogTagCtrl', ['$scope', ctrlSources.CartBlogTagCtrl]);
 controllers.controller('CartSearchCtrl', ['$scope', '$compile', ctrlSources.CartSearchCtrl]);
 controllers.controller('CartOauthCtrl', ['$scope', '$location', 'CartAccessCtrlService', ctrlSources.CartOauthCtrl]);
-controllers.controller('CartLoginCtrl', ['$scope', ctrlSources.CartLoginCtrl]);
+controllers.controller('CartLoginCtrl', ['$scope', 'CartAccessCtrlService', ctrlSources.CartLoginCtrl]);
 controllers.controller('CartProfileCtrl', ['$scope', ctrlSources.CartProfileCtrl]);
 controllers.controller('CartMasterCtrl', ['$scope', ctrlSources.CartMasterCtrl]);
 

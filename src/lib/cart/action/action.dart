@@ -84,11 +84,17 @@ class CartAction {
         // login failed with invalid owner
         PinLogger.instance.shout('[CartAction] handleOauth2Next: login failed with invalid owner!');
         ctx.res.redirect(Uri.parse('/error'));
+        return new Future.value(false);
+      } else {
+        return _updateSessionToken(ctx);
       }
-      return _updateSessionToken(ctx);
     })
     .then((_) {
-      ctx.res.redirect(Uri.parse('/master'));
+      if (_ == false) {
+        // means login failed, do nothing
+      } else {
+        ctx.res.redirect(Uri.parse('/master'));
+      }
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -107,6 +113,17 @@ class CartAction {
       "isAuthed": isAuthed
     }));
     ctx.end();
+  }
+
+  static handleLogin(HttpContext ctx) {
+    if (CartSystem.instance.credentials.length <= 0) {
+      PinLogger.instance.shout('[CartAction] handleLogin: Site has not been authorized yet!');
+      ctx.sendJson(buildResponse('handleLogin', { "message": "Already authorized!" }, valid: false));
+    } else {
+      ctx.sendJson(buildResponse('handleLogin', {
+          "url": CartSystem.instance.oauth2.getLoginUrl()
+      }));
+    }
   }
 
   static handleLogout(HttpContext ctx) {

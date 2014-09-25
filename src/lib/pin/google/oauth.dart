@@ -79,6 +79,24 @@ class PinGoogleOAuth {
     return url;
   }
 
+  String getLoginUrl() {
+    var grant = new OAuth2.AuthorizationCodeGrant(
+        _identifier,
+        _secret,
+        Uri.parse(GOOGLE_OAUTH_URL),
+        Uri.parse(GOOGLE_OAUTH_TOKEN_URL)
+    );
+    Uri authUrl = grant.getAuthorizationUrl(
+        Uri.parse(_redirectUrl),
+        scopes: [SCOPE_EMAIL]
+    );
+    String url = authUrl.toString();
+
+    PinLogger.instance.fine('[PinGoogleOAuth] getLoginUrl: ${url}');
+
+    return url;
+  }
+
   Future<HashMap> processOAuthNext(HashMap data) {
     final completer = new Completer();
 
