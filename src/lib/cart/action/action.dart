@@ -38,6 +38,7 @@ class CartAction {
         "url": CartSystem.instance.oauth2.getOAuthUrl()
       }));
     }
+    ctx.end();
   }
 
   static handleOauth2Next(HttpContext ctx) {
@@ -124,6 +125,7 @@ class CartAction {
           "url": CartSystem.instance.oauth2.getLoginUrl()
       }));
     }
+    ctx.end();
   }
 
   static handleLogout(HttpContext ctx) {
