@@ -49,6 +49,7 @@ class CartAction {
 
     CartSystem.instance.oauth2.processOAuthNext(ctx.params)
     .then((HashMap oauthResponse) {
+      // get oauth response step
       if (oauthResponse['result']) {
         credentials = oauthResponse['message'];
         return CartSystem.instance.oauth2.decodeIdToken(credentials['idToken']);
@@ -57,8 +58,10 @@ class CartAction {
       }
     })
     .then((HashMap decodedResponse) {
+      // parse id_token info
       if (decodedResponse['result']) {
-        email = decodedResponse['message']['email'];
+        HashMap idTokenInfo = decodedResponse['message'];
+        email = idTokenInfo['email'];
       } else {
         throw new Exception('[CartAction] handleOauth2Next: Decode id token failed, ${decodedResponse['message']}');
       }
