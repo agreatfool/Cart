@@ -25,16 +25,16 @@ class CartAction {
     indexData['categories'] = categoryList;
     indexData['tags'] = tagList;
 
-    ctx.sendJson(buildResponse(indexData));
+    ctx.sendJson(buildResponse('handleDataInit', indexData, doLog: false));
     ctx.end();
   }
 
   static handleOauth2(HttpContext ctx) {
     if (CartSystem.instance.credentials.length > 0) {
       PinLogger.instance.shout('[CartAction] handleOauth2: Already authorized!');
-      ctx.sendJson(buildResponse({ "message": "Already authorized!" }, valid: false));
+      ctx.sendJson(buildResponse('handleOauth2', { "message": "Already authorized!" }, valid: false));
     } else {
-      ctx.sendJson(buildResponse({
+      ctx.sendJson(buildResponse('handleOauth2', {
         "url": CartSystem.instance.oauth2.getOAuthUrl()
       }));
     }
@@ -103,7 +103,7 @@ class CartAction {
       isAuthed = true;
     }
 
-    ctx.sendJson(buildResponse({
+    ctx.sendJson(buildResponse('handleIsAuthed', {
       "isAuthed": isAuthed
     }));
     ctx.end();
@@ -113,7 +113,7 @@ class CartAction {
     if (isMaster(ctx)) {
       _removeSessionToken(ctx)
       .then((_) {
-        ctx.sendJson(buildResponse({}));
+        ctx.sendJson(buildResponse('handleLogout', {}));
         ctx.end();
       })
       .catchError((e, trace) {
@@ -121,7 +121,7 @@ class CartAction {
         ctx.res.redirect(Uri.parse('/error'));
       });
     } else {
-      ctx.sendJson(buildResponse({ "message": "No privilege to logout!" }, valid: false));
+      ctx.sendJson(buildResponse('handleLogout', { "message": "No privilege to logout!" }, valid: false));
       ctx.end();
     }
   }
@@ -151,11 +151,16 @@ class CartAction {
     return isMaster;
   }
 
-  static Map buildResponse(HashMap message, {bool valid: true}) {
-    return {
+  static Map buildResponse(String actionName, HashMap message, {bool valid: true, bool doLog: true}) {
+    HashMap result = {
         "valid": valid,
         "message": message
     };
+    if (doLog) {
+      PinLogger.instance.fine('[CartAction] ${actionName}: ${JSON.encode(result)}');
+    }
+
+    return result;
   }
 
   static Future<File> _updateSessionToken(HttpContext ctx) {
