@@ -67,17 +67,37 @@ class CartAction {
         throw new Exception('[CartAction] handleOauth2Next: Decode id token failed, ${decodedResponse['message']}');
       }
       if (!isAuthed) {
-        // save oauth data, also add oauth owner email
+        // add oauth owner email, and save the credentials first, since google api request need them
         credentials['email'] = email;
-        CartSystem.instance.credentials = credentials;
         return (new File(CartSystem.instance.oauth['web']['credentialsFilePath'])).writeAsString(decoder.convert(credentials));
       } else {
-        // just go to next step
+        // validate is valid owner or not
         if (email == CartSystem.instance.credentials['email']) {
           return new Future.value(true); // login user is the same as oauth user
         } else {
           return new Future.value(false); // not the same, invalid
         }
+      }
+    })
+    .then((_) {
+      if (!isAuthed) {
+        // search google drive for root blog folder drive id
+        return CartModel.instance.searchBlogRootFolder();
+      } else {
+        // just pass the result to next step
+        return new Future.value(_);
+      }
+    })
+    .then((_) {
+      if (!isAuthed) {
+        String rootFolderDriveId = _;
+        credentials['googleDriveRootFolder'] = rootFolderDriveId;
+        CartSystem.instance.googleDriveRootFolder = rootFolderDriveId;
+        CartSystem.instance.credentials = credentials;
+        return (new File(CartSystem.instance.oauth['web']['credentialsFilePath'])).writeAsString(decoder.convert(credentials));
+      } else {
+        // just pass the result to next step
+        return new Future.value(_);
       }
     })
     .then((_) {
