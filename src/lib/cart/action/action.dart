@@ -148,20 +148,20 @@ class CartAction {
     ctx.end();
   }
 
-  static handleLogout(HttpContext ctx) {
-    if (isMaster(ctx)) {
-      _removeSessionToken(ctx)
-      .then((_) {
-        ctx.sendJson(buildResponse('handleLogout', {}));
-        ctx.end();
-      })
-      .catchError((e, trace) {
-        PinUtility.handleError(e, trace);
-        ctx.res.redirect(Uri.parse('/error'));
-      });
-    } else {
-      ctx.sendJson(buildResponse('handleLogout', { "error": "No privilege to logout!" }, valid: false));
+  static void handleLogout(HttpContext ctx) {
+    if (!filterIsMaster(ctx)) {
+      return;
+    }
+    _removeSessionToken(ctx)
+    .then((_) {
+      ctx.sendJson(buildResponse('handleLogout', {}));
       ctx.end();
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.res.redirect(Uri.parse('/error'));
+    });
+  }
     }
   }
 
@@ -188,6 +188,17 @@ class CartAction {
     }
 
     return isMaster;
+  }
+
+  static bool filterIsMaster(HttpContext ctx) {
+    bool isUserMaster = isMaster(ctx);
+
+    if(!isUserMaster) {
+      ctx.sendJson(buildResponse('filterIsMaster', { "error": "User not logged in, pls login first!" }, valid: false));
+      ctx.end();
+    }
+
+    return isUserMaster;
   }
 
   static Map buildResponse(String actionName, HashMap message, {bool valid: true, bool doLog: true}) {
