@@ -51,6 +51,7 @@ main() {
   app.get('/api/isauthed',    (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
   app.get('/api/login',       (HttpContext ctx) => CartAction.handleLogin(ctx));
   app.post('/api/logout',     (HttpContext ctx) => CartAction.handleLogout(ctx));
+  app.post('/api/upload',     (HttpContext ctx) => CartAction.handleUpload(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER

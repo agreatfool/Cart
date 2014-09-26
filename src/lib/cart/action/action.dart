@@ -162,7 +162,27 @@ class CartAction {
       ctx.res.redirect(Uri.parse('/error'));
     });
   }
+
+  static handleUpload(HttpContext ctx) {
+    if (!filterIsMaster(ctx)) {
+      return;
     }
+    // case 1:
+    var binary = new List<int>();
+    ctx.req.listen(binary.addAll, onDone: () {
+
+    });
+    // case 2:
+    // import 'package:http_server/http_server.dart';
+    // https://code.google.com/p/dart/source/browse/trunk/dart/pkg/http_server/lib/src/http_body.dart
+//    HttpBodyHandler.processRequest(ctx.req).then((body) {
+//      HttpBodyFileUpload fileUploaded = body.body['myfile'];
+//      final file = new File('abc.jpg');
+//      file.writeAsBytes(fileUploaded.content, mode: FileMode.WRITE)
+//      .then((_) {
+//        request.response.close();
+//      });
+//    });
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
