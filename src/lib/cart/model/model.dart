@@ -27,7 +27,7 @@ class CartModel {
     PinUtility.checkDirExistsSync(CartConst.WWW_POST_PUB_PATH, createWhenNotExist: true);
     PinUtility.checkDirExistsSync(CartConst.WWW_POST_DATA_PATH, createWhenNotExist: true);
 
-    // handle
+    // google drive handle
     _drive = CartSystem.instance.drive;
   }
 
@@ -373,7 +373,7 @@ class CartModel {
     ])
     .then((GoogleDriveClient.FileList files) {
       if (files.items.length <= 0) {
-        return _drive.drive_folder(rootFolderName); // no necessary root blog folder, create it
+        return _drive.drive_folder(rootFolderName); // necessary root blog folder does not exist, create it
       } else {
         return new Future.value(files.items.removeAt(0)); // shall only contains 1 item
       }
