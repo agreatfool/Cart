@@ -32,7 +32,7 @@ class CartAction {
   static handleOauth2(HttpContext ctx) {
     if (CartSystem.instance.credentials.length > 0) {
       PinLogger.instance.shout('[CartAction] handleOauth2: Already authorized!');
-      ctx.sendJson(buildResponse('handleOauth2', { "message": "Already authorized!" }, valid: false));
+      ctx.sendJson(buildResponse('handleOauth2', { "error": "Already authorized!" }, valid: false));
     } else {
       ctx.sendJson(buildResponse('handleOauth2', {
         "url": CartSystem.instance.oauth2.getOAuthUrl()
@@ -118,8 +118,8 @@ class CartAction {
 
   static handleLogin(HttpContext ctx) {
     if (CartSystem.instance.credentials.length <= 0) {
-      PinLogger.instance.shout('[CartAction] handleLogin: Site has not been authorized yet!');
-      ctx.sendJson(buildResponse('handleLogin', { "message": "Already authorized!" }, valid: false));
+      PinLogger.instance.shout('[CartAction] handleLogin: Site has not been initialized yet!');
+      ctx.sendJson(buildResponse('handleLogin', { "error": "Site has not been initialized yet!" }, valid: false));
     } else {
       ctx.sendJson(buildResponse('handleLogin', {
           "url": CartSystem.instance.oauth2.getLoginUrl()
@@ -140,7 +140,7 @@ class CartAction {
         ctx.res.redirect(Uri.parse('/error'));
       });
     } else {
-      ctx.sendJson(buildResponse('handleLogout', { "message": "No privilege to logout!" }, valid: false));
+      ctx.sendJson(buildResponse('handleLogout', { "error": "No privilege to logout!" }, valid: false));
       ctx.end();
     }
   }
