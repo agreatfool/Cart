@@ -2,6 +2,14 @@ $ace-color1: #E8E8E8;
 $ace-color2: #DB784D;
 $ace-color3: #36312C;
 $ace-color4: #3B3A32;
+$ace-color5: #45403B;
+$ace-color6: #60A365;
+$ace-color7: #EBD1B7;
+$ace-color8: #95CC5E;
+$ace-color9: #F8BB39;
+$ace-color10: #F8F8F0;
+$ace-color11: #00A8C6;
+$ace-color12: #7A7267;
 
 .page-edit {
 
@@ -15,7 +23,7 @@ $ace-color4: #3B3A32;
 
   .ace-earthsong {
     background-color: $ace-color3;
-    color: #EBD1B7;
+    color: $ace-color7;
     .ace_gutter {
       background: $ace-color1;
       color: #333;
@@ -25,7 +33,7 @@ $ace-color4: #3B3A32;
       background: $ace-color1;
     }
     .ace_cursor {
-      color: #f8f8f0;
+      color: $ace-color10;
     }
     .ace_marker-layer .ace_selection {
       background: $ace-color2;
@@ -42,32 +50,32 @@ $ace-color4: #3B3A32;
       border: 1px solid $ace-color4;
     }
     .ace_marker-layer .ace_active-line {
-      background: #45403B;
+      background: $ace-color5;
     }
     .ace_gutter-active-line {
-      background-color: #45403B;
+      background-color: $ace-color5;
     }
     .ace_gutter-layer {
-      background-color: #45403B;
+      background-color: $ace-color5;
     }
     .ace_marker-layer .ace_selected-word {
       border: 1px solid $ace-color2;
     }
     .ace_fold {
-      background-color: #60A365;
-      border-color: #EBD1B7;
+      background-color: $ace-color6;
+      border-color: $ace-color7;
     }
     .ace_keyword {
       color: $ace-color2;
     }
     .ace_keyword.ace_other.ace_unit {
-      color: #95CC5E;
+      color: $ace-color8;
     }
     .ace_constant.ace_language {
       color: $ace-color2;
     }
     .ace_constant.ace_numeric {
-      color: #F8BB39;
+      color: $ace-color9;
     }
     .ace_constant.ace_character {
       color: $ace-color2;
@@ -76,13 +84,13 @@ $ace-color4: #3B3A32;
       color: $ace-color2;
     }
     .ace_support.ace_function {
-      color: #95CC5E;
+      color: $ace-color8;
     }
     .ace_support.ace_constant {
       color: $ace-color2;
     }
     .ace_support.ace_constant.ace_property-value {
-      color: #F8BB39;
+      color: $ace-color9;
     }
     .ace_support.ace_class {
       font-style: italic;
@@ -96,24 +104,24 @@ $ace-color4: #3B3A32;
       color: $ace-color2;
     }
     .ace_storage.ace_type {
-      color: #95CC5E;
+      color: $ace-color8;
     }
     .ace_invalid {
-      color: #f8f8f0;
-      background-color: #00a8c6;
+      color: $ace-color10;
+      background-color: $ace-color11;
     }
     .ace_invalid.ace_deprecated {
-      color: #f8f8f0;
-      background-color: #00a8c6;
+      color: $ace-color10;
+      background-color: $ace-color11;
     }
     .ace_string {
-      color: #F8BB39;
+      color: $ace-color9;
     }
     .ace_comment {
-      color: #7A7267;
+      color: $ace-color12;
     }
     .ace_variable {
-      color: #60A365;
+      color: $ace-color6;
     }
     .ace_variable.ace_parameter {
       font-style: italic;
@@ -122,10 +130,10 @@ $ace-color4: #3B3A32;
       color: $ace-color2;
     }
     .ace_entity.ace_name.ace_function {
-      color: #60A365;
+      color: $ace-color6;
     }
     .ace_entity.ace_name.ace_tag {
-      color: #95CC5E;
+      color: $ace-color8;
     }
   }
 
