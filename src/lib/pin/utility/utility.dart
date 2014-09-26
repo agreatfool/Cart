@@ -179,11 +179,11 @@ class PinUtility {
     return completer.future;
   }
 
-  static void handleError(dynamic e, StackTrace trace, {String message: null}) {
+  static void handleError(dynamic error, StackTrace trace, {String message: null}) {
     if (message != null) {
       PinLogger.instance.shout(message);
     }
-    PinLogger.instance.shout('Error: ${e}');
+    PinLogger.instance.shout('Error: ${error}');
     if (trace != null) {
       String traceStr = LibTrace.Trace.format(trace);
       PinLogger.instance.shout('StackTrace: ${traceStr}');
