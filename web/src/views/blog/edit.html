@@ -1,7 +1,27 @@
-<div class="container-fluid page-content-container">
+<div class="container-fluid page-content-container page-edit">
     <div class="row">
-        <div class="col-md-12">
-            <h2>blog/edit</h2>
+        <div class="col-md-12 page-top">
+            <h3>Edit</h3>
+        </div>
+    </div>
+    <div class="row page-body">
+        <div class="col-md-6">
+            <div id="markdown-edit"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="markdown-preview"></div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var editor = ace.edit('markdown-edit');
+
+    editor.setOption("showPrintMargin", false);
+    editor.setTheme('ace/theme/earthsong');
+
+    editor.getSession().setMode('ace/mode/markdown');
+    editor.getSession().on('change', function() {
+        $('#markdown-preview').html(marked(editor.getValue()));
+    });
+</script>

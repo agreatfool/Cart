@@ -41,6 +41,7 @@
     "marked": "~0.3.2",
     "angular-cookies": "~1.2.24",
     "pnotify": "~2.0.1",
-    "flat-ui": "~2.2.0"
+    "flat-ui": "~2.2.0",
+    "ace-builds": "~1.1.7"
   }
 }

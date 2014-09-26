@@ -1,0 +1,132 @@
+$ace-color1: #E8E8E8;
+$ace-color2: #DB784D;
+$ace-color3: #36312C;
+$ace-color4: #3B3A32;
+
+.page-edit {
+
+  #markdown-edit {
+    min-height: 750px;
+  }
+
+  #markdown-preview {
+    min-height: 750px;
+  }
+
+  .ace-earthsong {
+    background-color: $ace-color3;
+    color: #EBD1B7;
+    .ace_gutter {
+      background: $ace-color1;
+      color: #333;
+    }
+    .ace_print-margin {
+      width: 1px;
+      background: $ace-color1;
+    }
+    .ace_cursor {
+      color: #f8f8f0;
+    }
+    .ace_marker-layer .ace_selection {
+      background: $ace-color2;
+    }
+    .ace-earthsong.ace_multiselect .ace_selection.ace_start {
+      box-shadow: 0 0 3px 0px $ace-color3;
+      border-radius: 2px;
+    }
+    .ace_marker-layer .ace_step {
+      background: rgb(198, 219, 174);
+    }
+    .ace_marker-layer .ace_bracket {
+      margin: -1px 0 0 -1px;
+      border: 1px solid $ace-color4;
+    }
+    .ace_marker-layer .ace_active-line {
+      background: #45403B;
+    }
+    .ace_gutter-active-line {
+      background-color: #45403B;
+    }
+    .ace_gutter-layer {
+      background-color: #45403B;
+    }
+    .ace_marker-layer .ace_selected-word {
+      border: 1px solid $ace-color2;
+    }
+    .ace_fold {
+      background-color: #60A365;
+      border-color: #EBD1B7;
+    }
+    .ace_keyword {
+      color: $ace-color2;
+    }
+    .ace_keyword.ace_other.ace_unit {
+      color: #95CC5E;
+    }
+    .ace_constant.ace_language {
+      color: $ace-color2;
+    }
+    .ace_constant.ace_numeric {
+      color: #F8BB39;
+    }
+    .ace_constant.ace_character {
+      color: $ace-color2;
+    }
+    .ace_constant.ace_other {
+      color: $ace-color2;
+    }
+    .ace_support.ace_function {
+      color: #95CC5E;
+    }
+    .ace_support.ace_constant {
+      color: $ace-color2;
+    }
+    .ace_support.ace_constant.ace_property-value {
+      color: #F8BB39;
+    }
+    .ace_support.ace_class {
+      font-style: italic;
+      color: $ace-color2;
+    }
+    .ace_support.ace_type {
+      font-style: italic;
+      color: $ace-color2;
+    }
+    .ace_storage {
+      color: $ace-color2;
+    }
+    .ace_storage.ace_type {
+      color: #95CC5E;
+    }
+    .ace_invalid {
+      color: #f8f8f0;
+      background-color: #00a8c6;
+    }
+    .ace_invalid.ace_deprecated {
+      color: #f8f8f0;
+      background-color: #00a8c6;
+    }
+    .ace_string {
+      color: #F8BB39;
+    }
+    .ace_comment {
+      color: #7A7267;
+    }
+    .ace_variable {
+      color: #60A365;
+    }
+    .ace_variable.ace_parameter {
+      font-style: italic;
+    }
+    .ace_entity.ace_other.ace_attribute-name {
+      color: $ace-color2;
+    }
+    .ace_entity.ace_name.ace_function {
+      color: #60A365;
+    }
+    .ace_entity.ace_name.ace_tag {
+      color: #95CC5E;
+    }
+  }
+
+}

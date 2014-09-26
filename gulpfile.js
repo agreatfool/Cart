@@ -103,8 +103,22 @@ gulp.task('styles', function() {
     return Task_Styles();
 });
 
+// FIXME js / css codes in those two task shall also be minified !!!
+gulp.task('scripts_self_move', function() {
+    return gulp.src([
+        'web/src/scripts/ace-builds/src-min-noconflict/**/*'
+    ], { base: 'web/src/scripts' })
+    .pipe(gulp.dest('web/public/js'));
+});
+
+gulp.task('scripts_bower_move', function() {
+    return gulp.src([
+        'web/src/bower/ace-builds/src-min-noconflict/**/*'
+    ], { base: 'web/src/bower' })
+        .pipe(gulp.dest('web/public/js'));
+});
+
 gulp.task('styles_move', function() {
-    // FIXME css codes in this task shall also be minified !!!
     return gulp.src([
         'web/src/bower/bootstrap/dist/css/**/*',
         'web/src/bower/bootstrap/dist/fonts/**/*',
@@ -135,7 +149,7 @@ gulp.task('images', function() {
 });
 
 gulp.task('default', ['clean'], function() {
-    gulp.start('lint-scripts', 'scripts', 'styles_move', 'styles', 'htmls', 'images');
+    gulp.start('lint-scripts', 'scripts', 'scripts_self_move', 'scripts_bower_move', 'styles_move', 'styles', 'htmls', 'images');
 });
 
 gulp.task('watch', function() {
