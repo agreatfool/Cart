@@ -2,6 +2,6 @@
 
 module.exports = {
     'CartAccessCtrlService': require('./CartAccessCtrlService.js'),
-    'CartAceEditorService': require('./CartAceEditorService.js'),
-    'CartDataService': require('./CartDataService.js')
+    'CartDataService': require('./CartDataService.js'),
+    'CartEditorService': require('./CartEditorService.js')
 };
