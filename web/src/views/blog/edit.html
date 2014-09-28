@@ -13,15 +13,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    var editor = ace.edit('markdown-edit');
-
-    editor.setOption("showPrintMargin", false);
-    editor.setTheme('ace/theme/earthsong');
-
-    editor.getSession().setMode('ace/mode/markdown');
-    editor.getSession().on('change', function() {
-        $('#markdown-preview').html(marked(editor.getValue()));
-    });
-</script>
