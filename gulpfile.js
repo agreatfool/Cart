@@ -113,7 +113,8 @@ gulp.task('scripts_self_move', function() {
 
 gulp.task('scripts_bower_move', function() {
     return gulp.src([
-        'web/src/bower/ace-builds/src-min-noconflict/**/*'
+        'web/src/bower/ace-builds/src-min-noconflict/**/*',
+        'web/src/bower/highlightjs/highlight.pack.js'
     ], { base: 'web/src/bower' })
         .pipe(gulp.dest('web/public/js'));
 });
@@ -131,7 +132,8 @@ gulp.task('styles_move', function() {
         'web/src/bower/animate.css/animate.min.css',
         'web/src/bower/fullcalendar/fullcalendar.css',
         'web/src/bower/pnotify/pnotify.core.css',
-        'web/src/bower/pnotify/pnotify.buttons.css'
+        'web/src/bower/pnotify/pnotify.buttons.css',
+        'web/src/bower/highlightjs/styles/**/*'
     ], { base: 'web/src/bower' })
     .pipe(gulp.dest('web/public/css'));
 });
