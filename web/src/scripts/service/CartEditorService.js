@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, $, ace, marked, hljs */
+/* global _, $, ace, marked, hljs, CartUtility */
 module.exports = function() {
     // markd
     var renderer = new marked.Renderer();
@@ -77,38 +77,12 @@ module.exports = function() {
             editor.editElement.css('height', previewHeight);
         }
 
-        buildMdToc(converted);
-    };
-
-    var buildMdToc = function(html) { // TODO
-        var tocArray = {1: [], 2: [], 3: [], 4: [], 5: [], 6: []};
-
-        var prevLevel = null;
-        var appendHeader = function(headerLevel, headerText, anchorName) {
-            if (prevLevel == null) {
-                tocArray.push([headerText, anchorName]);
-            } else {
-
-            }
-        };
-
-        if (typeof html !== 'undefined' && html !== null && html !== '') {
-            var headers = $(html).filter(':header');
-            _.forEach(headers, function(header) {
-                var hElement = $(header);
-                var headerLevel = parseInt(hElement.prop("tagName").substring(1));
-                var headerText = hElement.text();
-                var anchorName = hElement.find('a').attr('name');
-            });
-            $('<ol></ol>');
-        }
-
-        return toc;
+        var toc = CartUtility.buildToc(converted, editor.baseUrl);
+        $('.page-edit').append(toc);
     };
 
     return {
         'createEditor': createEditor,
-        'previewMd': previewMd,
-        'buildMdToc': buildMdToc
+        'previewMd': previewMd
     };
 };
