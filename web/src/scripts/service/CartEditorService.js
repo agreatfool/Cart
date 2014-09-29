@@ -2,7 +2,6 @@
 
 /* global _, $, ace, marked, hljs */
 module.exports = function() {
-
     // markd
     var renderer = new marked.Renderer();
     renderer.heading = function(text, level) { // add anchor link
@@ -22,7 +21,7 @@ module.exports = function() {
         smartLists: true,
         smartypants: false,
         highlight: function (code, lang) {
-            // since highlight lib added class name not work, have to wrap code tag by self
+            // since the highlight class name added with highlight lib itself not working, have to wrap code tag by self
             return '<code class="hljs ' + lang + '">' + hljs.highlightAuto(code, [lang]).value + '</code>';
         }
     });
