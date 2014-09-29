@@ -90,4 +90,102 @@ CartUtility.prototype.handleResponse = function(result, notifySuccess, notifyErr
     }
 };
 
+CartUtility.prototype.buildToc = function(html, baseUrl) {
+    if (typeof baseUrl === 'undefined' || baseUrl === null) {
+        baseUrl = ''; // shall be 'http://...'
+    }
+    var rootNodeName = 'root';
+    /**
+     * [
+     *     { // index of this node is 5
+         *         "level": 3,
+         *         "text": "headerTextForLv3",
+         *         "anchor": "encodeURIComponent(headerTextForLv3)"
+         *         "parent": 4, // index of node in this array, only root parent is string 'root'
+         *         "html": $('<a href="#anchor">text</a>')
+         *     },
+     *     ...
+     * ]
+     */
+    var headers = [];
+
+    if (typeof html === 'undefined' || html === null || html === '') {
+        return '';
+    }
+
+    // find all headers, and collect basic info
+    var headerInfos = $(html).filter(':header');
+    if (headerInfos.length <= 0) {
+        return ''; // no headers found
+    }
+    _.forEach(headerInfos, function(header) {
+        // build basic headers info
+        var hElement = $(header);
+        var headerLevel = parseInt(hElement.prop("tagName").substring(1));
+        var headerText = hElement.text();
+        var anchorName = hElement.find('a').attr('name');
+        headers.push({
+            "level": headerLevel,
+            "text": headerText,
+            "anchor": anchorName,
+            "parent": null,
+            "html": null
+        });
+    });
+    var headersCloned = _.clone(headers);
+    // loop to build html code & find parent levels
+    _.forEach(headers, function(header, index) {
+        // FIXME angular anchor link issue
+        header.html = $('<li><a href="' + ((baseUrl === '') ? '' : (baseUrl + '/')) + '#' + header.anchor + '">' + header.text + '</a></li>');
+        if (index === 0) {
+            header.parent = rootNodeName;
+        } else {
+            var reversedBeforeHeaders = headersCloned.slice(0, index).reverse();
+            _.forEach(reversedBeforeHeaders, function(bfHeader, bfIndex) {
+                if (header.parent !== null) {
+                    // means parent already determined, skip this loop
+                    return;
+                }
+                if (bfHeader.level === header.level) {
+                    // same level, shall share the same parent node
+                    header.parent = bfHeader.parent;
+                } else if (bfHeader.level < header.level) {
+                    // current level is bigger than target, parent is target
+                    header.parent = (reversedBeforeHeaders.length - 1) - bfIndex; // since bfIndex is the index of reversed array
+                } else if (bfHeader.level > header.level) {
+                    // current level is lower than target, dismiss it
+                }
+            });
+            if (header.parent === null) {
+                // parent not found, root node
+                header.parent = rootNodeName;
+            }
+        }
+    });
+
+    // build final html codes
+    var root = $('<ol></ol>');
+    // build non root nodes first, and have to reverse headers first
+    // since we need to handle sub headers from the bottom to top
+    _.forEach(headers, function(header) {
+        if (header.parent === rootNodeName) {
+            return; // dismiss root nodes, since the content in it has not been built yet
+        }
+        var parentNode = headers[header.parent].html;
+        if (parentNode.find('ul').length <= 0) {
+            // parent li element does not contain the ul element, add it
+            parentNode.append('<ul></ul>');
+        }
+        $(parentNode.find('ul')[0]).append(header.html);
+    });
+    // build root nodes
+    _.forEach(headers, function(header) {
+        if (header.parent === rootNodeName) {
+            root.append(header.html);
+        }
+    });
+
+    return root.html();
+};
+
 module.exports = new CartUtility();
