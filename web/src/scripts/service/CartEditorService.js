@@ -69,8 +69,8 @@ module.exports = function() {
 
         editor.previewElement.html(converted);
 
-        var editHeight = editor.editElement.css('height');
-        var previewHeight = editor.previewElement.css('height');
+        var editHeight = parseInt(editor.editElement.css('height'));
+        var previewHeight = parseInt(editor.previewElement.css('height'));
         if (editHeight > previewHeight) {
             editor.previewElement.css('height', editHeight);
         } else if (editHeight < previewHeight) {
