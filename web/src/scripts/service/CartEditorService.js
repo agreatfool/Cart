@@ -26,13 +26,16 @@ module.exports = function() {
         }
     });
 
-    var createEditor = function(editElementId, previewElementId) {
+    var createEditor = function(editElementId, previewElementId, baseUrl) {
         // ACE
         if (typeof editElementId === 'undefined' || editElementId === null || editElementId === '') {
             editElementId = 'markdown-edit';
         }
         if (typeof previewElementId === 'undefined' || previewElementId === null || previewElementId === '') {
             previewElementId = 'markdown-preview';
+        }
+        if (typeof baseUrl === 'undefined' || baseUrl === null) {
+            baseUrl = '';
         }
 
         var aceEditor = ace.edit(editElementId);
@@ -59,6 +62,7 @@ module.exports = function() {
 
         aceEditor.editElement = $('#' + editElementId);
         aceEditor.previewElement = $('#' + previewElementId);
+        aceEditor.baseUrl = baseUrl;
 
         return aceEditor;
     };

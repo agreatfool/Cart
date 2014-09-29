@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = function ($scope, $dataService, $editorService) {
+module.exports = function ($scope, $location, $dataService, $editorService) {
     console.log('CartBlogNewCtrl');
 
-    $scope.aceEditor = $editorService.createEditor();
+    $scope.aceEditor = $editorService.createEditor('markdown-edit', 'markdown-preview', $location.absUrl());
 };
