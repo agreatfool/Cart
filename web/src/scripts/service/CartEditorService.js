@@ -7,7 +7,7 @@ module.exports = function() {
     renderer.heading = function(text, level) { // add anchor link
         return '' +
             '<h' + level + '>' +
-                '<a name="' + encodeURIComponent(text) + '"></a>' +
+                '<a name="' + CartUtility.escapeAnchorName(text) + '"></a>' +
                 text +
             '</h' + level + '>';
     };
@@ -81,6 +81,7 @@ module.exports = function() {
             editor.editElement.css('height', previewHeight);
         }
 
+        // FIXME edit page style, place TOC to a right position
         var toc = CartUtility.buildToc(converted, editor.baseUrl);
         $('.page-edit').append(toc);
     };

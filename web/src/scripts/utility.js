@@ -100,7 +100,7 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
      *     { // index of this node is 5
          *         "level": 3,
          *         "text": "headerTextForLv3",
-         *         "anchor": "encodeURIComponent(headerTextForLv3)"
+         *         "anchor": "CartUtility.escapeAnchorName(headerTextForLv3)"
          *         "parent": 4, // index of node in this array, only root parent is string 'root'
          *         "html": $('<a href="#anchor">text</a>')
          *     },
@@ -135,8 +135,7 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
     var headersCloned = _.clone(headers);
     // loop to build html code & find parent levels
     _.forEach(headers, function(header, index) {
-        // FIXME angular anchor link issue
-        header.html = $('<li><a href="' + ((baseUrl === '') ? '' : (baseUrl + '/')) + '#' + header.anchor + '">' + header.text + '</a></li>');
+        header.html = $('<li><a href="' + baseUrl + '#' + header.anchor + '">' + header.text + '</a></li>');
         if (index === 0) {
             header.parent = rootNodeName;
         } else {
@@ -186,6 +185,14 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
     });
 
     return root.html();
+};
+
+CartUtility.prototype.escapeAnchorName = function(anchorName) {
+    return encodeURIComponent(anchorName);
+};
+
+CartUtility.prototype.getPureAbsUrlFromLocation = function($location) {
+    return $location.protocol() + '://' + $location.host() + '/' + $location.path();
 };
 
 module.exports = new CartUtility();
