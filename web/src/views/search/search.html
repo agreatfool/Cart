@@ -8,20 +8,15 @@
         <!-- search conditions display -->
         <div class="col-md-12">
             <div class="row search-line">
-                <div class="col-md-2">
-                    <div class="btn-group select select-block">
-                        <button class="btn dropdown-toggle clearfix btn-primary" data-toggle="dropdown">
-                            <span class="filter-option pull-left">Show Search</span>
-                            &nbsp;
-                            <span class="caret"></span>
-                        </button>
-                        <span class="dropdown-arrow dropdown-arrow-inverse"></span>
-                        <ul class="dropdown-menu dropdown-inverse">
-                            <li ng-class="{selected: displayCondName == condName}" ng-repeat="condName in displayCondNames">
-                                <a ng-click="displayCond(condName)"><span class="pull-left">{{ condName }}</span></a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="col-md-2 btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">
+                        Show Search <span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                        <li ng-class="{active: displayCondName == condName}" ng-repeat="condName in displayCondNames">
+                            <a ng-click="displayCond(condName)">{{ condName }}</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <!-- search conditions -->
@@ -42,13 +37,11 @@
                                     <span class="label label-default">Selected Tags: </span>
                                 </div>
                             </div>
-                            <div class="row tagsrow tagsinput">
-                                <div class="col-md-12">
-                                    <span class="tag">
-                                        <span>
-                                            <span class="tag-name">This is a very long long tag name, longer than you can imagine</span>
-                                        </span>
-                                        <a class="tagsinput-remove-link"></a>
+                            <div class="row tagsinput-primary">
+                                <div class="col-md-12 bootstrap-tagsinput">
+                                    <span class="tag label label-info">
+                                        This is a very long long tag name, longer than you can imagine
+                                        <span class="tagsinput-remove-link" data-role="remove"></span>
                                     </span>
                                 </div>
                             </div>

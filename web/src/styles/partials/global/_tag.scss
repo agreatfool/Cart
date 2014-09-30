@@ -1,19 +1,19 @@
-.tagsrow {
+.tagsinput-primary {
   margin: 15px 0 0 0;
   .tag {
     padding-right: 16px;
   }
   .tag:hover {
-    padding-right: 22px;
+    padding-right: 26px;
   }
-  .tagsinput {
+  span .tagsinput-remove-link {
+    margin: 1px 0 0 12px;
+  }
+  .bootstrap-tagsinput {
     height: auto;
     border: none;
     padding: 10px 1px 5px 6px;
     box-shadow: $box-shadow;
-  }
-  .tagsinput-remove-link {
-    padding-top: 10px;
   }
   .tag-name {
     display: block;

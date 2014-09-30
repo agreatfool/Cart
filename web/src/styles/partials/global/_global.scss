@@ -6,3 +6,14 @@ body {
 .clear-all {
   clear: both;
 }
+
+/**
+ * Flat-UI hacks
+ */
+.dropdown-menu {
+  left: auto;
+}
+.dropdown-menu > li:first-child > a:first-child {
+  border-top-left-radius:  4px;
+  border-top-right-radius: 4px;
+}
