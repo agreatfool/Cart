@@ -184,7 +184,17 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
         }
     });
 
-    return root.html();
+    return '<ol>' + root.html() + '</ol>'; // since html() only returned the innerHtml of the element
+};
+
+CartUtility.prototype.toggleToc = function() {
+    var icon = $('.markdown-toc-icon');
+    var toc = $('.markdown-toc-content');
+    if (toc.html() !== '') {
+        toc.slideToggle('fast', function() {
+            icon.toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
+        });
+    }
 };
 
 CartUtility.prototype.escapeAnchorName = function(anchorName) {

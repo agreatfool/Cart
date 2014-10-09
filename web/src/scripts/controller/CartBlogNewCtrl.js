@@ -6,6 +6,8 @@ module.exports = function ($scope, $location, $anchorScroll, $dataService, $edit
 
     $scope.aceEditor = $editorService.createEditor('markdown-edit', 'markdown-preview', CartUtility.getPureAbsUrlFromLocation($location));
 
+    $scope.toggleToc = CartUtility.toggleToc;
+
     $scope.$on('$routeChangeStart', function() {
         // anchor link logic
         var prevHash = $location.hash();

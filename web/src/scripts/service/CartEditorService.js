@@ -56,6 +56,7 @@ module.exports = function() {
         aceEditor.getSession().setUseWrapMode(true);
         aceEditor.session.setScrollTop(false);
         aceEditor.resize(true);
+
         aceEditor.getSession().on('change', function() {
             previewMd(aceEditor);
         });
@@ -81,9 +82,8 @@ module.exports = function() {
             editor.editElement.css('height', previewHeight);
         }
 
-        // FIXME edit page style, place TOC to a right position
         var toc = CartUtility.buildToc(converted, editor.baseUrl);
-        $('.page-edit').append(toc);
+        $('.markdown-toc-content').html(toc);
     };
 
     return {
