@@ -63,6 +63,8 @@ module.exports = function() {
         aceEditor.previewElement = $('#' + previewElementId);
         aceEditor.baseUrl = baseUrl;
 
+        // TODO add keyboard binding for shortcuts, command + s, command + p, etc ...
+
         return aceEditor;
     };
 
