@@ -46,20 +46,18 @@ module.exports = function() {
         aceEditor.setBehavioursEnabled(true);
 
         aceEditor.getSession().setMode('ace/mode/markdown');
-
-        aceEditor.session.setUseWrapMode(true);
-        aceEditor.session.setNewLineMode("unix");
-        aceEditor.renderer.setShowGutter(true);
-        aceEditor.renderer.setPrintMarginColumn(true);
-        aceEditor.renderer.setPadding(15);
-        aceEditor.renderer.setScrollMargin(true ? 20 : 40, 40); // ENV.chrome_app ? 20 : 40, 40
-        aceEditor.getSession().setUseWrapMode(true);
-        aceEditor.session.setScrollTop(false);
-        aceEditor.resize(true);
-
         aceEditor.getSession().on('change', function() {
             previewMd(aceEditor);
         });
+
+        aceEditor.session.setUseWrapMode(true);
+        aceEditor.session.setNewLineMode("unix");
+        aceEditor.session.setScrollTop(false);
+        aceEditor.renderer.setShowGutter(true);
+        aceEditor.renderer.setPrintMarginColumn(true);
+        aceEditor.renderer.setPadding(15);
+        aceEditor.renderer.setScrollMargin(20);
+        aceEditor.resize(true);
 
         aceEditor.editElement = $('#' + editElementId);
         aceEditor.previewElement = $('#' + previewElementId);
