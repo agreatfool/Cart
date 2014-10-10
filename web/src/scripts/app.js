@@ -29,7 +29,7 @@ require('./../bower/ng-file-upload/angular-file-upload-shim.js'); // also includ
 
 // others
 global.moment = require('moment');
-global.pouchdb = require('pouchdb');
+global.PouchDB = require('pouchdb');
 global.md5 = require('blueimp-md5').md5;
 global.uuid = require('./../bower/node-uuid/uuid.js');
 global.marked = require('./../bower/marked/index.js');
