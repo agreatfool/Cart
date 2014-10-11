@@ -43,21 +43,6 @@ module.exports = function($http, $q) {
     };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    //-* DB RELATED
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var dbFlush = function() {
-        var deferred = $q.defer();
-        PouchDB.destroy(CartConst.DB_NAME).then(function() {
-            db = new PouchDB(CartConst.DB_NAME);
-            deferred.resolve(true);
-        }, function(err) {
-            CartUtility.notify('Error', err.toString(), 'error');
-            deferred.resolve(false);
-        });
-        return deferred.promise;
-    };
-
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var postSaveTmp = function(uuid, title, markdown) {
@@ -153,6 +138,15 @@ module.exports = function($http, $q) {
         });
         return deferred.promise;
     };
+
+    var postRemoveAllTmp = function() {
+        var deferred = $q.defer();
+        PouchDB.destroy(CartConst.DB_NAME).then(function() {
+            db = new PouchDB(CartConst.DB_NAME);
+            deferred.resolve(true);
+        }, function(err) {
+            CartUtility.notify('Error', err.toString(), 'error');
+            deferred.resolve(false);
         });
         return deferred.promise;
     };
