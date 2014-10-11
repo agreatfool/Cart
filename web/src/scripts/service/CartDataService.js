@@ -11,7 +11,7 @@ module.exports = function($http, $q) {
     var categories = {};
     var tags = {};
     /**
-     * Temporarily saved post:
+     * Structure of temporarily saved post:
      * {
      *     "title": title string,
      *     "md": markdown string,
@@ -151,19 +151,18 @@ module.exports = function($http, $q) {
         return deferred.promise;
     };
 
-    // FIXME remove later
-    global.db = db;
-    global.dbFlush = dbFlush;
-    global.dbSave = dbSave;
-    global.postSaveTmp = postSaveTmp;
-    global.postGetTmp = postGetTmp;
-
-    return {
+    // FIXME reformat later
+    var apis = {
         'getInitData': getInitData,
-        // database APIs
-        'dbFlush': dbFlush,
         // post APIs
         'postSaveTmp': postSaveTmp,
-        'postGetTmp': postGetTmp
+        'postGetTmp': postGetTmp,
+        'postRemoveTmp': postRemoveTmp,
+        'postGetAllTmp': postGetAllTmp,
+        'postRemoveAllTmp': postRemoveAllTmp
     };
+
+    global.apis = apis;
+
+    return apis;
 };
