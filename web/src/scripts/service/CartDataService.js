@@ -2,7 +2,7 @@
 
 /* global PouchDB, CartUtility */
 module.exports = function($http, $q) {
-    var db = new PouchDB('Cart');
+    var db = new PouchDB('CartDatabase');
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* MODELS
@@ -61,12 +61,8 @@ module.exports = function($http, $q) {
                 deferred.resolve(false); // previous done with error, resolve with false
             }
         }, function(err) {
-            if (typeof err === 'object') {
-                CartUtility.notify('Error', err.toString(), 'error');
-                deferred.resolve(false); // error, popup notification, resolve with false
-            } else {
-                deferred.resolve(true); // no error, resolve with true
-            }
+            CartUtility.notify('Error', err.toString(), 'error');
+            deferred.resolve(false); // error, popup notification, resolve with false
         });
         return deferred.promise;
     };
@@ -84,10 +80,30 @@ module.exports = function($http, $q) {
         });
     };
 
+    var postGetTmp = function(uuid) {
+        var deferred = $q.defer();
+        db.get(uuid).then(function(doc) {
+            if (doc !== null && typeof doc === 'object' && doc.hasOwnProperty('md')) {
+                deferred.resolve(doc.md);
+            } else {
+                deferred.resolve('');
+            }
+        }, function(err) {
+            if (typeof err === 'object' && err.status === 404) {
+                deferred.resolve('');
+            } else {
+                CartUtility.notify('Error', err.toString(), 'error');
+                deferred.resolve(false);
+            }
+        });
+        return deferred.promise;
+    };
+
     // FIXME remove later
     global.db = db;
     global.dbSave = dbSave;
     global.postSaveTmp = postSaveTmp;
+    global.postGetTmp = postGetTmp;
 
     return {
         'getInitData': getInitData,
