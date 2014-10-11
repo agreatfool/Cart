@@ -1,6 +1,6 @@
 'use strict';
 
-/* global PouchDB, CartUtility */
+/* global PouchDB, moment, CartUtility, CartConst */
 module.exports = function($http, $q) {
     var db = new PouchDB('CartDatabase');
 
@@ -63,6 +63,18 @@ module.exports = function($http, $q) {
         }, function(err) {
             CartUtility.notify('Error', err.toString(), 'error');
             deferred.resolve(false); // error, popup notification, resolve with false
+        });
+        return deferred.promise;
+    };
+
+    var dbFlush = function() {
+        var deferred = $q.defer();
+        PouchDB.destroy(CartConst.DB_NAME).then(function() {
+            db = new PouchDB(CartConst.DB_NAME);
+            deferred.resolve(true);
+        }, function(err) {
+            CartUtility.notify('Error', err.toString(), 'error');
+            deferred.resolve(false);
         });
         return deferred.promise;
     };

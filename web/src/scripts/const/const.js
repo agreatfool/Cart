@@ -16,4 +16,7 @@ CartConst.PAGE_FOOTER_HEIGHT = 100;
 // cookie token
 CartConst.TOKEN_NAME = 'CART-TOKEN';
 
+// database
+CartConst.DB_NAME = 'CartDatabase';
+
 module.exports = CartConst;
