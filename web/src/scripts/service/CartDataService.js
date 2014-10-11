@@ -13,6 +13,7 @@ module.exports = function($http, $q) {
     /**
      * Temporarily saved post:
      * {
+     *     "title": title string,
      *     "md": markdown string,
      *     "created": timestamp,
      *     "updated": timestamp
@@ -48,12 +49,14 @@ module.exports = function($http, $q) {
         var deferred = $q.defer();
         db.get(uuid)
         .then(function(doc) {
+            doc.title = title;
             doc.md = markdown;
             doc.updated = moment().unix();
             return db.put(doc, uuid, doc._rev); // old doc found, update it
         }, function(err) {
             if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
                 var doc = {
+                    "title": title,
                     "md": markdown,
                     "created": moment().unix(),
                     "updated": moment().unix()
