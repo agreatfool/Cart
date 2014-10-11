@@ -2,7 +2,7 @@
 
 /* global PouchDB, moment, CartUtility, CartConst */
 module.exports = function($http, $q) {
-    var db = new PouchDB('CartDatabase');
+    var db = new PouchDB(CartConst.DB_NAME);
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* MODELS
@@ -10,6 +10,14 @@ module.exports = function($http, $q) {
     var posts = {};
     var categories = {};
     var tags = {};
+    /**
+     * Temporarily saved post:
+     * {
+     *     "md": markdown string,
+     *     "created": timestamp,
+     *     "updated": timestamp
+     * }
+     */
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* DATA RELATED
@@ -37,16 +45,20 @@ module.exports = function($http, $q) {
     //-* DB RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var dbSave = function(uuid, markdown) {
-        markdown = {
-            "md": markdown
-        };
         var deferred = $q.defer();
         db.get(uuid)
         .then(function(doc) {
-            return db.put(markdown, uuid, doc._rev); // old doc found, update it
+            doc.md = markdown;
+            doc.updated = moment().unix();
+            return db.put(doc, uuid, doc._rev); // old doc found, update it
         }, function(err) {
             if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
-                return db.put(markdown, uuid);
+                var doc = {
+                    "md": markdown,
+                    "created": moment().unix(),
+                    "updated": moment().unix()
+                };
+                return db.put(doc, uuid);
             } else if (typeof err === 'object') {
                 CartUtility.notify('Error', err.toString(), 'error');
                 var sub = $q.defer();
@@ -96,13 +108,13 @@ module.exports = function($http, $q) {
         var deferred = $q.defer();
         db.get(uuid).then(function(doc) {
             if (doc !== null && typeof doc === 'object' && doc.hasOwnProperty('md')) {
-                deferred.resolve(doc.md);
+                deferred.resolve(doc);
             } else {
-                deferred.resolve('');
+                deferred.resolve(null);
             }
         }, function(err) {
             if (typeof err === 'object' && err.status === 404) {
-                deferred.resolve('');
+                deferred.resolve(null);
             } else {
                 CartUtility.notify('Error', err.toString(), 'error');
                 deferred.resolve(false);
@@ -113,13 +125,17 @@ module.exports = function($http, $q) {
 
     // FIXME remove later
     global.db = db;
+    global.dbFlush = dbFlush;
     global.dbSave = dbSave;
     global.postSaveTmp = postSaveTmp;
     global.postGetTmp = postGetTmp;
 
     return {
         'getInitData': getInitData,
+        // database APIs
+        'dbFlush': dbFlush,
         // post APIs
-        'postSaveTmp': postSaveTmp
+        'postSaveTmp': postSaveTmp,
+        'postGetTmp': postGetTmp
     };
 };
