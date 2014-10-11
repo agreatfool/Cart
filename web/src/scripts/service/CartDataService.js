@@ -1,6 +1,6 @@
 'use strict';
 
-/* global PouchDB, moment, CartUtility, CartConst */
+/* global _, PouchDB, moment, CartUtility, CartConst */
 module.exports = function($http, $q) {
     var db = new PouchDB(CartConst.DB_NAME);
 
@@ -100,18 +100,59 @@ module.exports = function($http, $q) {
     var postGetTmp = function(uuid) {
         var deferred = $q.defer();
         db.get(uuid).then(function(doc) {
-            if (doc !== null && typeof doc === 'object' && doc.hasOwnProperty('md')) {
-                deferred.resolve(doc);
-            } else {
-                deferred.resolve(null);
+            if (doc === null || typeof doc !== 'object' || !doc.hasOwnProperty('md')) {
+                doc = false;
             }
+            deferred.resolve(doc);
         }, function(err) {
-            if (typeof err === 'object' && err.status === 404) {
-                deferred.resolve(null);
-            } else {
+            if (typeof err === 'object' && err.status !== 404) {
                 CartUtility.notify('Error', err.toString(), 'error');
+            }
+            deferred.resolve(false);
+        });
+        return deferred.promise;
+    };
+
+    var postRemoveTmp = function(uuid) {
+        var deferred = $q.defer();
+        db.get(uuid).then(function(doc) {
+            if (doc !== null && typeof doc === 'object' && doc.hasOwnProperty('md')) {
+                db.remove(doc._id, doc._rev).then(function() {
+                    deferred.resolve(true);
+                }, function(err) {
+                    CartUtility.notify('Error', err.toString(), 'error');
+                    deferred.resolve(false);
+                });
+            } else {
                 deferred.resolve(false);
             }
+        }, function(err) {
+            if (typeof err === 'object' && err.status !== 404) {
+                CartUtility.notify('Error', err.toString(), 'error');
+            }
+            deferred.resolve(false);
+        });
+        return deferred.promise;
+    };
+
+    var postGetAllTmp = function() {
+        var deferred = $q.defer();
+        db.allDocs({ include_docs: true }).then(function(response) {
+            if (response.total_rows <= 0) {
+                deferred.resolve([]);
+            } else {
+                var docs = [];
+                _.forEach(response.rows, function(row) {
+                    docs.push(row.doc);
+                });
+                deferred.resolve(docs.reverse());
+            }
+        }, function(err) {
+            CartUtility.notify('Error', err.toString(), 'error');
+            deferred.resolve(false);
+        });
+        return deferred.promise;
+    };
         });
         return deferred.promise;
     };
