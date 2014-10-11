@@ -45,7 +45,22 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* DB RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var dbSave = function(uuid, markdown) {
+    var dbFlush = function() {
+        var deferred = $q.defer();
+        PouchDB.destroy(CartConst.DB_NAME).then(function() {
+            db = new PouchDB(CartConst.DB_NAME);
+            deferred.resolve(true);
+        }, function(err) {
+            CartUtility.notify('Error', err.toString(), 'error');
+            deferred.resolve(false);
+        });
+        return deferred.promise;
+    };
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* POST RELATED
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var postSaveTmp = function(uuid, title, markdown) {
         var deferred = $q.defer();
         db.get(uuid)
         .then(function(doc) {
@@ -80,31 +95,6 @@ module.exports = function($http, $q) {
             deferred.resolve(false); // error, popup notification, resolve with false
         });
         return deferred.promise;
-    };
-
-    var dbFlush = function() {
-        var deferred = $q.defer();
-        PouchDB.destroy(CartConst.DB_NAME).then(function() {
-            db = new PouchDB(CartConst.DB_NAME);
-            deferred.resolve(true);
-        }, function(err) {
-            CartUtility.notify('Error', err.toString(), 'error');
-            deferred.resolve(false);
-        });
-        return deferred.promise;
-    };
-
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    //-* POST RELATED
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var postSaveTmp = function(uuid, markdown) {
-        dbSave(uuid, markdown).then(function(result) {
-            if (false === result) {
-                CartUtility.notify('Save', 'Failed in saving!', 'error');
-            } else {
-                CartUtility.notify('Save', 'Post saved!');
-            }
-        });
     };
 
     var postGetTmp = function(uuid) {
