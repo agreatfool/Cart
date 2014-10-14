@@ -80,6 +80,22 @@ module.exports = function($dataService) {
                 // UPLOAD POST
             }
         });
+        aceEditor.commands.addCommand({
+            "name": "cmdDisplayIndex",
+            "bindKey": {"win": "Ctrl-I", "mac": "Command-I"},
+            "exec": function(editor) {
+                CartUtility.log('ACE Ctrl-I triggered: Display post index.');
+                CartUtility.toggleToc();
+            }
+        });
+        aceEditor.commands.addCommand({
+            "name": "cmdGotoTop",
+            "bindKey": {"win": "Ctrl-H", "mac": "Command-H"},
+            "exec": function(editor) {
+                CartUtility.log('ACE Ctrl-H triggered: Goto page top.');
+                $('.page-to-top').click();
+            }
+        });
 
         return aceEditor;
     };
