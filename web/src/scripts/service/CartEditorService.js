@@ -97,6 +97,21 @@ module.exports = function($dataService) {
             }
         });
 
+        $('#markdown-edit')
+        .bind('drop', function(event) {
+            console.log(event);
+            console.log('drop!');
+            event.preventDefault();
+            return false;
+        })
+        .bind('dragover', function() {
+            console.log(event);
+            console.log('dragover!');
+            event.preventDefault();
+            return false;
+        });
+        // TODO do not use ng-file-upload, remove it do upload yourself
+
         return aceEditor;
     };
 
