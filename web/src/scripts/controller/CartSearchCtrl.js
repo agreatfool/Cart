@@ -1,8 +1,8 @@
 'use strict';
 
-/* global $, moment */
+/* global $, moment, CartUtility */
 module.exports = function ($scope, $compile) {
-    console.log('CartSearchCtrl');
+    CartUtility.log('CartSearchCtrl');
 
     // DISPLAY CONTROL
     $scope.displayCondNames = ['Calendar', 'Categories', 'Tags'];
@@ -53,7 +53,7 @@ module.exports = function ($scope, $compile) {
          *     day: 2014-08-01
          * }
          */
-        console.log(cond);
+        CartUtility.log(cond);
     };
 
     /* config object */

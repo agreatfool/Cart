@@ -2,7 +2,7 @@
 
 /* global CartUtility */
 module.exports = function($scope, $location, $anchorScroll, $dataService, $editorService) {
-    console.log('CartBlogNewCtrl');
+    CartUtility.log('CartBlogNewCtrl');
 
     $scope.aceEditor = $editorService.createEditor('markdown-edit', 'markdown-preview', CartUtility.getPureAbsUrlFromLocation($location));
 

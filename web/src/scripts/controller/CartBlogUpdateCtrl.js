@@ -1,5 +1,6 @@
 'use strict';
 
+/* global CartUtility */
 module.exports = function ($scope, $location, $anchorScroll, $dataService, $editorService) {
-    console.log('CartBlogUpdateCtrl');
+    CartUtility.log('CartBlogUpdateCtrl');
 };

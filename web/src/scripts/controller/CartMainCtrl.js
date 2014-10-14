@@ -1,8 +1,8 @@
 'use strict';
 
-/* global $, CartConst */
+/* global $, CartConst, CartUtility */
 module.exports = function($scope, $location, $cookies, $window, $routeSegment, $footerService, $dataService, $accessService) {
-    console.log('CartMainCtrl');
+    CartUtility.log('CartMainCtrl');
 
     $scope.segment = $routeSegment;
     $scope.location = $location;

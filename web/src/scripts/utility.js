@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, $, PNotify */
+/* global _, $, moment, PNotify */
 var CartUtility = function() {
     this.spinTasksCount = 0;
     this.pnotifyStack = {'dir1': 'up', 'dir2': 'right', 'push': 'bottom', 'spacing1': 0, 'spacing2': 0};
@@ -203,6 +203,19 @@ CartUtility.prototype.escapeAnchorName = function(anchorName) {
 
 CartUtility.prototype.getPureAbsUrlFromLocation = function($location) {
     return $location.protocol() + '://' + $location.host() + '/' + $location.path();
+};
+
+CartUtility.prototype.log = function(msg, facility) {
+    if (typeof msg === 'undefined' || msg === '' || msg === null) {
+        return;
+    }
+    if (typeof console === 'object') {
+        if (typeof msg === 'object') {
+            msg = JSON.stringify(msg);
+        }
+        msg = '[' + moment().format('YYYY-MM-DD HH:mm:ss') + ']' + ((typeof facility === 'string') ? (' ' + facility) : '') + ' ' + msg;
+        console.log(msg);
+    }
 };
 
 module.exports = new CartUtility();

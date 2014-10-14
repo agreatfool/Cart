@@ -1,7 +1,8 @@
 'use strict';
 
+/* global CartUtility */
 module.exports = function ($scope, $location, $accessService) {
-    console.log('CartOauthCtrl');
+    CartUtility.log('CartOauthCtrl');
 
     $scope.hasBeenInited = false;
 

@@ -2,7 +2,7 @@
 
 /* global CartUtility */
 module.exports = function ($scope, $accessService) {
-    console.log('CartLoginCtrl');
+    CartUtility.log('CartLoginCtrl');
 
     $scope.startLoginProcess = function() {
         if ($accessService.isMaster()) {
