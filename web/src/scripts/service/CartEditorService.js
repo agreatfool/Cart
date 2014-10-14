@@ -68,7 +68,7 @@ module.exports = function($dataService) {
             "name": "cmdSaveTmp",
             "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
             "exec": function(editor) {
-                CartUtility.log('ACE Ctrl-S triggered!');
+                CartUtility.log('ACE Ctrl-S triggered: Save post tmp.');
                 // SAVE TMP
             }
         });
@@ -76,7 +76,7 @@ module.exports = function($dataService) {
             "name": "cmdUpload",
             "bindKey": {"win": "Ctrl-U", "mac": "Command-U"},
             "exec": function(editor) {
-                CartUtility.log('ACE Ctrl-U triggered!');
+                CartUtility.log('ACE Ctrl-U triggered: Upload post.');
                 // UPLOAD POST
             }
         });
