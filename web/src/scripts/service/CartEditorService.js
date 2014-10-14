@@ -94,8 +94,10 @@ module.exports = function($dataService) {
         var previewHeight = parseInt(editor.previewElement.css('height'));
         if (editHeight > previewHeight) {
             editor.previewElement.css('height', editHeight);
+            editor.resize();
         } else if (editHeight < previewHeight) {
             editor.editElement.css('height', previewHeight);
+            editor.resize();
         }
 
         var toc = CartUtility.buildToc(converted, editor.baseUrl);
