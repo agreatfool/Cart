@@ -66,7 +66,7 @@ module.exports = function($dataService) {
         // TODO add keyboard binding for shortcuts, command + s, command + p, etc ...
         aceEditor.commands.addCommand({
             "name": "cmdSaveTmp",
-            "bindKey": {"win": "Ctrl-S",  "mac": "Command-S"},
+            "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-S triggered!');
                 // SAVE TMP
@@ -74,7 +74,7 @@ module.exports = function($dataService) {
         });
         aceEditor.commands.addCommand({
             "name": "cmdUpload",
-            "bindKey": {"win": "Ctrl-U",  "mac": "Command-U"},
+            "bindKey": {"win": "Ctrl-U", "mac": "Command-U"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-U triggered!');
                 // UPLOAD POST
