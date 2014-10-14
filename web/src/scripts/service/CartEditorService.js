@@ -1,7 +1,7 @@
 'use strict';
 
 /* global _, $, ace, marked, hljs, CartUtility */
-module.exports = function() {
+module.exports = function($dataService) {
     // markd
     var renderer = new marked.Renderer();
     renderer.heading = function(text, level) { // add anchor link

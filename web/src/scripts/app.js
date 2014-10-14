@@ -83,7 +83,7 @@ var services = angular.module('Cart.Services', []);
 
 services.factory('CartAccessCtrlService', ['$http', '$q', '$cookies', serviceSources.CartAccessCtrlService]);
 services.factory('CartDataService', ['$http', '$q', serviceSources.CartDataService]);
-services.factory('CartEditorService', ['$http', '$q', '$cookies', serviceSources.CartEditorService]);
+services.factory('CartEditorService', ['$http', '$q', '$cookies', 'CartDataService', serviceSources.CartEditorService]);
 services.factory('CartFixFooterService', [function() {
     return { 'fixFooter': fixFooter };
 }]);
