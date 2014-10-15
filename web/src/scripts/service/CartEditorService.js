@@ -63,7 +63,6 @@ module.exports = function($dataService) {
         aceEditor.previewElement = $('#' + previewElementId);
         aceEditor.baseUrl = baseUrl;
 
-        // TODO add keyboard binding for shortcuts, command + s, command + p, etc ...
         aceEditor.commands.addCommand({
             "name": "cmdSaveTmp",
             "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
@@ -97,20 +96,30 @@ module.exports = function($dataService) {
             }
         });
 
-        $('#markdown-edit')
-        .bind('drop', function(event) {
-            console.log(event);
-            console.log('drop!');
-            event.preventDefault();
-            return false;
-        })
-        .bind('dragover', function() {
-            console.log(event);
-            console.log('dragover!');
-            event.preventDefault();
-            return false;
-        });
-        // TODO do not use ng-file-upload, remove it do upload yourself
+        // file upload related
+        if (CartUtility.isDndSupported()) {
+            $('#markdown-edit')
+            .bind('drop', function(event) {
+                console.log(event);
+                console.log('drop!');
+                event.preventDefault();
+                return false;
+            })
+            .bind('dragover', function() {
+                // eat the dragover event to enable drop event
+                event.preventDefault(); return false;
+            });
+            // TODO do not use ng-file-upload, remove it do upload yourself
+        } else {
+            CartUtility.notify(
+                'Warning',
+                'Drag & Drop file upload functionality is not supported in this browser. \n' +
+                'You cannot upload file! \n' +
+                'Please use modern browsers like Chrome.',
+                'notice',
+                100000 // 10s
+            );
+        }
 
         return aceEditor;
     };

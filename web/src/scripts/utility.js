@@ -220,4 +220,9 @@ CartUtility.prototype.log = function(msg, facility) {
     }
 };
 
+CartUtility.prototype.isDndSupported = function() {
+    var div = document.createElement('div');
+    return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+};
+
 module.exports = new CartUtility();
