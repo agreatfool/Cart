@@ -129,6 +129,9 @@ $ace-color12: #7A7267;
   .ace-earthsong {
     background-color: $ace-color3;
     color: $ace-color7;
+    .ace_drag_over {
+      border: 5px dashed $color-silver;
+    }
     .ace_gutter {
       color: $color-silver;
     }

@@ -98,18 +98,43 @@ module.exports = function($dataService) {
 
         // file upload related
         if (CartUtility.isDndSupported()) {
-            $('#markdown-edit')
-            .bind('drop', function(event) {
-                console.log(event);
-                console.log('drop!');
+            // intercept document body drag & drop event, prevent document drop page redirect
+            $(document).on('dragenter', function(event) {
+                event.stopPropagation();
                 event.preventDefault();
-                return false;
-            })
-            .bind('dragover', function() {
-                // eat the dragover event to enable drop event
-                event.preventDefault(); return false;
+            }).on('dragover', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }).on('drop', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
             });
-            // TODO do not use ng-file-upload, remove it do upload yourself
+            // bind real drop event
+            var aceContent = $('.ace_content');
+            aceContent.on('dragenter', function(event) {
+                // display drag over view effect
+                event.stopPropagation();
+                event.preventDefault();
+                aceContent.addClass('ace_drag_over');
+            }).on('dragleave', function(event) {
+                // hide drag over view effect
+                event.stopPropagation();
+                event.preventDefault();
+                aceContent.removeClass('ace_drag_over');
+            }).on('dragover', function(event) {
+                // intercept the dragover event to enable drop event
+                event.stopPropagation();
+                event.preventDefault();
+            }).on('drop', function(event) {
+                // drop to upload
+                aceContent.removeClass('ace_drag_over');
+                CartUtility.notify('Uploading', 'Start to upload file ', 'info');
+                var files = event.originalEvent.dataTransfer.files;
+                console.log(files);
+                console.log('drop!');
+                event.stopPropagation();
+                event.preventDefault();
+            });
         } else {
             CartUtility.notify(
                 'Warning',
