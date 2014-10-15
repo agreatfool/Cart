@@ -24,8 +24,6 @@ require('angular-animate');
 require('angular-route-segment');
 require('angular-cookies');
 require('angular-ui-calendar');
-require('ng-file-upload');
-require('./../bower/ng-file-upload/angular-file-upload-shim.js'); // also include it's shim
 
 // others
 global.moment = require('moment');
