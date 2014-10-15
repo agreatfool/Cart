@@ -41,3 +41,34 @@
     transform: scale(1.0);
   }
 }
+
+.spinner-markdown {
+  margin: auto 0;
+  width: 70px;
+  text-align: center;
+}
+
+.spinner-markdown > div {
+  width: 18px;
+  height: 18px;
+  background-color: $color-silver;
+  border-radius: 100%;
+  display: inline-block;
+  animation: bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner-markdown .bounce1 {
+  animation-delay: -0.32s;
+}
+
+.spinner-markdown .bounce2 {
+  animation-delay: -0.16s;
+}
+
+@keyframes bouncedelay {
+  0%, 80%, 100% {
+    transform: scale(0.0);
+  } 40% {
+    transform: scale(1.0);
+  }
+}
