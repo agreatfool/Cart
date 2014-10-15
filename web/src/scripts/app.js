@@ -24,6 +24,7 @@ require('angular-animate');
 require('angular-route-segment');
 require('angular-cookies');
 require('angular-ui-calendar');
+require('ng-file-upload');
 
 // others
 global.moment = require('moment');
@@ -47,7 +48,7 @@ global.CartUtility = require('./utility.js');
 var app = angular.module('Cart', [
     'ngRoute', 'ngAnimate', 'ngCookies',
     'route-segment', 'view-segment',
-    'ui.calendar',
+    'angularFileUpload', 'ui.calendar',
     'Cart.Controllers', 'Cart.Services'
 ]);
 
@@ -80,7 +81,7 @@ controllers.controller('CartMasterCtrl', ['$scope', ctrlSources.CartMasterCtrl])
 var services = angular.module('Cart.Services', []);
 
 services.factory('CartAccessCtrlService', ['$http', '$q', '$cookies', serviceSources.CartAccessCtrlService]);
-services.factory('CartDataService', ['$http', '$q', serviceSources.CartDataService]);
+services.factory('CartDataService', ['$http', '$q', '$upload', serviceSources.CartDataService]);
 services.factory('CartEditorService', ['$http', '$q', '$cookies', 'CartDataService', serviceSources.CartEditorService]);
 services.factory('CartFixFooterService', [function() {
     return { 'fixFooter': fixFooter };

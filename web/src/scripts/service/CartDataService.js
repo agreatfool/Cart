@@ -1,7 +1,7 @@
 'use strict';
 
 /* global _, PouchDB, moment, CartUtility, CartConst */
-module.exports = function($http, $q) {
+module.exports = function($http, $q, $upload) {
     var db = new PouchDB(CartConst.DB_NAME);
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

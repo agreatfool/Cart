@@ -42,6 +42,7 @@
     "pnotify": "~2.0.1",
     "flat-ui": "~2.2.0",
     "ace-builds": "~1.1.7",
-    "highlightjs": "~8.0.0"
+    "highlightjs": "~8.0.0",
+    "ng-file-upload": "~1.6.12"
   }
 }
