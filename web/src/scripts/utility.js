@@ -32,6 +32,8 @@ CartUtility.prototype.spinHide = function() {
 };
 
 CartUtility.prototype.notify = function(title, text, type, duration) {
+    // type: "notice", "info", "success", or "error"
+    // duration: milliseconds
     if (typeof title === 'undefined') {
         title = 'title';
     }
