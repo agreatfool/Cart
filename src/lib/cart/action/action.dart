@@ -170,7 +170,7 @@ class CartAction {
     // case 1:
     var binary = new List<int>();
     ctx.req.listen(binary.addAll, onDone: () {
-
+      PinLogger.instance.fine('File upload done...');
     });
     // case 2:
     // import 'package:http_server/http_server.dart';
