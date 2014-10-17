@@ -132,6 +132,7 @@ module.exports = function($http, $q, $cookies, $dataService) {
                 var files = event.originalEvent.dataTransfer.files;
                 console.log(files);
                 console.log('drop!');
+                $dataService.fileUpload(files[0]);
                 event.stopPropagation();
                 event.preventDefault();
             });

@@ -171,6 +171,10 @@ class CartAction {
     var binary = new List<int>();
     ctx.req.listen(binary.addAll, onDone: () {
       PinLogger.instance.fine('File upload done...');
+      PinLogger.instance.fine(ctx.params);
+
+      String str = new String.fromCharCodes(binary);
+      PinLogger.instance.fine(str);
     });
     // case 2:
     // import 'package:http_server/http_server.dart';
