@@ -9,10 +9,13 @@ module.exports = function($scope, $location, $anchorScroll, $dataService, $edito
     $scope.toggleToc = CartUtility.toggleToc;
 
     $scope.$on('$routeChangeStart', function() {
+        CartUtility.log('CartBlogNewCtrl $routeChangeStart entered!');
         // anchor link logic
         var prevHash = $location.hash();
-        $location.hash(CartUtility.escapeAnchorName(prevHash));
-        $anchorScroll();
-        $location.hash(prevHash);
+        if (typeof prevHash === 'string' && prevHash !== '') {
+            $location.hash(CartUtility.escapeAnchorName(prevHash));
+            $anchorScroll();
+            $location.hash(prevHash);
+        }
     });
 };
