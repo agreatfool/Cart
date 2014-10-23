@@ -7,7 +7,7 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
     $scope.segment = $routeSegment;
     $scope.location = $location;
     $scope.rootPath = $location.path().split('/')[1]; // for nav highlight
-    $scope.indexPaths = ['', 'new', 'update', 'year', 'month', 'day'];
+    $scope.indexPaths = ['', 'new', 'update', 'year', 'month', 'day']; // for index nav high light
     $scope.isMaster = $accessService.isMaster();
 
     $scope.pageGoTo = function(page) {
