@@ -40,8 +40,9 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
 
     // route change event, when location changed
     $scope.$on('$routeChangeStart', function(event, next, current) {
+        CartUtility.log('CartMainCtrl $routeChangeStart entered!');
         // reset the rootPath in url
-        $scope.rootPath = $location.path().split('/')[1];
+        $scope.rootPath = $location.path().split('/')[1]; // $scope.rootPath: "http://host/post/postId" => "post"
         // validate accessible
         var validateUrl = $scope.rootPath;
         if (typeof next !== 'undefined' && next.hasOwnProperty('originalPath')) {
