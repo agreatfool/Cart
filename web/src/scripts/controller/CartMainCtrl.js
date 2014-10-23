@@ -28,10 +28,11 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
     $scope.loginToggle = function() {
         if ($scope.isMaster) { // already login
             // logout
-            $accessService.logout().then(function() {
+            var actionAfterLogout = function() {
                 delete $cookies[CartConst.TOKEN_NAME];
                 $window.location.href = CartUtility.getPureRootUrlFromLocation($location);
-            });
+            };
+            $accessService.logout().then(actionAfterLogout, actionAfterLogout);
         } else {
             // redirect to login page
             $location.url('/login');
