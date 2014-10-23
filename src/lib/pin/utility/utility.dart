@@ -166,7 +166,7 @@ class PinUtility {
         completer.complete(true);
       } else {
         dir.create(recursive: true)
-        .then(() {
+        .then((_) {
           completer.complete(true);
         })
         .catchError((e, trace) {
