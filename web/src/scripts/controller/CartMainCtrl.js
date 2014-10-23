@@ -1,6 +1,6 @@
 'use strict';
 
-/* global $, CartConst, CartUtility */
+/* global $, _, CartConst, CartUtility */
 module.exports = function($scope, $location, $cookies, $window, $routeSegment, $footerService, $dataService, $accessService) {
     CartUtility.log('CartMainCtrl');
 
@@ -45,7 +45,7 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
         $scope.rootPath = $location.path().split('/')[1]; // $scope.rootPath: "http://host/post/postId" => "post"
         // validate accessible
         var validateUrl = $scope.rootPath;
-        if (typeof next !== 'undefined' && next.hasOwnProperty('originalPath')) {
+        if (!_.isUndefined(next) && next.hasOwnProperty('originalPath')) {
             validateUrl = next.originalPath;
         }
         if (!$accessService.isUrlAccessibleForUser(validateUrl)) {

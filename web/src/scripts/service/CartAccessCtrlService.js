@@ -45,7 +45,7 @@ module.exports = function($http, $q, $cookies) {
         var rootPath = null;
         var split = url.split('/');
         _.forEach(split, function(element) {
-            if (typeof element === 'string' && element !== '' && element !== null && rootPath === null) {
+            if (_.isString(element) && !_.isEmpty(element) && !_.isNull(element) && _.isNull(rootPath)) {
                 rootPath = element;
             }
         });

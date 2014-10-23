@@ -28,13 +28,13 @@ module.exports = function($http, $q, $cookies, $dataService) {
 
     var createEditor = function(editElementId, previewElementId, baseUrl) {
         // ACE
-        if (typeof editElementId === 'undefined' || editElementId === null || editElementId === '') {
+        if (_.isUndefined(editElementId) || _.isNull(editElementId) || _.isEmpty(editElementId)) {
             editElementId = 'markdown-edit';
         }
-        if (typeof previewElementId === 'undefined' || previewElementId === null || previewElementId === '') {
+        if (_.isUndefined(previewElementId) || _.isNull(previewElementId) || _.isEmpty(previewElementId)) {
             previewElementId = 'markdown-preview';
         }
-        if (typeof baseUrl === 'undefined' || baseUrl === null) {
+        if (_.isUndefined(baseUrl) || _.isNull(baseUrl)) {
             baseUrl = '';
         }
 

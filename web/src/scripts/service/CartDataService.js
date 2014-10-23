@@ -62,7 +62,7 @@ module.exports = function($http, $q, $upload) {
                     "updated": moment().unix()
                 };
                 return db.put(doc, uuid);
-            } else if (typeof err === 'object') {
+            } else if (_.isObject(err)) {
                 CartUtility.notify('Error', err.toString(), 'error');
                 var sub = $q.defer();
                 sub.resolve(false); // error encountered, resolve with false
@@ -85,12 +85,12 @@ module.exports = function($http, $q, $upload) {
     var postGetTmp = function(uuid) {
         var deferred = $q.defer();
         db.get(uuid).then(function(doc) {
-            if (doc === null || typeof doc !== 'object' || !doc.hasOwnProperty('md')) {
+            if (_.isNull(doc) || !_.isObject(doc) || !doc.hasOwnProperty('md')) {
                 doc = false;
             }
             deferred.resolve(doc);
         }, function(err) {
-            if (typeof err === 'object' && err.status !== 404) {
+            if (_.isObject(err) && err.status !== 404) {
                 CartUtility.notify('Error', err.toString(), 'error');
             }
             deferred.resolve(false);
@@ -101,7 +101,7 @@ module.exports = function($http, $q, $upload) {
     var postRemoveTmp = function(uuid) {
         var deferred = $q.defer();
         db.get(uuid).then(function(doc) {
-            if (doc !== null && typeof doc === 'object' && doc.hasOwnProperty('md')) {
+            if (!_.isNull(doc) && _.isOjbect(doc) && doc.hasOwnProperty('md')) {
                 db.remove(doc._id, doc._rev).then(function() {
                     deferred.resolve(true);
                 }, function(err) {
@@ -112,7 +112,7 @@ module.exports = function($http, $q, $upload) {
                 deferred.resolve(false);
             }
         }, function(err) {
-            if (typeof err === 'object' && err.status !== 404) {
+            if (_.isObject(err) && err.status !== 404) {
                 CartUtility.notify('Error', err.toString(), 'error');
             }
             deferred.resolve(false);

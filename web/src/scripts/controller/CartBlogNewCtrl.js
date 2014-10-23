@@ -1,6 +1,6 @@
 'use strict';
 
-/* global CartUtility */
+/* global _, CartUtility */
 module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, $editorService) {
     CartUtility.log('CartBlogNewCtrl');
 
@@ -12,7 +12,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         CartUtility.log('CartBlogNewCtrl $routeChangeStart entered!');
         // anchor link logic
         var prevHash = $location.hash();
-        if (typeof prevHash === 'string' && prevHash !== '') {
+        if (_.isString(prevHash) && !_.isEmpty(prevHash)) {
             $location.hash(CartUtility.escapeAnchorName(prevHash));
             $anchorScroll();
             $location.hash(prevHash);

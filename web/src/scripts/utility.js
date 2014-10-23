@@ -10,7 +10,7 @@ CartUtility.prototype.spinShow = function(promise) {
     var self = this;
     self.spinTasksCount++;
     $('.spinner-mask').show();
-    if (typeof promise === 'object' && promise.hasOwnProperty('finally')) {
+    if (_.isObject(promise) && promise.hasOwnProperty('finally')) {
         // this is a promise
         promise['finally'](function() {
             self.spinHide();
@@ -34,16 +34,16 @@ CartUtility.prototype.spinHide = function() {
 CartUtility.prototype.notify = function(title, text, type, duration) {
     // type: "notice", "info", "success", or "error"
     // duration: milliseconds
-    if (typeof title === 'undefined') {
+    if (_.isUndefined(title)) {
         title = 'title';
     }
-    if (typeof text === 'undefined') {
+    if (_.isUndefined(text)) {
         text = '';
     }
-    if (typeof type === 'undefined' || type === '' || type === null) {
+    if (_.isUndefined(type) || _.isEmpty(type) || _.isNull(type)) {
         type = 'info';
     }
-    if (typeof duration === 'undefined' || duration === '' || duration === null) {
+    if (_.isUndefined(duration) || _.isEmpty(duration) || _.isNull(duration)) {
         duration = 3000; // 3s
     }
 
@@ -64,10 +64,10 @@ CartUtility.prototype.notify = function(title, text, type, duration) {
 };
 
 CartUtility.prototype.handleResponse = function(result, notifySuccess, notifyError) {
-    if (typeof notifySuccess !== 'boolean') {
+    if (!_.isBoolean(notifySuccess)) {
         notifySuccess = false; // default not display the succeed message
     }
-    if (typeof notifyError !== 'boolean') {
+    if (!_.isBoolean(notifyError)) {
         notifyError = true; // default display the failure message
     }
 
@@ -93,7 +93,7 @@ CartUtility.prototype.handleResponse = function(result, notifySuccess, notifyErr
 };
 
 CartUtility.prototype.buildToc = function(html, baseUrl) {
-    if (typeof baseUrl === 'undefined' || baseUrl === null) {
+    if (_.isUndefined(baseUrl) || _.isNull(baseUrl)) {
         baseUrl = ''; // shall be 'http://...'
     }
     var rootNodeName = 'root';
@@ -111,7 +111,7 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
      */
     var headers = [];
 
-    if (typeof html === 'undefined' || html === null || html === '') {
+    if (_.isUndefined(html) || _.isEmpty(html) || _.isNull(html)) {
         return '';
     }
 
@@ -212,14 +212,14 @@ CartUtility.prototype.getPureAbsUrlFromLocation = function($location) {
 };
 
 CartUtility.prototype.log = function(msg, facility) {
-    if (typeof msg === 'undefined' || msg === '' || msg === null) {
+    if (_.isUndefined(msg) || _.isEmpty(msg) || _.isNull(msg)) {
         return;
     }
-    if (typeof console === 'object') {
-        if (typeof msg === 'object') {
+    if (_.isObject(console)) {
+        if (_.isObject(msg)) {
             msg = JSON.stringify(msg);
         }
-        msg = '[' + moment().format('YYYY-MM-DD HH:mm:ss') + ']' + ((typeof facility === 'string') ? (' ' + facility) : '') + ' ' + msg;
+        msg = '[' + moment().format('YYYY-MM-DD HH:mm:ss') + ']' + ((_.isString(facility)) ? (' ' + facility) : '') + ' ' + msg;
         console.log(msg);
     }
 };
