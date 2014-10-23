@@ -203,6 +203,10 @@ CartUtility.prototype.escapeAnchorName = function(anchorName) {
     return encodeURIComponent(anchorName);
 };
 
+CartUtility.prototype.getPureRootUrlFromLocation = function($location) {
+    return $location.protocol() + '://' + $location.host() + '/';
+};
+
 CartUtility.prototype.getPureAbsUrlFromLocation = function($location) {
     return $location.protocol() + '://' + $location.host() + '/' + $location.path();
 };

@@ -1,14 +1,14 @@
 'use strict';
 
 /* global CartUtility */
-module.exports = function ($scope, $location, $accessService) {
+module.exports = function ($scope, $location, $window, $accessService) {
     CartUtility.log('CartOauthCtrl');
 
     $scope.hasBeenInited = false;
 
     $scope.startOauthProcess = function() {
         $accessService.getOauthUrl().then(function(result) {
-            window.location.href = result.url;
+            $window.location.href = result.url;
         });
     };
 

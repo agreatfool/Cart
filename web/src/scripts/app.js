@@ -63,15 +63,15 @@ app.config(['$routeProvider', '$locationProvider', '$routeSegmentProvider', rout
 var controllers = angular.module('Cart.Controllers', []);
 
 controllers.controller('CartMainCtrl', ['$scope', '$location', '$cookies', '$window', '$routeSegment', 'CartFixFooterService', 'CartDataService', 'CartAccessCtrlService', ctrlSources.CartMainCtrl]);
-controllers.controller('CartBlogListCtrl', ['$scope', ctrlSources.CartBlogListCtrl]);
+controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', ctrlSources.CartBlogListCtrl]);
 controllers.controller('CartBlogNewCtrl', ['$scope', '$location', '$anchorScroll', 'CartDataService', 'CartEditorService', ctrlSources.CartBlogNewCtrl]);
 controllers.controller('CartBlogUpdateCtrl', ['$scope', '$location', '$anchorScroll', 'CartDataService', 'CartEditorService', ctrlSources.CartBlogUpdateCtrl]);
 controllers.controller('CartBlogViewCtrl', ['$scope', ctrlSources.CartBlogViewCtrl]);
 controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCategoryCtrl]);
 controllers.controller('CartBlogTagCtrl', ['$scope', ctrlSources.CartBlogTagCtrl]);
 controllers.controller('CartSearchCtrl', ['$scope', '$compile', ctrlSources.CartSearchCtrl]);
-controllers.controller('CartOauthCtrl', ['$scope', '$location', 'CartAccessCtrlService', ctrlSources.CartOauthCtrl]);
-controllers.controller('CartLoginCtrl', ['$scope', 'CartAccessCtrlService', ctrlSources.CartLoginCtrl]);
+controllers.controller('CartOauthCtrl', ['$scope', '$location', '$window', 'CartAccessCtrlService', ctrlSources.CartOauthCtrl]);
+controllers.controller('CartLoginCtrl', ['$scope', '$window', 'CartAccessCtrlService', ctrlSources.CartLoginCtrl]);
 controllers.controller('CartProfileCtrl', ['$scope', ctrlSources.CartProfileCtrl]);
 controllers.controller('CartMasterCtrl', ['$scope', ctrlSources.CartMasterCtrl]);
 

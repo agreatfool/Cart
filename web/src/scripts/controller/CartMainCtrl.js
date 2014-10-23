@@ -30,7 +30,7 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
             // logout
             $accessService.logout().then(function() {
                 delete $cookies[CartConst.TOKEN_NAME];
-                $window.location.href = $window.location.protocol + '//' + $window.location.host;
+                $window.location.href = CartUtility.getPureRootUrlFromLocation($location);
             });
         } else {
             // redirect to login page
