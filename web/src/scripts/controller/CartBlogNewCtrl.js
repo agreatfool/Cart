@@ -1,10 +1,10 @@
 'use strict';
 
 /* global CartUtility */
-module.exports = function($scope, $location, $anchorScroll, $dataService, $editorService) {
+module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, $editorService) {
     CartUtility.log('CartBlogNewCtrl');
 
-    $scope.aceEditor = $editorService.createEditor('markdown-edit', 'markdown-preview', CartUtility.getPureAbsUrlFromLocation($location));
+    $scope.aceEditor = $editorService.createEditor('markdown-edit', 'markdown-preview', $routeParams.postId, CartUtility.getPureAbsUrlFromLocation($location));
 
     $scope.toggleToc = CartUtility.toggleToc;
 
