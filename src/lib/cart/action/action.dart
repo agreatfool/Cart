@@ -167,37 +167,38 @@ class CartAction {
     if (!filterIsMaster(ctx)) {
       return;
     }
-    var binary = new List<int>();
-    ctx.req.listen(binary.addAll,
-    onDone: () {
-      PinLogger.instance.fine('File upload done...');
-      HashMap fileInfo = PinUtility.parseFileUploadBinary(binary);
+    PinLogger.instance.fine('[CartAction] handleUpload: Start to handle file upload action.');
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      return new Future.value(body);
+    })
+    .then((HttpRequestBody body) {
+      String postId = body.body['postId'];
+      HttpBodyFileUpload fileUploaded = body.body['file'];
 
-      if (fileInfo['params'].length == 0
-        || !fileInfo['params'].containsKey('postId')
-        || fileInfo['fileName'] == null || fileInfo['fileContent'] == null || fileInfo['fileType'] == null) {
-        // parse failed
-        ctx.sendJson(buildResponse('handleUpload', { "error": "File info parsing failed, info: " + fileInfo.toString() }, valid: false));
+      if (postId == null || fileUploaded == null) {
+        ctx.sendJson(buildResponse('handleUpload', { "error": "Failed in parsing file!" }, valid: false));
+      } else if (['image/png', 'image/jpeg', 'image/gif'].indexOf(fileUploaded.contentType.toString()) == -1) {
+        ctx.sendJson(buildResponse('handleUpload', { "error": "File type not supported: ${fileUploaded.contentType}" }, valid: false));
       } else {
-        // check file exists or not
-        String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, fileInfo['params']['postId']);
-        String filePath = LibPath.join(postPath, fileInfo['fileName']);
+        String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, postId);
+        String filePath = LibPath.join(postPath, fileUploaded.filename);
         PinUtility.createDir(postPath)
         .then((_) {
-          return (new File(filePath)).writeAsBytes(fileInfo['fileContent']);
+          return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
         })
         .then((_) {
-          ctx.sendJson(buildResponse('handleUpload', { "fileName": fileInfo['fileName'], "fileType": fileInfo['fileType'] }));
+          ctx.sendJson(buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
         })
         .catchError((e, trace) {
           PinUtility.handleError(e, trace);
-          ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in writing file!" }, valid: false));
+          ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
         });
       }
-    },
-    onError: (error) {
-      PinUtility.handleError(error, null);
-      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered while uploading file!" }, valid: false));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
     });
   }
 

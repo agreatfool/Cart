@@ -9,3 +9,4 @@ dependencies:
   stack_trace: any
   markdown: any
   uuid: any
+  http_server: any
