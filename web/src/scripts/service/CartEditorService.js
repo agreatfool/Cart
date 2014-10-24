@@ -26,7 +26,7 @@ module.exports = function($http, $q, $cookies, $dataService) {
         }
     });
 
-    var createEditor = function(editElementId, previewElementId, baseUrl) {
+    var createEditor = function(editElementId, previewElementId, postId, baseUrl) {
         // ACE
         if (_.isUndefined(editElementId) || _.isNull(editElementId) || _.isEmpty(editElementId)) {
             editElementId = 'markdown-edit';
@@ -61,6 +61,7 @@ module.exports = function($http, $q, $cookies, $dataService) {
 
         aceEditor.editElement = $('#' + editElementId);
         aceEditor.previewElement = $('#' + previewElementId);
+        aceEditor.postId = postId;
         aceEditor.baseUrl = baseUrl;
 
         aceEditor.commands.addCommand({
@@ -132,7 +133,7 @@ module.exports = function($http, $q, $cookies, $dataService) {
                 var files = event.originalEvent.dataTransfer.files;
                 console.log(files);
                 console.log('drop!');
-                $dataService.fileUpload(files[0]);
+                $dataService.fileUpload(postId, files[0]);
                 event.stopPropagation();
                 event.preventDefault();
             });

@@ -64,7 +64,7 @@ var controllers = angular.module('Cart.Controllers', []);
 
 controllers.controller('CartMainCtrl', ['$scope', '$location', '$cookies', '$window', '$routeSegment', 'CartFixFooterService', 'CartDataService', 'CartAccessCtrlService', ctrlSources.CartMainCtrl]);
 controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', ctrlSources.CartBlogListCtrl]);
-controllers.controller('CartBlogNewCtrl', ['$scope', '$location', '$anchorScroll', 'CartDataService', 'CartEditorService', ctrlSources.CartBlogNewCtrl]);
+controllers.controller('CartBlogNewCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'CartEditorService', ctrlSources.CartBlogNewCtrl]);
 controllers.controller('CartBlogUpdateCtrl', ['$scope', '$location', '$anchorScroll', 'CartDataService', 'CartEditorService', ctrlSources.CartBlogUpdateCtrl]);
 controllers.controller('CartBlogViewCtrl', ['$scope', ctrlSources.CartBlogViewCtrl]);
 controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCategoryCtrl]);

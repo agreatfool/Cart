@@ -167,26 +167,38 @@ class CartAction {
     if (!filterIsMaster(ctx)) {
       return;
     }
-    // case 1:
     var binary = new List<int>();
-    ctx.req.listen(binary.addAll, onDone: () {
+    ctx.req.listen(binary.addAll,
+    onDone: () {
       PinLogger.instance.fine('File upload done...');
-      PinLogger.instance.fine(ctx.params);
+      HashMap fileInfo = PinUtility.parseFileUploadBinary(binary);
 
-      String str = new String.fromCharCodes(binary);
-      PinLogger.instance.fine(str);
+      if (fileInfo['params'].length == 0
+        || !fileInfo['params'].containsKey('postId')
+        || fileInfo['fileName'] == null || fileInfo['fileContent'] == null || fileInfo['fileType'] == null) {
+        // parse failed
+        ctx.sendJson(buildResponse('handleUpload', { "error": "File info parsing failed, info: " + fileInfo.toString() }, valid: false));
+      } else {
+        // check file exists or not
+        String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, fileInfo['params']['postId']);
+        String filePath = LibPath.join(postPath, fileInfo['fileName']);
+        PinUtility.createDir(postPath)
+        .then((_) {
+          return (new File(filePath)).writeAsBytes(fileInfo['fileContent']);
+        })
+        .then((_) {
+          ctx.sendJson(buildResponse('handleUpload', { "fileName": fileInfo['fileName'], "fileType": fileInfo['fileType'] }));
+        })
+        .catchError((e, trace) {
+          PinUtility.handleError(e, trace);
+          ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in writing file!" }, valid: false));
+        });
+      }
+    },
+    onError: (error) {
+      PinUtility.handleError(error, null);
+      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered while uploading file!" }, valid: false));
     });
-    // case 2:
-    // import 'package:http_server/http_server.dart';
-    // https://code.google.com/p/dart/source/browse/trunk/dart/pkg/http_server/lib/src/http_body.dart
-//    HttpBodyHandler.processRequest(ctx.req).then((body) {
-//      HttpBodyFileUpload fileUploaded = body.body['myfile'];
-//      final file = new File('abc.jpg');
-//      file.writeAsBytes(fileUploaded.content, mode: FileMode.WRITE)
-//      .then((_) {
-//        request.response.close();
-//      });
-//    });
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

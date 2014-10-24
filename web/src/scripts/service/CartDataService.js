@@ -151,7 +151,7 @@ module.exports = function($http, $q, $upload) {
         return deferred.promise;
     };
 
-    var fileUpload = function(file) {
+    var fileUpload = function(postId, file) {
         var deferred = $q.defer();
         /**
          * Type File:
@@ -172,6 +172,7 @@ module.exports = function($http, $q, $upload) {
             $upload.upload({
                 url: '/api/upload',
                 method: 'POST',
+                data: {"postId": postId},
                 file: file
             }).progress(function(event) {
                 console.log('percent: ' + parseInt(100.0 * event.loaded / event.total));
