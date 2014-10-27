@@ -129,8 +129,13 @@ $ace-color12: #7A7267;
   #markdown-loading {
     position: absolute;
     z-index: $page-layer-trigger;
-    top: 5px;
+    top: 0px;
     right: 10px;
+
+    .spinner-markdown-name {
+      margin: -4px 15px 0 0;
+      color: $color-gray;
+    }
   }
 
   .ace-earthsong {

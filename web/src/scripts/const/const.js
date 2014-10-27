@@ -19,4 +19,7 @@ CartConst.TOKEN_NAME = 'CART-TOKEN';
 // database
 CartConst.DB_NAME = 'CartDatabase';
 
+// upload
+CartConst.UPLOAD_TYPES = ['image/png', 'image/gif', 'image/jpeg'];
+
 module.exports = CartConst;

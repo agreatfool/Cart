@@ -1,7 +1,7 @@
 'use strict';
 
 /* global _, PouchDB, moment, CartUtility, CartConst */
-module.exports = function($http, $q, $upload) {
+module.exports = function($http, $q) {
     var db = new PouchDB(CartConst.DB_NAME);
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -151,42 +151,6 @@ module.exports = function($http, $q, $upload) {
         return deferred.promise;
     };
 
-    var fileUpload = function(postId, file) {
-        var deferred = $q.defer();
-        /**
-         * Type File:
-         * {
-         *     lastModified: 1413263779000,
-         *     lastModifiedDate: Tue Oct 14 2014 13:16:19 GMT+0800 (CST),
-         *     name: "filename.png",
-         *     size: 1100819,
-         *     type: "image/png"
-         * }
-         */
-        var uploadTypes = [
-            'image/png', 'image/jpeg', 'image/gif'
-        ];
-        if (uploadTypes.indexOf(file.type) === -1) {
-            deferred.resolve(false);
-        } else {
-            $upload.upload({
-                url: '/api/upload',
-                method: 'POST',
-                data: {"postId": postId},
-                file: file
-            }).progress(function(event) {
-                console.log('percent: ' + parseInt(100.0 * event.loaded / event.total));
-            }).success(function(data, status, headers, config) {
-                // file is uploaded successfully
-                console.log(data);
-                deferred.resolve(true);
-            }).error(function() {
-                // FIXME error param? how to handle?
-            });
-        }
-        return deferred.promise;
-    };
-
     // FIXME reformat later
     var apis = {
         'getInitData': getInitData,
@@ -195,9 +159,7 @@ module.exports = function($http, $q, $upload) {
         'postGetTmp': postGetTmp,
         'postRemoveTmp': postRemoveTmp,
         'postGetAllTmp': postGetAllTmp,
-        'postRemoveAllTmp': postRemoveAllTmp,
-        // file
-        'fileUpload': fileUpload
+        'postRemoveAllTmp': postRemoveAllTmp
     };
 
     global.apis = apis;

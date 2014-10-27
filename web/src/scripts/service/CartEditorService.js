@@ -1,7 +1,7 @@
 'use strict';
 
-/* global _, $, ace, marked, hljs, CartUtility */
-module.exports = function($http, $q, $cookies, $dataService) {
+/* global _, $, ace, marked, hljs, CartUtility, CartConst */
+module.exports = function($http, $q, $cookies, FileUploader) {
     // markd
     var renderer = new marked.Renderer();
     renderer.heading = function(text, level) { // add anchor link
@@ -98,6 +98,60 @@ module.exports = function($http, $q, $cookies, $dataService) {
         });
 
         // file upload related
+        /**
+         * File {
+         *     FilelastModified: 1414117158000,
+         *     lastModifiedDate: Fri Oct 24 2014 10:19:18 GMT+0800 (CST),
+         *     name: "1697525.jpeg",
+         *     size: 9303,
+         *     type: "image/jpeg"
+         * }
+         * FileLikeObject {
+         *     lastModifiedDate: Mon Oct 27 2014 12:50:24 GMT+0800 (CST),
+         *     size: 269534,
+         *     type: "image/png",
+         *     name: "6f5ef307gw1elpmcbs6k1j20db0dwmz3.png"
+         * }
+         */
+        var uploader = new FileUploader({
+            url: '/api/upload',
+            removeAfterUpload: true
+        });
+        uploader.filters.push({
+            name: 'fileTypeFilter',
+            fn: function(file) {
+                return CartConst.UPLOAD_TYPES.indexOf(file.type) !== -1;
+            }
+        });
+        var uploaderProcessNextUpload = function() {
+            if (uploader.queue.length > 0) {
+                var fileItem = uploader.queue[0];
+                uploaderReportUploadProgress(fileItem.file.name, 0);
+                fileItem.formData = [{ "postId": postId }];
+                fileItem.upload();
+            }
+        };
+        var uploaderReportUploadProgress = function(name, progress) {
+            $('.spinner-markdown-name').text('Uploading "' + name + '": ' + progress + '% ...');
+        };
+        uploader.onWhenAddingFileFailed = function(file) {
+            CartUtility.notify('Error', 'File type of "' + file.name + '" is not allowed: ' + file.type, 'error');
+        };
+        uploader.onProgressItem = function(fileItem, progress) {
+            uploaderReportUploadProgress(fileItem.file.name, progress);
+        };
+        uploader.onErrorItem = function(fileItem) {
+            CartUtility.notify('Upload Error!', 'Error encountered while uploading file "' + fileItem.file.name + '"!', 'error');
+        };
+        uploader.onCompleteItem = function(fileItem) {
+            CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
+            uploaderProcessNextUpload();
+        };
+        uploader.onCompleteAll = function() {
+            CartUtility.notify('Uploads Done!', 'All uploads done!', 'success');
+            $('#markdown-loading').hide();
+            $('.spinner-markdown-name').text('');
+        };
         if (CartUtility.isDndSupported()) {
             // intercept document body drag & drop event, prevent document drop page redirect
             $(document).on('dragenter', function(event) {
@@ -128,20 +182,21 @@ module.exports = function($http, $q, $cookies, $dataService) {
                 event.preventDefault();
             }).on('drop', function(event) {
                 // drop to upload
-                aceContent.removeClass('ace_drag_over');
-                CartUtility.notify('Uploading', 'Start to upload file ', 'info');
-                var files = event.originalEvent.dataTransfer.files;
-                console.log(files);
-                console.log('drop!');
-                $dataService.fileUpload(postId, files[0]);
                 event.stopPropagation();
                 event.preventDefault();
+                // styles
+                aceContent.removeClass('ace_drag_over');
+                $('#markdown-loading').show();
+                // upload
+                var files = event.originalEvent.dataTransfer.files;
+                uploader.addToQueue(files);
+                uploaderProcessNextUpload();
             });
         } else {
             CartUtility.notify(
                 'Warning',
                 'Drag & Drop file upload functionality is not supported in this browser. \n' +
-                'You cannot upload file! \n' +
+                'You cannot upload file with this browser! \n' +
                 'Please use modern browsers like Chrome.',
                 'notice',
                 100000 // 10s
