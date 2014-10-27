@@ -100,12 +100,12 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
     /**
      * [
      *     { // index of this node is 5
-         *         "level": 3,
-         *         "text": "headerTextForLv3",
-         *         "anchor": "CartUtility.escapeAnchorName(headerTextForLv3)"
-         *         "parent": 4, // index of node in this array, only root parent is string 'root'
-         *         "html": $('<a href="#anchor">text</a>')
-         *     },
+     *         "level": 3,
+     *         "text": "headerTextForLv3",
+     *         "anchor": "CartUtility.escapeAnchorName(headerTextForLv3)"
+     *         "parent": 4, // index of node in this array, only root parent is string 'root'
+     *         "html": $('<a href="#anchor">text</a>')
+     *     },
      *     ...
      * ]
      */
