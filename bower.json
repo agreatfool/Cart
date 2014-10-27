@@ -43,6 +43,6 @@
     "flat-ui": "~2.2.0",
     "ace-builds": "~1.1.7",
     "highlightjs": "~8.0.0",
-    "ng-file-upload": "~1.6.12"
+    "angular-file-upload": "~1.1.5"
   }
 }
