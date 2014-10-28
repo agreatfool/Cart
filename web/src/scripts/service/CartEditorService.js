@@ -211,14 +211,22 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         var uploaderReportUploadProgress = function(name, progress) {
             spinnerNameElement.text('Uploading "' + name + '": ' + progress + '% ...');
         };
+        var uploaderHideSpinner = function() {
+            if (uploader.queue.length == 0 && !uploader.isUploading) {
+                spinnerElement.hide();
+                spinnerNameElement.text('');
+            }
+        };
         uploader.onWhenAddingFileFailed = function(file) {
             CartUtility.notify('Error', 'File type of "' + file.name + '" is not allowed: ' + file.type, 'error');
+            uploaderHideSpinner();
         };
         uploader.onProgressItem = function(fileItem, progress) {
             uploaderReportUploadProgress(fileItem.file.name, progress);
         };
         uploader.onErrorItem = function(fileItem) {
             CartUtility.notify('Upload Error!', 'Error encountered while uploading file "' + fileItem.file.name + '"!', 'error');
+            uploaderHideSpinner();
         };
         uploader.onCompleteItem = function(fileItem) {
             CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
@@ -226,8 +234,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         };
         uploader.onCompleteAll = function() {
             CartUtility.notify('Uploads Done!', 'All uploads done!', 'success');
-            spinnerElement.hide();
-            spinnerNameElement.text('');
+            uploaderHideSpinner();
         };
         if (CartUtility.isDndSupported()) {
             // intercept document body drag & drop event, prevent document drop page redirect
