@@ -112,7 +112,6 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
 
         aceEditor.postId = postId;
         aceEditor.baseUrl = baseUrl;
-        aceEditor.title = '';
         aceEditor.editElement = editElement;
         aceEditor.previewElement = previewElement;
         aceEditor.titleElement = titleElement;
@@ -286,9 +285,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             // apply toc html
             editor.tocContentElement.html(toc);
             // apply post title
-            var title = $($(editor.tocFirstLinksIdentify)[0]).text();
-            editor.title = title;
-            editor.titleElement.text(title);
+            editor.titleElement.text($($(editor.tocFirstLinksIdentify)[0]).text());
         }
     };
 
