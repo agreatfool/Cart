@@ -149,7 +149,7 @@ class CartAction {
   }
 
   static void handleLogout(HttpContext ctx) {
-    if (!filterIsMaster(ctx)) {
+    if (!_filterIsMaster(ctx)) {
       return;
     }
     _removeSessionToken(ctx)
@@ -164,7 +164,7 @@ class CartAction {
   }
 
   static handleUpload(HttpContext ctx) {
-    if (!filterIsMaster(ctx)) {
+    if (!_filterIsMaster(ctx)) {
       return;
     }
     PinLogger.instance.fine('[CartAction] handleUpload: Start to handle file upload action.');
@@ -227,7 +227,7 @@ class CartAction {
     return isMaster;
   }
 
-  static bool filterIsMaster(HttpContext ctx) {
+  static bool _filterIsMaster(HttpContext ctx) {
     bool isUserMaster = isMaster(ctx);
 
     if(!isUserMaster) {
