@@ -27,8 +27,6 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
 
     $scope.newTagName = '';
     $scope.addPostTag = function(event) {
-        console.log($scope.postTitle);
-        console.log($scope.postCategory);
         event.preventDefault();
         if (!_.isEmpty($scope.newTagName) && $scope.postTags.indexOf($scope.newTagName) === -1) {
             $scope.postTags.push($scope.newTagName);
