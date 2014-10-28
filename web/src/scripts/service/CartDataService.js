@@ -15,6 +15,8 @@ module.exports = function($http, $q) {
      * {
      *     "title": title string,
      *     "md": markdown string,
+     *     "category": string,
+     *     "tags": [string, ...],
      *     "created": timestamp,
      *     "updated": timestamp
      * }
@@ -43,14 +45,22 @@ module.exports = function($http, $q) {
     };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    //-* POST RELATED
+    //-* LOCAL POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var postSaveTmp = function(uuid, title, markdown) {
+    var postSaveTmp = function(uuid, title, markdown, category, tags) {
+        if (_.isUndefined(category) || _.isEmpty(category)) {
+            category = CartConst.POST_DEFAULT_CATEGORY;
+        }
+        if (_.isUndefined(tags)) {
+            tags = [];
+        }
         var deferred = $q.defer();
         db.get(uuid)
         .then(function(doc) {
             doc.title = title;
             doc.md = markdown;
+            doc.category = category;
+            doc.tags = tags;
             doc.updated = moment().unix();
             return db.put(doc, uuid, doc._rev); // old doc found, update it
         }, function(err) {
@@ -58,6 +68,8 @@ module.exports = function($http, $q) {
                 var doc = {
                     "title": title,
                     "md": markdown,
+                    "category": category,
+                    "tags": tags,
                     "created": moment().unix(),
                     "updated": moment().unix()
                 };
