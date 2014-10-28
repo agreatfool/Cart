@@ -43,6 +43,15 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         $scope.postTags.splice(tagIndex, 1);
     };
 
+    $dataService.postGetTmp($routeParams.postId).then(function(data) {
+        if (data === false) {
+            return; // post data not found
+        }
+        $scope.aceEditor.setValue(data.md, -1);
+        $scope.postCategory = data.category;
+        $scope.postTags = data.tags;
+    });
+
     $scope.$on('$routeChangeStart', function() {
         CartUtility.log('CartBlogNewCtrl $routeChangeStart entered!');
         // anchor link logic
