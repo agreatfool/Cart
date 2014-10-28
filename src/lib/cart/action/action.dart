@@ -25,16 +25,16 @@ class CartAction {
     indexData['categories'] = categoryList;
     indexData['tags'] = tagList;
 
-    ctx.sendJson(buildResponse('handleDataInit', indexData, doLog: false));
+    ctx.sendJson(_buildResponse('handleDataInit', indexData, doLog: false));
     ctx.end();
   }
 
   static handleOauth2(HttpContext ctx) {
     if (CartSystem.instance.credentials.length > 0) {
       PinLogger.instance.shout('[CartAction] handleOauth2: Already authorized!');
-      ctx.sendJson(buildResponse('handleOauth2', { "error": "Already authorized!" }, valid: false));
+      ctx.sendJson(_buildResponse('handleOauth2', { "error": "Already authorized!" }, valid: false));
     } else {
-      ctx.sendJson(buildResponse('handleOauth2', {
+      ctx.sendJson(_buildResponse('handleOauth2', {
         "url": CartSystem.instance.oauth2.getOAuthUrl()
       }));
     }
@@ -130,7 +130,7 @@ class CartAction {
       isAuthed = true;
     }
 
-    ctx.sendJson(buildResponse('handleIsAuthed', {
+    ctx.sendJson(_buildResponse('handleIsAuthed', {
       "isAuthed": isAuthed
     }));
     ctx.end();
@@ -139,9 +139,9 @@ class CartAction {
   static handleLogin(HttpContext ctx) {
     if (CartSystem.instance.credentials.length <= 0) {
       PinLogger.instance.shout('[CartAction] handleLogin: Site has not been initialized yet!');
-      ctx.sendJson(buildResponse('handleLogin', { "error": "Site has not been initialized yet!" }, valid: false));
+      ctx.sendJson(_buildResponse('handleLogin', { "error": "Site has not been initialized yet!" }, valid: false));
     } else {
-      ctx.sendJson(buildResponse('handleLogin', {
+      ctx.sendJson(_buildResponse('handleLogin', {
           "url": CartSystem.instance.oauth2.getLoginUrl()
       }));
     }
@@ -154,7 +154,7 @@ class CartAction {
     }
     _removeSessionToken(ctx)
     .then((_) {
-      ctx.sendJson(buildResponse('handleLogout', {}));
+      ctx.sendJson(_buildResponse('handleLogout', {}));
       ctx.end();
     })
     .catchError((e, trace) {
@@ -177,9 +177,9 @@ class CartAction {
       HttpBodyFileUpload fileUploaded = body.body['file'];
 
       if (postId == null || fileUploaded == null) {
-        ctx.sendJson(buildResponse('handleUpload', { "error": "Failed in parsing file!" }, valid: false));
+        ctx.sendJson(_buildResponse('handleUpload', { "error": "Failed in parsing file!" }, valid: false));
       } else if (['image/png', 'image/jpeg', 'image/gif'].indexOf(fileUploaded.contentType.toString()) == -1) {
-        ctx.sendJson(buildResponse('handleUpload', { "error": "File type not supported: ${fileUploaded.contentType}" }, valid: false));
+        ctx.sendJson(_buildResponse('handleUpload', { "error": "File type not supported: ${fileUploaded.contentType}" }, valid: false));
       } else {
         String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, postId);
         String filePath = LibPath.join(postPath, fileUploaded.filename);
@@ -188,17 +188,17 @@ class CartAction {
           return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
         })
         .then((_) {
-          ctx.sendJson(buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
+          ctx.sendJson(_buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
         })
         .catchError((e, trace) {
           PinUtility.handleError(e, trace);
-          ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
+          ctx.sendJson(_buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
         });
       }
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
+      ctx.sendJson(_buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
     });
   }
 
@@ -231,14 +231,14 @@ class CartAction {
     bool isUserMaster = isMaster(ctx);
 
     if(!isUserMaster) {
-      ctx.sendJson(buildResponse('filterIsMaster', { "error": "User not logged in, pls login first!" }, valid: false));
+      ctx.sendJson(_buildResponse('filterIsMaster', { "error": "User not logged in, pls login first!" }, valid: false));
       ctx.end();
     }
 
     return isUserMaster;
   }
 
-  static Map buildResponse(String actionName, HashMap message, {bool valid: true, bool doLog: true}) {
+  static Map _buildResponse(String actionName, HashMap message, {bool valid: true, bool doLog: true}) {
     HashMap result = {
         "valid": valid,
         "message": message
