@@ -54,43 +54,50 @@ module.exports = function($http, $q) {
         if (_.isUndefined(tags)) {
             tags = [];
         }
+
         var deferred = $q.defer();
-        db.get(uuid)
-        .then(function(doc) {
-            doc.title = title;
-            doc.md = markdown;
-            doc.category = category;
-            doc.tags = tags;
-            doc.updated = moment().unix();
-            return db.put(doc, uuid, doc._rev); // old doc found, update it
-        }, function(err) {
-            if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
-                var doc = {
-                    "title": title,
-                    "md": markdown,
-                    "category": category,
-                    "tags": tags,
-                    "created": moment().unix(),
-                    "updated": moment().unix()
-                };
-                return db.put(doc, uuid);
-            } else if (_.isObject(err)) {
+
+        if (_.isEmpty(uuid) || _.isEmpty(title) || _.isEmpty(markdown)) {
+            deferred.resolve(false);
+        } else {
+            db.get(uuid)
+            .then(function(doc) {
+                doc.title = title;
+                doc.md = markdown;
+                doc.category = category;
+                doc.tags = tags;
+                doc.updated = moment().unix();
+                return db.put(doc, uuid, doc._rev); // old doc found, update it
+            }, function(err) {
+                if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
+                    var doc = {
+                        "title": title,
+                        "md": markdown,
+                        "category": category,
+                        "tags": tags,
+                        "created": moment().unix(),
+                        "updated": moment().unix()
+                    };
+                    return db.put(doc, uuid);
+                } else if (_.isObject(err)) {
+                    CartUtility.notify('Error', err.toString(), 'error');
+                    var sub = $q.defer();
+                    sub.resolve(false); // error encountered, resolve with false
+                    return sub.promise;
+                }
+            })
+            .then(function(response) {
+                if (response !== false) {
+                    deferred.resolve(true); // previous done with no error, resolve with true
+                } else {
+                    deferred.resolve(false); // previous done with error, resolve with false
+                }
+            }, function(err) {
                 CartUtility.notify('Error', err.toString(), 'error');
-                var sub = $q.defer();
-                sub.resolve(false); // error encountered, resolve with false
-                return sub.promise;
-            }
-        })
-        .then(function(response) {
-            if (response !== false) {
-                deferred.resolve(true); // previous done with no error, resolve with true
-            } else {
-                deferred.resolve(false); // previous done with error, resolve with false
-            }
-        }, function(err) {
-            CartUtility.notify('Error', err.toString(), 'error');
-            deferred.resolve(false); // error, popup notification, resolve with false
-        });
+                deferred.resolve(false); // error, popup notification, resolve with false
+            });
+        }
+
         return deferred.promise;
     };
 
