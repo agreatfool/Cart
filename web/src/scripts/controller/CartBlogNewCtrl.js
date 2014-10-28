@@ -4,8 +4,9 @@
 module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, $editorService) {
     CartUtility.log('CartBlogNewCtrl');
 
+    $scope.postCategory = '';
+    $scope.postTags = [];
 
-    $scope.toggleToc = CartUtility.toggleToc;
     $scope.aceEditor = $editorService.createEditor({
         postId: $routeParams.postId,
         postBaseUrl: CartUtility.getPureAbsUrlFromLocation($location),
@@ -19,6 +20,28 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         spinnerElement: $('#markdown-loading'),
         spinnerNameElement: $('.spinner-markdown-name')
     });
+
+    $scope.toggleToc = function() {
+        CartUtility.toggleToc($('.markdown-toc-icon'), $('.markdown-toc-content'));
+    };
+
+    $scope.newTagName = '';
+    $scope.addPostTag = function(event) {
+        console.log($scope.postTitle);
+        console.log($scope.postCategory);
+        event.preventDefault();
+        if (!_.isEmpty($scope.newTagName) && $scope.postTags.indexOf($scope.newTagName) === -1) {
+            $scope.postTags.push($scope.newTagName);
+        }
+        $scope.newTagName = '';
+    };
+    $scope.removePostTag = function(tagName) {
+        var tagIndex = $scope.postTags.indexOf(tagName);
+        if (tagIndex === -1) {
+            return;
+        }
+        $scope.postTags.splice(tagIndex, 1);
+    };
 
     $scope.$on('$routeChangeStart', function() {
         CartUtility.log('CartBlogNewCtrl $routeChangeStart entered!');

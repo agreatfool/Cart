@@ -13,6 +13,34 @@ $ace-color12: #7A7267;
 
 .page-edit {
 
+  .blog-edit-top {
+    .top-info {
+      margin: 30px 0 0 0;
+      .top-input {
+        cursor: text;
+        min-width: 50px;
+      }
+      .tagsinput-primary {
+        display: inline-block;
+        margin: 0;
+        .bootstrap-tagsinput {
+          background-color: inherit;
+          padding: 0;
+          input {
+            color: $color-white-pure;
+          }
+        }
+      }
+    }
+    .btn {
+      font-size: 14px;
+      cursor: default;
+    }
+    .btn-default {
+      margin-left: 10px;
+    }
+  }
+
   .page-body {
     .col-md-6 {
       padding: 0;

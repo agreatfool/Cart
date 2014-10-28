@@ -282,7 +282,14 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         }
 
         var toc = CartUtility.buildToc(converted, editor.baseUrl);
-        $('.markdown-toc-content').html(toc);
+        if (toc !== '') { // find header links
+            // apply toc html
+            editor.tocContentElement.html(toc);
+            // apply post title
+            var title = $($(editor.tocFirstLinksIdentify)[0]).text();
+            editor.title = title;
+            editor.titleElement.text(title);
+        }
     };
 
     return {
