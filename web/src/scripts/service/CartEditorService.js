@@ -29,15 +29,17 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
     var createEditor = function(options) {
         /**
          * options {
+         *     categoryElement: jQuery.fn.init[1],
          *     editElement: jQuery.fn.init[1],
          *     postBaseUrl: "http://cart.com//new/84fd8b5f-087e-4d62-998d-10d4ca45b0d7",
          *     postId: "84fd8b5f-087e-4d62-998d-10d4ca45b0d7",
          *     previewElement: jQuery.fn.init[1],
          *     spinnerElement: jQuery.fn.init[1],
          *     spinnerNameElement: jQuery.fn.init[1],
+         *     tagsIdentify: "#markdown-post-tags > span",
          *     titleElement: jQuery.fn.init[1],
          *     tocContentElement: jQuery.fn.init[1],
-         *     tocFirstLinksIdentify: '.markdown-toc-content > ol > li > a',
+         *     tocFirstLinksIdentify: ".markdown-toc-content > ol > li > a",
          *     tocIconElement: jQuery.fn.init[1],
          *     topBtnElement: jQuery.fn.init[1]
          * }
