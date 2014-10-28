@@ -26,19 +26,70 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         }
     });
 
-    var createEditor = function(editElementId, previewElementId, postId, baseUrl) {
-        // ACE
-        if (_.isUndefined(editElementId) || _.isNull(editElementId) || _.isEmpty(editElementId)) {
-            editElementId = 'markdown-edit';
+    var createEditor = function(options) {
+        /**
+         * options {
+         *     editElement: jQuery.fn.init[1],
+         *     postBaseUrl: "http://cart.com//new/84fd8b5f-087e-4d62-998d-10d4ca45b0d7",
+         *     postId: "84fd8b5f-087e-4d62-998d-10d4ca45b0d7",
+         *     previewElement: jQuery.fn.init[1],
+         *     spinnerElement: jQuery.fn.init[1],
+         *     spinnerNameElement: jQuery.fn.init[1],
+         *     titleElement: jQuery.fn.init[1],
+         *     tocContentElement: jQuery.fn.init[1],
+         *     tocFirstLinksIdentify: '.markdown-toc-content > ol > li > a',
+         *     tocIconElement: jQuery.fn.init[1],
+         *     topBtnElement: jQuery.fn.init[1]
+         * }
+         */
+        // options check
+        if (_.isUndefined(options) || _.isEmpty(options)) {
+            return false; // invalid options
         }
-        if (_.isUndefined(previewElementId) || _.isNull(previewElementId) || _.isEmpty(previewElementId)) {
-            previewElementId = 'markdown-preview';
+        var postId = options.postId;
+        if (!_.isString(postId) || _.isEmpty(postId)) {
+            return null;
         }
-        if (_.isUndefined(baseUrl) || _.isNull(baseUrl)) {
-            baseUrl = '';
+        var baseUrl = options.postBaseUrl;
+        if (!_.isString(baseUrl) || _.isEmpty(baseUrl)) {
+            return null;
+        }
+        var editElement = options.editElement;
+        if (!_.isObject(editElement) || editElement.length <= 0) {
+            return false;
+        }
+        var previewElement = options.previewElement;
+        if (!_.isObject(previewElement) || previewElement.length <= 0) {
+            return false;
+        }
+        var titleElement = options.titleElement;
+        if (!_.isObject(titleElement) || titleElement.length <= 0) {
+            return false;
+        }
+        var tocIconElement = options.tocIconElement;
+        if (!_.isObject(tocIconElement) || tocIconElement.length <= 0) {
+            return false;
+        }
+        var tocContentElement = options.tocContentElement;
+        if (!_.isObject(tocContentElement) || tocContentElement.length <= 0) {
+            return false;
+        }
+        var tocFirstLinksIdentify = options.tocFirstLinksIdentify;
+        var topBtnElement = options.topBtnElement;
+        if (!_.isObject(topBtnElement) || topBtnElement.length <= 0) {
+            return false;
+        }
+        var spinnerElement = options.spinnerElement;
+        if (!_.isObject(spinnerElement) || spinnerElement.length <= 0) {
+            return false;
+        }
+        var spinnerNameElement = options.spinnerNameElement;
+        if (!_.isObject(spinnerNameElement) || spinnerNameElement.length <= 0) {
+            return false;
         }
 
-        var aceEditor = ace.edit(editElementId);
+        // editor
+        var aceEditor = ace.edit(editElement.attr('id'));
 
         aceEditor.setOption("showPrintMargin", false);
         aceEditor.setTheme('ace/theme/earthsong');
@@ -59,17 +110,25 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         aceEditor.renderer.setScrollMargin(20);
         aceEditor.resize(true);
 
-        aceEditor.editElement = $('#' + editElementId);
-        aceEditor.previewElement = $('#' + previewElementId);
         aceEditor.postId = postId;
         aceEditor.baseUrl = baseUrl;
+        aceEditor.title = '';
+        aceEditor.editElement = editElement;
+        aceEditor.previewElement = previewElement;
+        aceEditor.titleElement = titleElement;
+        aceEditor.tocIconElement = tocIconElement;
+        aceEditor.tocContentElement = tocContentElement;
+        aceEditor.tocFirstLinksIdentify = tocFirstLinksIdentify;
+        aceEditor.topBtnElement = topBtnElement;
+        aceEditor.spinnerElement = spinnerElement;
+        aceEditor.spinnerNameElement = spinnerNameElement;
 
         aceEditor.commands.addCommand({
             "name": "cmdSaveTmp",
             "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-S triggered: Save post tmp.');
-                // SAVE TMP
+                $dataService.postSaveTmp(postId, editor.title, editor.getSession().getValue());
             }
         });
         aceEditor.commands.addCommand({
@@ -85,7 +144,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             "bindKey": {"win": "Ctrl-I", "mac": "Command-I"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-I triggered: Display post index.');
-                CartUtility.toggleToc();
+                CartUtility.toggleToc(editor.tocIconElement, editor.tocContentElement);
             }
         });
         aceEditor.commands.addCommand({
@@ -93,7 +152,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             "bindKey": {"win": "Ctrl-H", "mac": "Command-H"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-H triggered: Goto page top.');
-                $('.page-to-top').click();
+                editor.topBtnElement.click();
             }
         });
 
@@ -132,7 +191,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             }
         };
         var uploaderReportUploadProgress = function(name, progress) {
-            $('.spinner-markdown-name').text('Uploading "' + name + '": ' + progress + '% ...');
+            spinnerNameElement.text('Uploading "' + name + '": ' + progress + '% ...');
         };
         uploader.onWhenAddingFileFailed = function(file) {
             CartUtility.notify('Error', 'File type of "' + file.name + '" is not allowed: ' + file.type, 'error');
@@ -149,8 +208,8 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         };
         uploader.onCompleteAll = function() {
             CartUtility.notify('Uploads Done!', 'All uploads done!', 'success');
-            $('#markdown-loading').hide();
-            $('.spinner-markdown-name').text('');
+            spinnerElement.hide();
+            spinnerNameElement.text('');
         };
         if (CartUtility.isDndSupported()) {
             // intercept document body drag & drop event, prevent document drop page redirect
@@ -186,7 +245,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
                 event.preventDefault();
                 // styles
                 aceContent.removeClass('ace_drag_over');
-                $('#markdown-loading').show();
+                spinnerElement.show();
                 // upload
                 var files = event.originalEvent.dataTransfer.files;
                 uploader.addToQueue(files);

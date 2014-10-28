@@ -189,9 +189,7 @@ CartUtility.prototype.buildToc = function(html, baseUrl) {
     return '<ol>' + root.html() + '</ol>'; // since html() only returned the innerHtml of the element
 };
 
-CartUtility.prototype.toggleToc = function() {
-    var icon = $('.markdown-toc-icon');
-    var toc = $('.markdown-toc-content');
+CartUtility.prototype.toggleToc = function(icon, toc) { /* all params are jquery elements: $('#id') */
     if (toc.html() !== '') {
         toc.slideToggle('fast', function() {
             icon.toggleClass('glyphicon-plus').toggleClass('glyphicon-minus');
