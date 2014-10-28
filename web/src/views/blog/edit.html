@@ -13,7 +13,7 @@
                         <div id="markdown-post-category" class="btn btn-xs btn-primary top-input" contenteditable="true" ng-model="postCategory"></div>
                         <div class="btn btn-xs btn-default">Tags</div>
                         <div class="tagsinput-primary">
-                            <div class="bootstrap-tagsinput">
+                            <div id="markdown-post-tags" class="bootstrap-tagsinput">
                                 <span class="tag label label-info" ng-repeat="tag in postTags">
                                     {{ tag }}
                                     <span class="tagsinput-remove-link" data-role="remove" ng-click="removePostTag(tag)"></span>

@@ -13,6 +13,8 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         editElement: $('#markdown-edit'),
         previewElement: $('#markdown-preview'),
         titleElement: $('#markdown-post-title'),
+        categoryElement: $('#markdown-post-category'),
+        tagsIdentify: '#markdown-post-tags > span',
         tocIconElement: $('.markdown-toc-icon'),
         tocContentElement: $('.markdown-toc-content'),
         tocFirstLinksIdentify: '.markdown-toc-content > ol > li > a',

@@ -66,6 +66,11 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         if (!_.isObject(titleElement) || titleElement.length <= 0) {
             return false;
         }
+        var categoryElement = options.categoryElement;
+        if (!_.isObject(categoryElement) || categoryElement.length <= 0) {
+            return false;
+        }
+        var tagsIdentify = options.tagsIdentify;
         var tocIconElement = options.tocIconElement;
         if (!_.isObject(tocIconElement) || tocIconElement.length <= 0) {
             return false;
@@ -115,6 +120,8 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         aceEditor.editElement = editElement;
         aceEditor.previewElement = previewElement;
         aceEditor.titleElement = titleElement;
+        aceEditor.categoryElement = categoryElement;
+        aceEditor.tagsIdentify = tagsIdentify;
         aceEditor.tocIconElement = tocIconElement;
         aceEditor.tocContentElement = tocContentElement;
         aceEditor.tocFirstLinksIdentify = tocFirstLinksIdentify;
@@ -127,7 +134,17 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-S triggered: Save post tmp.');
-                $dataService.postSaveTmp(postId, editor.title, editor.getSession().getValue());
+                var tags = [];
+                var tagElements = $(editor.tagsIdentify);
+                if (tagElements.length > 0) {
+                    _.forEach(tagElements, function(element) {
+                        tags.push($(element).text().trim());
+                    });
+                }
+                $dataService.postSaveTmp(
+                    postId, editor.titleElement.text().trim(), editor.getSession().getValue(),
+                    editor.categoryElement.text().trim(), tags
+                );
             }
         });
         aceEditor.commands.addCommand({
