@@ -25,6 +25,8 @@ require('angular-route-segment');
 require('angular-cookies');
 require('angular-ui-calendar');
 require('angular-file-upload');
+require('angular-ui-utils');
+require('angular-contenteditable');
 
 // others
 global.moment = require('moment');
@@ -48,7 +50,7 @@ global.CartUtility = require('./utility.js');
 var app = angular.module('Cart', [
     'ngRoute', 'ngAnimate', 'ngCookies',
     'route-segment', 'view-segment',
-    'angularFileUpload', 'ui.calendar',
+    'angularFileUpload', 'ui.calendar', 'ui.utils', 'contenteditable',
     'Cart.Controllers', 'Cart.Services'
 ]);
 
