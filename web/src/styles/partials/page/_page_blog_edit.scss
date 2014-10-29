@@ -22,11 +22,17 @@ $ace-color12: #7A7267;
       }
       .tagsinput-primary {
         display: inline-block;
+        height: 27px;
         margin: 0;
+        vertical-align: middle;
         .bootstrap-tagsinput {
           background-color: inherit;
           padding: 0;
           input {
+            height: 27px;
+            margin: 0;
+            font-size: 14px;
+            line-height: 14px;
             color: $color-white-pure;
           }
         }
