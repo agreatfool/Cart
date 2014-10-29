@@ -60,7 +60,7 @@ class CartCategoryList extends Object with PinSerializable {
     if (timestamp == null) {
       timestamp = PinTime.getTime();
     }
-    var category = new CartCategoryList.fromJson({
+    var category = new CartCategory.fromJson({
         "uuid": uuid,
         "title": name,
         "created": timestamp,
