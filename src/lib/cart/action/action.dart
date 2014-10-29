@@ -29,6 +29,50 @@ class CartAction {
     ctx.end();
   }
 
+  static handleTagCreate(HttpContext ctx) {
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+    String uuid = ctx.params['uuid'];
+    String name = ctx.params['name'];
+    if (!PinUtility.isUuid(uuid)) {
+      ctx.sendJson(_buildResponse('handleTagCreate', { "error": "Invalid tag uuid!" }, valid: false));
+    } else if (name == null || name == '') {
+      ctx.sendJson(_buildResponse('handleTagCreate', { "error": "Invalid tag name!" }, valid: false));
+    } else {
+      CartModel.instance.addTag(uuid, name)
+      .then((CartTag tag) {
+        ctx.sendJson(_buildResponse('handleTagCreate', {"tag": tag.toJson()}));
+      })
+      .catchError((e, trace) {
+        PinUtility.handleError(e, trace);
+        ctx.sendJson(_buildResponse('handleTagCreate', { "error": "Error in creating tag!" }, valid: false));
+      });
+    }
+  }
+
+  static handleCategoryCreate(HttpContext ctx) {
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+    String uuid = ctx.params['uuid'];
+    String name = ctx.params['name'];
+    if (!PinUtility.isUuid(uuid)) {
+      ctx.sendJson(_buildResponse('handleCategoryCreate', { "error": "Invalid category uuid!" }, valid: false));
+    } else if (name == null || name == '') {
+      ctx.sendJson(_buildResponse('handleCategoryCreate', { "error": "Invalid category name!" }, valid: false));
+    } else {
+      CartModel.instance.addCategory(uuid, name)
+      .then((CartCategory category) {
+        ctx.sendJson(_buildResponse('handleCategoryCreate', {"category": category.toJson()}));
+      })
+      .catchError((e, trace) {
+        PinUtility.handleError(e, trace);
+        ctx.sendJson(_buildResponse('handleCategoryCreate', { "error": "Error in creating category!" }, valid: false));
+      });
+    }
+  }
+
   static handleOauth2(HttpContext ctx) {
     if (CartSystem.instance.credentials.length > 0) {
       PinLogger.instance.shout('[CartAction] handleOauth2: Already authorized!');

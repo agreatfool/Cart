@@ -45,13 +45,15 @@ main() {
   //-* ROUTERS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   var app = new Express();
-  app.post('/api/init',       (HttpContext ctx) => CartAction.handleDataInit(ctx));
-  app.get('/api/oauth2',      (HttpContext ctx) => CartAction.handleOauth2(ctx));
-  app.get('/api/oauth2next',  (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
-  app.get('/api/isauthed',    (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
-  app.get('/api/login',       (HttpContext ctx) => CartAction.handleLogin(ctx));
-  app.post('/api/logout',     (HttpContext ctx) => CartAction.handleLogout(ctx));
-  app.post('/api/upload',     (HttpContext ctx) => CartAction.handleUpload(ctx));
+  app.post('/api/init',               (HttpContext ctx) => CartAction.handleDataInit(ctx));
+  app.get('/api/oauth2',              (HttpContext ctx) => CartAction.handleOauth2(ctx));
+  app.get('/api/oauth2next',          (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
+  app.get('/api/isauthed',            (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
+  app.get('/api/login',               (HttpContext ctx) => CartAction.handleLogin(ctx));
+  app.post('/api/logout',             (HttpContext ctx) => CartAction.handleLogout(ctx));
+  app.post('/api/upload',             (HttpContext ctx) => CartAction.handleUpload(ctx));
+  app.post('/api/tag/create',         (HttpContext ctx) => CartAction.handleTagCreate(ctx));
+  app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER
