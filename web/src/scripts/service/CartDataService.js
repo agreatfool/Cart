@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, PouchDB, moment, CartUtility, CartConst */
+/* global $, _, uuid, PouchDB, moment, CartUtility, CartConst */
 module.exports = function($http, $q) {
     var db = new PouchDB(CartConst.DB_NAME);
 
@@ -170,6 +170,62 @@ module.exports = function($http, $q) {
         return deferred.promise;
     };
 
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* CATEGORY RELATED
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var categoryCreate = function(categoryName) {
+        var deferred = $q.defer();
+        $http({
+            method: "POST",
+            url: '/api/category/create',
+            data: $.param({
+                "uuid": uuid.v4(),
+                "name": categoryName
+            }),
+            headers: {"Content-type": "application/x-www-form-urlencoded"}
+        }).success(function(result) {
+            if (CartUtility.handleResponse(result)) {
+                // TODO
+                console.log(result);
+                deferred.resolve(result.message);
+            } else {
+                deferred.reject();
+            }
+        });
+        return CartUtility.spinShow(deferred.promise);
+    };
+    var categorySearch = function(categoryName) {
+
+    };
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* TAG RELATED
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var tagCreate = function(tagName) {
+        var deferred = $q.defer();
+        $http({
+            method: "POST",
+            url: '/api/tag/create',
+            data: $.param({
+                "uuid": uuid.v4(),
+                "name": tagName
+            }),
+            headers: {"Content-type": "application/x-www-form-urlencoded"}
+        }).success(function(result) {
+            if (CartUtility.handleResponse(result)) {
+                // TODO
+                console.log(result);
+                deferred.resolve(result.message);
+            } else {
+                deferred.reject();
+            }
+        });
+        return CartUtility.spinShow(deferred.promise);
+    };
+    var tagSearch = function(tagName) {
+
+    };
+
     // FIXME reformat later
     var apis = {
         'getInitData': getInitData,
@@ -178,7 +234,13 @@ module.exports = function($http, $q) {
         'postGetTmp': postGetTmp,
         'postRemoveTmp': postRemoveTmp,
         'postGetAllTmp': postGetAllTmp,
-        'postRemoveAllTmp': postRemoveAllTmp
+        'postRemoveAllTmp': postRemoveAllTmp,
+        // category APIs
+        'categoryCreate': categoryCreate,
+        'categorySearch': categorySearch,
+        // tag APIs
+        'tagCreate': tagCreate,
+        'tagSearch': tagSearch
     };
 
     global.apis = apis;
