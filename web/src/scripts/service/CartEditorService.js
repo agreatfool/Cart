@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, $, ace, marked, hljs, CartUtility, CartConst */
+/* global _, $, ace, angular, marked, hljs, CartUtility, CartConst */
 module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
     // markd
     var renderer = new marked.Renderer();
@@ -175,6 +175,23 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
         });
 
         // file upload related
+        /* HOT FIX for FileUploader.isUploading status */
+        FileUploader.prototype._onCompleteItem = function(item, response, status, headers) {
+            var nextItem = this.getReadyItems()[0];
+            this.isUploading = !!nextItem;
+
+            item._onComplete(response, status, headers);
+            this.onCompleteItem(item, response, status, headers);
+
+            if (angular.isDefined(nextItem)) {
+                nextItem.upload();
+                return;
+            }
+
+            this.onCompleteAll();
+            this.progress = this._getTotalProgress();
+            this._render();
+        };
         /**
          * File {
          *     FilelastModified: 1414117158000,
@@ -201,7 +218,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             }
         });
         var uploaderProcessNextUpload = function() {
-            if (uploader.queue.length > 0) {
+            if (uploader.queue.length > 0 && !uploader.isUploading) {
                 var fileItem = uploader.queue[0];
                 uploaderReportUploadProgress(fileItem.file.name, 0);
                 fileItem.formData = [{ "postId": postId }];
@@ -212,7 +229,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             spinnerNameElement.text('Uploading "' + name + '": ' + progress + '% ...');
         };
         var uploaderHideSpinner = function() {
-            if (uploader.queue.length == 0 && !uploader.isUploading) {
+            if (uploader.queue.length === 0 && !uploader.isUploading) {
                 spinnerElement.hide();
                 spinnerNameElement.text('');
             }
