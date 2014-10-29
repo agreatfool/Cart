@@ -53,9 +53,9 @@ class CartCategoryList extends Object with PinSerializable {
     }
   }
 
-  void addNewCategory(String uuid, String name, {int timestamp: null}) {
+  CartCategory addNewCategory(String uuid, String name, {int timestamp: null}) {
     if (list.containsKey(uuid)) {
-      return;
+      return find(uuid);
     }
     if (timestamp == null) {
       timestamp = PinTime.getTime();
@@ -66,14 +66,15 @@ class CartCategoryList extends Object with PinSerializable {
         "created": timestamp,
         "updated": timestamp
     });
-    add(category);
+    return add(category);
   }
 
-  void add(CartCategory category) {
-    if (list.containsKey(category.uuid)) {
-      return;
+  CartCategory add(CartCategory category) {
+    if (!list.containsKey(category.uuid)) {
+      list[category.uuid] = category;
     }
-    list[category.uuid] = category;
+
+    return category;
   }
 
   void update(CartCategory category) {

@@ -53,9 +53,9 @@ class CartTagList extends Object with PinSerializable {
     }
   }
 
-  void addNewTag(String uuid, String name, {int timestamp: null}) {
+  CartTag addNewTag(String uuid, String name, {int timestamp: null}) {
     if (list.containsKey(uuid)) {
-      return;
+      return find(uuid);
     }
     if (timestamp == null) {
       timestamp = PinTime.getTime();
@@ -66,14 +66,14 @@ class CartTagList extends Object with PinSerializable {
         "created": timestamp,
         "updated": timestamp
     });
-    add(tag);
+    return add(tag);
   }
 
-  void add(CartTag tag) {
-    if (list.containsKey(tag.uuid)) {
-      return;
+  CartTag add(CartTag tag) {
+    if (!list.containsKey(tag.uuid)) {
+      list[tag.uuid] = tag;
     }
-    list[tag.uuid] = tag;
+    return tag;
   }
 
   void update(CartTag tag) {

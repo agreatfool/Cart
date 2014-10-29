@@ -232,20 +232,20 @@ class CartModel {
     final completer = new Completer();
     var timestamp = PinTime.getTime();
 
-    categories.addNewCategory(uuid, name, timestamp: timestamp);
+    CartCategory category = categories.addNewCategory(uuid, name, timestamp: timestamp);
 
     _drive.drive_folder(name, parents: [CartSystem.instance.googleDriveRootFolder])
     .then((GoogleDriveClient.File file) {
       return new Future.value(file.id);
     })
     .then((String driveId) {
-      CartCategory category = categories.find(uuid);
+      category = categories.find(uuid);
       category.driveId = driveId;
       categories.update(category);
       return _saveDatabase();
     })
     .then((_) {
-      completer.complete(true);
+      completer.complete(category);
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -307,11 +307,11 @@ class CartModel {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
-    tags.addNewTag(uuid, name, timestamp: timestamp);
+    CartTag tag = tags.addNewTag(uuid, name, timestamp: timestamp);
 
     tags.dump()
     .then((_) {
-      completer.complete(true);
+      completer.complete(tag);
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
