@@ -48,16 +48,16 @@ module.exports = function($http, $q) {
     //-* LOCAL POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var postSaveTmp = function(uuid, title, markdown, category, tags) {
-        if (_.isUndefined(category) || _.isEmpty(category)) {
-            category = CartConst.POST_DEFAULT_CATEGORY;
-        }
         if (_.isUndefined(tags)) {
             tags = [];
         }
 
         var deferred = $q.defer();
 
-        if (_.isEmpty(uuid) || _.isEmpty(title) || _.isEmpty(markdown)) {
+        if (_.isUndefined(uuid) || _.isEmpty(uuid)
+            || _.isUndefined(title) || _.isEmpty(title)
+            || _.isUndefined(markdown) || _.isEmpty(markdown)
+            || _.isUndefined(category) || _.isEmpty(category)) {
             deferred.resolve(false);
         } else {
             db.get(uuid)

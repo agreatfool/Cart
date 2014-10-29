@@ -22,7 +22,4 @@ CartConst.DB_NAME = 'CartDatabase';
 // upload
 CartConst.UPLOAD_TYPES = ['image/png', 'image/gif', 'image/jpeg'];
 
-// post
-CartConst.POST_DEFAULT_CATEGORY = 'default';
-
 module.exports = CartConst;
