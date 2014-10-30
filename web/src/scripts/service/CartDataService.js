@@ -54,10 +54,17 @@ module.exports = function($http, $q) {
 
         var deferred = $q.defer();
 
-        if (_.isUndefined(uuid) || _.isEmpty(uuid)
-            || _.isUndefined(title) || _.isEmpty(title)
-            || _.isUndefined(markdown) || _.isEmpty(markdown)
-            || _.isUndefined(category) || _.isEmpty(category)) {
+        if (_.isUndefined(uuid) || _.isEmpty(uuid)) {
+            CartUtility.notify('Error', 'Post uuid invalid!', 'error');
+            deferred.resolve(false);
+        } else if (_.isUndefined(title) || _.isEmpty(title)) {
+            CartUtility.notify('Error', 'Post title invalid!', 'error');
+            deferred.resolve(false);
+        } else if (_.isUndefined(markdown) || _.isEmpty(markdown)) {
+            CartUtility.notify('Error', 'Post markdown invalid!', 'error');
+            deferred.resolve(false);
+        } else if (_.isUndefined(category) || _.isEmpty(category)) {
+            CartUtility.notify('Error', 'Post category invalid!', 'error');
             deferred.resolve(false);
         } else {
             db.get(uuid)
