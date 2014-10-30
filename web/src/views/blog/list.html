@@ -47,4 +47,70 @@
             </ul>
         </div>
     </div>
+    <style type="text/css">
+        .pagination li {
+            margin-right: -1px;
+        }
+    </style>
+    <script type="text/ng-template" id="CartBlogListModal.html">
+        <div class="blog-list-modal">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <b>Currently temporarily saved posts:</b>
+                                </div>
+                                <div class="pull-right">
+                                    <span class="glyphicon glyphicon-remove" style="cursor: pointer;" ng-click="close()"></span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="post in dataOnPage">
+                                        <td><a href="{{ rootUrl }}new/{{ post._id }}" ng-click="close()">{{ post.title }}</a></td>
+                                        <td><a href="{{ rootUrl }}category/{{ post.category }}" ng-click="close()">{{ post.category }}</a></td>
+                                        <td>{{ post.created }}</td>
+                                        <td>{{ post.updated }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 pull-right">
+                        <div class="pagination pull-right">
+                            <pagination
+                                boundary-links="true"
+                                direction-links="true"
+                                total-items="paginationTotalItems"
+                                items-per-page="itemsPerPage"
+                                ng-model="paginationCurrentPage"
+                                class="pagination-sm"
+                                num-pages="paginationNumPages"
+                                ng-change="loadPageData()"
+                                max-size="paginationMaxSize"
+                                rotate="false"
+                                previous-text="&lsaquo;"
+                                next-text="&rsaquo;"
+                                first-text="&laquo;"
+                                last-text="&raquo;">
+                            </pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
 </div>
