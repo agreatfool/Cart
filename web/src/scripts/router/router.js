@@ -6,9 +6,8 @@ module.exports = function($routeProvider, $locationProvider, $routeSegmentProvid
     $routeSegmentProvider.options.strictMode = true;
     $routeSegmentProvider.
         when('/',                    'blog_list').
-        when('/new/:postId',         'blog_new').
-        when('/update/:postId',      'blog_update').
         when('/:year/:month/:title', 'blog_view').
+        when('/edit/:postId',        'blog_edit').
         when('/category',            'blog_category').
         when('/category/:category',  'blog_list').
         when('/tag',                 'blog_tag').
@@ -29,14 +28,9 @@ module.exports = function($routeProvider, $locationProvider, $routeSegmentProvid
             'templateUrl': 'views/blog/list.html',
             'controller': 'CartBlogListCtrl'
         }).
-        segment('blog_new', {
+        segment('blog_edit', {
             'templateUrl': 'views/blog/edit.html',
-            'controller': 'CartBlogNewCtrl',
-            'dependencies': ['postId']
-        }).
-        segment('blog_update', {
-            'templateUrl': 'views/blog/edit.html',
-            'controller': 'CartBlogUpdateCtrl',
+            'controller': 'CartBlogEditCtrl',
             'dependencies': ['postId']
         }).
         segment('blog_view', {

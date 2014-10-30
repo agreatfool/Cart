@@ -2,7 +2,7 @@
 
 /* global $, _, CartUtility */
 module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, $editorService) {
-    CartUtility.log('CartBlogNewCtrl');
+    CartUtility.log('CartBlogEditCtrl');
 
     $scope.postCategory = '';
     $scope.postTags = [];
