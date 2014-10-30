@@ -5,10 +5,10 @@
                 <div class="col-md-1">
                     <h3>Blog</h3>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2" ng-show="isMaster">
                     <div class="top-button">
                         <a href="#" class="btn btn-xs btn-primary" ng-click="createNew()">Create New</a>
-                        <a href="#" class="btn btn-xs btn-primary">View Tmp History</a>
+                        <a href="#" class="btn btn-xs btn-primary" ng-click="openTmpPostList()">View Tmp History</a>
                     </div>
                 </div>
             </div>
