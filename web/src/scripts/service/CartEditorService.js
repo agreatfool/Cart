@@ -146,7 +146,11 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
                 $dataService.postSaveTmp(
                     postId, editor.titleElement.text().trim(), editor.getSession().getValue(),
                     editor.categoryElement.text().trim(), tags
-                );
+                ).then(function(result) {
+                    if (true === result) {
+                        CartUtility.notify('Done', 'Tmp post saved!', 'success');
+                    }
+                });
             }
         });
         aceEditor.commands.addCommand({
