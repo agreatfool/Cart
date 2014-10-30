@@ -45,6 +45,7 @@
     "highlightjs": "~8.0.0",
     "angular-file-upload": "~1.1.5",
     "angular-ui-utils": "bower",
-    "angular-contenteditable": "~0.3.7"
+    "angular-contenteditable": "~0.3.7",
+    "angular-bootstrap": "~0.11.2"
   }
 }
