@@ -47,11 +47,6 @@
             </ul>
         </div>
     </div>
-    <style type="text/css">
-        .pagination li {
-            margin-right: -1px;
-        }
-    </style>
     <script type="text/ng-template" id="CartBlogListModal.html">
         <div class="blog-list-modal">
             <div class="modal-body">
@@ -62,8 +57,11 @@
                                 <div class="pull-left">
                                     <b>Temporarily saved posts:</b>
                                 </div>
-                                <div class="pull-right">
-                                    <span class="glyphicon glyphicon-remove" style="cursor: pointer;" ng-click="close()"></span>
+                                <div class="modal-close pull-right">
+                                    <span class="glyphicon glyphicon-remove" ng-click="close()"></span>
+                                </div>
+                                <div class="modal-delete-all pull-right" ng-show="dataOnPage.length > 0">
+                                    <a href="#" class="btn btn-xs btn-danger" ng-click="deleteAllTmpPost()">Delete All</a>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -73,15 +71,27 @@
                                         <th>Title</th>
                                         <th>Category</th>
                                         <th>Created</th>
-                                        <th>Updated</th>
+                                        <th>Updated&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></th>
+                                        <th>Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="post in dataOnPage">
-                                        <td><a href="{{ rootUrl }}new/{{ post._id }}" ng-click="close()">{{ post.title }}</a></td>
+                                        <td>
+                                            <a href="{{ rootUrl }}view/{{ post._id }}" ng-click="close()" ng-show="post.published">{{ post.title }}</a>
+                                            <span ng-show="!post.published">{{ post.title }}</span>
+                                        </td>
                                         <td><a href="{{ rootUrl }}category/{{ post.category }}" ng-click="close()">{{ post.category }}</a></td>
                                         <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                                        <td>
+                                            <span ng-show="post.published">Published</span>
+                                            <span ng-show="!post.published">Draft</span>
+                                        </td>
+                                        <td><a href="{{ rootUrl }}edit/{{ post._id }}" class="btn btn-xs btn-primary" ng-click="close()">Edit</a></td>
+                                        <td><a href="#" class="btn btn-xs btn-danger" ng-click="deleteTmpPost(post._id)">Delete</a></td>
                                     </tr>
                                 </tbody>
                             </table>

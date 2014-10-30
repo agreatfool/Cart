@@ -6,8 +6,8 @@ module.exports = function($routeProvider, $locationProvider, $routeSegmentProvid
     $routeSegmentProvider.options.strictMode = true;
     $routeSegmentProvider.
         when('/',                    'blog_list').
-        when('/:year/:month/:title', 'blog_view').
         when('/edit/:postId',        'blog_edit').
+        when('/view/:postId',        'blog_view').
         when('/category',            'blog_category').
         when('/category/:category',  'blog_list').
         when('/tag',                 'blog_tag').

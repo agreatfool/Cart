@@ -21,9 +21,29 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         $scope.dataOnPage = $scope.dataRows.slice(startPos, endPos);
     };
 
+    $scope.deleteTmpPost = function(uuid) {
+        $dataService.postRemoveTmp(uuid).then(function(result) {
+            if (result === true) {
+                CartUtility.notify('Done', 'Tmp post data deleted!', 'success');
+            } else {
+                CartUtility.notify('Error', 'Error in deleting tmp post data!', 'error');
+            }
+        });
+    };
+
+    $scope.deleteAllTmpPost = function() {
+        $dataService.postRemoveAllTmp().then(function(result) {
+            if (result === true) {
+                CartUtility.notify('Done', 'All tmp post data deleted!', 'success');
+            } else {
+                CartUtility.notify('Error', 'Error in deleting all tmp post data!', 'error');
+            }
+        });
+    };
+
     //FIXME category link on template is invalid
     $dataService.postGetAllTmp().then(function(result) {
-        $scope.dataRows = _.sortBy(result, function(post) { return post.created; }).reverse();
+        $scope.dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse();
         $scope.paginationTotalItems = result.length;
         $scope.paginationCurrentPage = 1;
         $scope.loadPageData();

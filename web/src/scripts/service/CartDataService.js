@@ -127,7 +127,7 @@ module.exports = function($http, $q) {
     var postRemoveTmp = function(uuid) {
         var deferred = $q.defer();
         db.get(uuid).then(function(doc) {
-            if (!_.isNull(doc) && _.isOjbect(doc) && doc.hasOwnProperty('md')) {
+            if (!_.isNull(doc) && _.isObject(doc) && doc.hasOwnProperty('md')) {
                 db.remove(doc._id, doc._rev).then(function() {
                     deferred.resolve(true);
                 }, function(err) {
