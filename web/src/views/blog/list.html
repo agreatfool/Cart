@@ -7,8 +7,8 @@
                 </div>
                 <div class="col-md-2" ng-show="isMaster">
                     <div class="top-button">
-                        <a href="#" class="btn btn-xs btn-primary" ng-click="createNew()">Create New</a>
-                        <a href="#" class="btn btn-xs btn-primary" ng-click="openTmpPostList()">View Tmp History</a>
+                        <a href="#" class="btn btn-xs btn-primary" ng-click="createNewPost()">New</a>
+                        <a href="#" class="btn btn-xs btn-primary" ng-click="openTmpPostList()">View Tmp</a>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="pull-left">
-                                    <b>Currently temporarily saved posts:</b>
+                                    <b>Temporarily saved posts:</b>
                                 </div>
                                 <div class="pull-right">
                                     <span class="glyphicon glyphicon-remove" style="cursor: pointer;" ng-click="close()"></span>

@@ -6,22 +6,22 @@ module.exports = function ($scope, $location, $window, $modal, $accessService) {
 
     $scope.isMaster = $accessService.isMaster();
 
-    $scope.createNew = function() {
+    $scope.createNewPost = function() {
         if (!$scope.isMaster) {
             return;
         }
         // redirect to create post page
-        $window.location.href = CartUtility.getPureRootUrlFromLocation($location) + 'new/' + uuid.v4();
+        $window.location.href = CartUtility.getPureRootUrlFromLocation($location) + 'edit/' + uuid.v4();
     };
 
-    $scope.openTmpPostList = function(size) {
+    $scope.openTmpPostList = function() {
         if (!$scope.isMaster) {
             return;
         }
         $modal.open({
             templateUrl: 'CartBlogListModal.html',
             controller: 'CartBlogListModalCtrl',
-            size: size
+            size: 'lg'
         });
     };
 };
