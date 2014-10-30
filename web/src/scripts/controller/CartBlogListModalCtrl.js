@@ -1,8 +1,10 @@
 'use strict';
 
-/* global _, CartUtility */
+/* global _, moment, CartUtility */
 module.exports = function($scope, $location, $modalInstance, $dataService) {
     CartUtility.log('CartBlogListModalCtrl');
+
+    $scope.moment = moment;
 
     $scope.dataRows = [];
     $scope.rootUrl = CartUtility.getPureRootUrlFromLocation($location);

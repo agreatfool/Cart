@@ -80,8 +80,8 @@
                                     <tr ng-repeat="post in dataOnPage">
                                         <td><a href="{{ rootUrl }}new/{{ post._id }}" ng-click="close()">{{ post.title }}</a></td>
                                         <td><a href="{{ rootUrl }}category/{{ post.category }}" ng-click="close()">{{ post.category }}</a></td>
-                                        <td>{{ post.created }}</td>
-                                        <td>{{ post.updated }}</td>
+                                        <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                                        <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
