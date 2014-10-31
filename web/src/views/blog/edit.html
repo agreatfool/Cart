@@ -10,7 +10,11 @@
                         <div class="btn btn-xs btn-default">Title</div>
                         <div id="markdown-post-title" class="btn btn-xs btn-primary top-input" contenteditable="true"></div>
                         <div class="btn btn-xs btn-default">Category</div>
-                        <div id="markdown-post-category" class="btn btn-xs btn-primary top-input" contenteditable="true" ng-model="postCategory"></div>
+                        <div id="markdown-post-category" class="btn btn-xs btn-primary top-input single-line" contenteditable="true"
+                            ng-keyup="$event.keyCode == 13 && inputCategory($event)"
+                            ng-blur="inputCategory($event)"
+                            ng-model="categoryInput">
+                        </div>
                         <div class="btn btn-xs btn-default">Tags</div>
                         <div class="tagsinput-primary">
                             <div id="markdown-post-tags" class="bootstrap-tagsinput">
@@ -18,7 +22,10 @@
                                     {{ tag }}
                                     <span class="tagsinput-remove-link" data-role="remove" ng-click="removePostTag(tag)"></span>
                                 </span>
-                                <input type="text" title="" ng-keyup="$event.keyCode == 13 && addPostTag($event)" ng-blur="addPostTag($event)" ng-model="newTagName">
+                                <input type="text" title=""
+                                    ng-keyup="$event.keyCode == 13 && addPostTag($event)"
+                                    ng-blur="addPostTag($event)"
+                                    ng-model="tagInput">
                             </div>
                         </div>
                     </div>

@@ -27,13 +27,21 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         CartUtility.toggleToc($('.markdown-toc-icon'), $('.markdown-toc-content'));
     };
 
-    $scope.newTagName = '';
+    // category related
+    $scope.categoryInput = '';
+    $scope.inputCategory = function(event) {
+        event.preventDefault();
+        $scope.categoryInput = $scope.categoryInput.replace(/[<]br[^>]*[>]/gi, '');
+    };
+
+    // tag related
+    $scope.tagInput = '';
     $scope.addPostTag = function(event) {
         event.preventDefault();
-        if (!_.isEmpty($scope.newTagName) && $scope.postTags.indexOf($scope.newTagName) === -1) {
-            $scope.postTags.push($scope.newTagName);
+        if (!_.isEmpty($scope.tagInput) && $scope.postTags.indexOf($scope.tagInput) === -1) {
+            $scope.postTags.push($scope.tagInput);
         }
-        $scope.newTagName = '';
+        $scope.tagInput = '';
     };
     $scope.removePostTag = function(tagName) {
         var tagIndex = $scope.postTags.indexOf(tagName);
