@@ -227,6 +227,9 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
                 uploaderReportUploadProgress(fileItem.file.name, 0);
                 fileItem.formData = [{ "postId": postId }];
                 fileItem.upload();
+            } else if (uploader.queue.length === 0) {
+                // no any files to be uploaded, try to hide spinner
+                uploaderHideSpinner();
             }
         };
         var uploaderReportUploadProgress = function(name, progress) {
@@ -249,13 +252,11 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             CartUtility.notify('Upload Error!', 'Error encountered while uploading file "' + fileItem.file.name + '"!', 'error');
             uploaderHideSpinner();
         };
-        uploader.onCompleteItem = function(fileItem) {
-            CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
+        uploader.onCompleteItem = function(fileItem, response) {
+            if (CartUtility.handleResponse(response)) {
+                CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
+            }
             uploaderProcessNextUpload();
-        };
-        uploader.onCompleteAll = function() {
-            CartUtility.notify('Uploads Done!', 'All uploads done!', 'success');
-            uploaderHideSpinner();
         };
         if (CartUtility.isDndSupported()) {
             // intercept document body drag & drop event, prevent document drop page redirect
