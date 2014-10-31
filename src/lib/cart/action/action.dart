@@ -211,34 +211,29 @@ class CartAction {
     if (!_filterIsMaster(ctx)) {
       return;
     }
+    String filePath;
+    HttpBodyFileUpload fileUploaded;
+
     PinLogger.instance.fine('[CartAction] handleUpload: Start to handle file upload action.');
     HttpBodyHandler.processRequest(ctx.req)
     .then((HttpRequestBody body) {
-      return new Future.value(body);
-    })
-    .then((HttpRequestBody body) {
       String postId = body.body['postId'];
-      HttpBodyFileUpload fileUploaded = body.body['file'];
-
+      fileUploaded = body.body['file'];
       if (postId == null || fileUploaded == null) {
-        ctx.sendJson(_buildResponse('handleUpload', { "error": "Failed in parsing file!" }, valid: false));
+        throw new Exception('[CartAction] handleUpload: Failed in parsing file!');
       } else if (['image/png', 'image/jpeg', 'image/gif'].indexOf(fileUploaded.contentType.toString()) == -1) {
-        ctx.sendJson(_buildResponse('handleUpload', { "error": "File type not supported: ${fileUploaded.contentType}" }, valid: false));
+        throw new Exception('[CartAction] handleUpload: File type not supported: ${fileUploaded.contentType}');
       } else {
         String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, postId);
-        String filePath = LibPath.join(postPath, fileUploaded.filename);
-        PinUtility.createDir(postPath)
-        .then((_) {
-          return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
-        })
-        .then((_) {
-          ctx.sendJson(_buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
-        })
-        .catchError((e, trace) {
-          PinUtility.handleError(e, trace);
-          ctx.sendJson(_buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
-        });
+        filePath = LibPath.join(postPath, fileUploaded.filename);
+        return PinUtility.createDir(postPath);
       }
+    })
+    .then((_) {
+      return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
+    })
+    .then((_) {
+      ctx.sendJson(_buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -326,6 +321,10 @@ class CartAction {
 
     var cookie = '${name}=${value}; Expires=${PinTime.formatRFC2616(expires)}; Path=/';
     ctx.res.headers.add('set-cookie', cookie);
+  }
+
+  static Future<HttpRequestBody> _parseHttpReqBody(HttpContext ctx) {
+    return HttpBodyHandler.processRequest(ctx.req);
   }
 
 }
