@@ -44,12 +44,17 @@ class PinUtility {
     return data;
   }
 
-  static Future<File> writeJsonFile(String path, Map json) {
+  static Future<File> writeJsonFile(String path, Map json, {withIndent: false}) {
     final completer = new Completer();
     String jsonStr = '';
 
     try {
-      jsonStr = JSON.encode(json);
+      if (!withIndent) {
+        jsonStr = JSON.encode(json);
+      } else {
+        final decoder = new JsonEncoder.withIndent('    ');
+        jsonStr = decoder.convert(json);
+      }
     } catch (e, trace) {
       handleError(e, trace, message: '[PinUtility] writeJsonFile: Error in encoding JSON obj: ${json}');
       completer.completeError(e, trace);
