@@ -99,7 +99,7 @@ angular.element().ready(function() {
     angular.bootstrap($html, ['Cart']);
 
     // nav hover display effect
-    $('.page-content').mousemove(function(e) {
+    $('.page-content').mousemove(_.throttle(function(e) {
         var elementOffset = $(this).offset();
         var posX = e.pageX - elementOffset.left;
         var posY = e.pageY - elementOffset.top;
@@ -108,10 +108,10 @@ angular.element().ready(function() {
         } else {
             $('.nav-trigger').removeClass('nav-trigger-active');
         }
-    });
+    }, 150)); // do mouse move event every 150ms
 
     // window resize event
-    $(window).resize(fixFooter);
+    $(window).resize(_.throttle(fixFooter, 150)); // do fixFooter every 150ms
 
     // scroll to top
     var toTopBtn = $('.page-to-top');
