@@ -8,7 +8,31 @@ module.exports = function($http, $q) {
     //-* MODELS
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var posts = {};
+    /**
+     * categories: {
+     *     bbc3440b-6e9a-4e17-8c31-534f8f58784f: {
+     *         created: 1414724441574,
+     *         driveId: "0ByO96ydBQtM2RkwtZFBGb1ZFb2M",
+     *         title: "first category",
+     *         updated: 1414724441574,
+     *         uuid: "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
+     *     },
+     *     ...
+     * }
+     */
     var categories = {};
+    /**
+     * tags: {
+     *     bbc3440b-6e9a-4e17-8c31-534f8f58784f: {
+     *         created: 1414724441574,
+     *         driveId: "0ByO96ydBQtM2RkwtZFBGb1ZFb2M",
+     *         title: "first tag",
+     *         updated: 1414724441574,
+     *         uuid: "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
+     *     },
+     *     ...
+     * }
+     */
     var tags = {};
     /**
      * Structure of temporarily saved post:
