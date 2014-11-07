@@ -94,7 +94,6 @@ class CartAction {
   static handleOauth2Next(HttpContext ctx) {
     String email = '';
     HashMap credentials = {};
-    final decoder = new JsonEncoder.withIndent('    ');
 
     bool isAuthed = (CartSystem.instance.credentials.length > 0);
 
@@ -119,7 +118,7 @@ class CartAction {
       if (!isAuthed) {
         // add oauth owner email, and save the credentials first, since google api request need them
         credentials['email'] = email;
-        return (new File(CartSystem.instance.oauth['web']['credentialsFilePath'])).writeAsString(decoder.convert(credentials));
+        return PinUtility.writeJsonFile(CartSystem.instance.oauth['web']['credentialsFilePath'], credentials, withIndent: true);
       } else {
         // validate is valid owner or not
         if (email == CartSystem.instance.credentials['email']) {
@@ -144,7 +143,7 @@ class CartAction {
         credentials['googleDriveRootFolder'] = rootFolderDriveId;
         CartSystem.instance.googleDriveRootFolder = rootFolderDriveId;
         CartSystem.instance.credentials = credentials;
-        return (new File(CartSystem.instance.oauth['web']['credentialsFilePath'])).writeAsString(decoder.convert(credentials));
+        return PinUtility.writeJsonFile(CartSystem.instance.oauth['web']['credentialsFilePath'], credentials, withIndent: true);
       } else {
         // just pass the result to next step
         return new Future.value(_);
@@ -297,7 +296,6 @@ class CartAction {
 
   static Future<File> _updateSessionToken(HttpContext ctx) {
     String token = PinUtility.uuid();
-    final decoder = new JsonEncoder.withIndent('    ');
 
     var expires = new DateTime.now();
     expires = expires.add(new Duration(seconds: CartSystem.instance.setting['cookieLive']));
@@ -308,15 +306,13 @@ class CartAction {
         CartConst.SESSION_EXPIRES_KEY: expires.millisecondsSinceEpoch
     };
     CartSystem.instance.session = session;
-    return (new File(CartConst.CONFIG_SESSION_PATH)).writeAsString(decoder.convert(session));
+    return PinUtility.writeJsonFile(CartConst.CONFIG_SESSION_PATH, session, withIndent: true);
   }
 
   static Future<File> _removeSessionToken(HttpContext ctx) {
     _setCookie(ctx, CartConst.SESSION_TOKEN_KEY, '');
     CartSystem.instance.session = {};
-    return (new File(CartConst.CONFIG_SESSION_PATH)).writeAsString(JSON.encode({})).catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-    });
+    return PinUtility.writeJsonFile(CartConst.CONFIG_SESSION_PATH, {});
   }
 
   static void _setCookie(HttpContext ctx, String name, String value, {DateTime expires: null}) {
