@@ -188,7 +188,7 @@ class PinUtility {
   }
 
   static String _prevErrorMsg = null;
-  static void handleError(dynamic error, StackTrace trace, {String message: null}) {
+  static void handleError(dynamic error, StackTrace trace, {String message: null, bool ignoreDuplicate: true}) {
     // output additional message first
     if (message != null) {
       PinLogger.instance.shout(message);
@@ -201,7 +201,7 @@ class PinUtility {
     } catch (e) {
       // do nothing, just ignore it to prevent NoSuchMethod exception
     }
-    if (_prevErrorMsg == null || _prevErrorMsg != currentErrorMsg) {
+    if (!ignoreDuplicate || _prevErrorMsg == null || _prevErrorMsg != currentErrorMsg) {
       // ignore duplicated errors
       _prevErrorMsg = currentErrorMsg;
       PinLogger.instance.shout('Error: ${error}');
@@ -210,6 +210,22 @@ class PinUtility {
         PinLogger.instance.shout('StackTrace: ${traceStr}');
       }
     }
+  }
+  static void clearPrevErrorMsg() {
+    /**
+     * We need to remove duplicate error checking between different api process:
+     * For example:
+     * API CALL 001: Error - Type A
+     * API CALL 002: Succeed
+     * API CALL 003: Succeed
+     * ...
+     * API CALL 500: Succeed
+     * API CALL 501: Error - Type A
+     * And you can imagine what happened: no log messages for this error.
+     * How do you know what happened?
+     * And it's impossible to find previous log messages for this type of error, since it's too old.
+     */
+    _prevErrorMsg = null;
   }
 
   static String uuid() {

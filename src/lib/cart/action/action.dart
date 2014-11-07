@@ -3,6 +3,7 @@ part of cart;
 class CartAction {
 
   static handleDataInit(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     HashMap<String, Map> indexData = {
         "posts": {},
         "categories": {},
@@ -30,6 +31,7 @@ class CartAction {
   }
 
   static handleTagCreate(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     if (!_filterIsMaster(ctx)) {
       return;
     }
@@ -55,6 +57,7 @@ class CartAction {
   }
 
   static handleCategoryCreate(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     if (!_filterIsMaster(ctx)) {
       return;
     }
@@ -80,6 +83,7 @@ class CartAction {
   }
 
   static handleOauth2(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     if (CartSystem.instance.credentials.length > 0) {
       PinLogger.instance.shout('[CartAction] handleOauth2: Already authorized!');
       ctx.sendJson(_buildResponse('handleOauth2', { "error": "Already authorized!" }, valid: false));
@@ -92,6 +96,7 @@ class CartAction {
   }
 
   static handleOauth2Next(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     String email = '';
     HashMap credentials = {};
 
@@ -173,6 +178,7 @@ class CartAction {
   }
 
   static handleIsAuthed(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     var isAuthed = false;
 
     if (CartSystem.instance.credentials.length > 0) {
@@ -186,6 +192,7 @@ class CartAction {
   }
 
   static handleLogin(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     if (CartSystem.instance.credentials.length <= 0) {
       PinLogger.instance.shout('[CartAction] handleLogin: Site has not been initialized yet!');
       ctx.sendJson(_buildResponse('handleLogin', { "error": "Site has not been initialized yet!" }, valid: false));
@@ -198,6 +205,7 @@ class CartAction {
   }
 
   static void handleLogout(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     if (!_filterIsMaster(ctx)) {
       return;
     }
@@ -213,6 +221,7 @@ class CartAction {
   }
 
   static handleUpload(HttpContext ctx) {
+    PinUtility.clearPrevErrorMsg();
     if (!_filterIsMaster(ctx)) {
       return;
     }
