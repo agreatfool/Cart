@@ -35,8 +35,8 @@ class CartAction {
     }
     _parseHttpReqBody(ctx)
     .then((HttpRequestBody body) {
-      String uuid = ctx.params['uuid'];
-      String name = ctx.params['name'];
+      String uuid = body.body['uuid'];
+      String name = body.body['name'];
       if (!PinUtility.isUuid(uuid)) {
         throw new Exception('[CartAction] handleCategoryCreate: Invalid tag uuid!');
       } else if (name == null || name == '') {
