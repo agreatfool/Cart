@@ -42,7 +42,7 @@ class CartAction {
       } else if (name == null || name == '') {
         throw new Exception('[CartAction] handleCategoryCreate: Invalid tag name!');
       } else {
-        CartModel.instance.addTag(uuid, name);
+        return CartModel.instance.addTag(uuid, name);
       }
     })
     .then((CartTag tag) {
