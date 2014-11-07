@@ -53,9 +53,25 @@ class CartCategoryList extends Object with PinSerializable {
     }
   }
 
+  CartCategory findByTitle(String title) {
+    CartCategory found = null;
+    for (String uuid in list.keys) {
+      CartCategory category = list[uuid];
+      if (category.title == title) {
+        found = category;
+        break;
+      }
+    }
+    return found;
+  }
+
   CartCategory addNewCategory(String uuid, String name, {int timestamp: null}) {
     if (list.containsKey(uuid)) {
-      return find(uuid);
+      throw new Exception('[CartCategoryList] addNewCategory: Duplicate category uuid: ${uuid}!');
+    }
+    CartCategory titleFound = findByTitle(name);
+    if (titleFound != null) {
+      throw new Exception('[CartCategoryList] addNewCategory: Duplicate category name: ${name}!');
     }
     if (timestamp == null) {
       timestamp = PinTime.getTime();

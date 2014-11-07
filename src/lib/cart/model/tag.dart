@@ -53,9 +53,25 @@ class CartTagList extends Object with PinSerializable {
     }
   }
 
+  CartTag findByTitle(String title) {
+    CartTag found = null;
+    for (String uuid in list.keys) {
+      CartTag tag = list[uuid];
+      if (tag.title == title) {
+        found = tag;
+        break;
+      }
+    }
+    return found;
+  }
+
   CartTag addNewTag(String uuid, String name, {int timestamp: null}) {
     if (list.containsKey(uuid)) {
-      return find(uuid);
+      throw new Exception('[CartTagList] addNewTag: Duplicate tag uuid: ${uuid}!');
+    }
+    CartTag titleFound = findByTitle(name);
+    if (titleFound != null) {
+      throw new Exception('[CartTagList] addNewTag: Duplicate tag name: ${name}!');
     }
     if (timestamp == null) {
       timestamp = PinTime.getTime();
