@@ -187,14 +187,28 @@ class PinUtility {
     return completer.future;
   }
 
+  static String _prevErrorMsg = null;
   static void handleError(dynamic error, StackTrace trace, {String message: null}) {
+    // output additional message first
     if (message != null) {
       PinLogger.instance.shout(message);
     }
-    PinLogger.instance.shout('Error: ${error}');
-    if (trace != null) {
-      String traceStr = LibTrace.Trace.format(trace);
-      PinLogger.instance.shout('StackTrace: ${traceStr}');
+
+    // parse current error message
+    String currentErrorMsg = null;
+    try {
+      currentErrorMsg = error.toString();
+    } catch (e) {
+      // do nothing, just ignore it to prevent NoSuchMethod exception
+    }
+    if (_prevErrorMsg == null || _prevErrorMsg != currentErrorMsg) {
+      // ignore duplicated errors
+      _prevErrorMsg = currentErrorMsg;
+      PinLogger.instance.shout('Error: ${error}');
+      if (trace != null) {
+        String traceStr = LibTrace.Trace.format(trace);
+        PinLogger.instance.shout('StackTrace: ${traceStr}');
+      }
     }
   }
 
