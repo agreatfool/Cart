@@ -27,6 +27,7 @@ web/src/bower/
 # Dart
 config/credentials.json
 config/session.json
+database/*.json
 
 # HTML
 web/public
