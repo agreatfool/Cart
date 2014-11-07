@@ -50,22 +50,14 @@ module.exports = function($http, $q) {
     //-* DATA RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var getInitData = function() {
-        var deferred = $q.defer();
-        $http({
-            method: "POST",
-            url: '/api/init',
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                posts = result.message.posts;
-                categories = result.message.categories;
-                tags = result.message.tags;
-                deferred.resolve(result.message);
-            } else {
-                deferred.reject();
+        return CartUtility.post(
+            $http, $q, '/api/init', {}, function(data) {
+                posts = data.message.posts;
+                categories = data.message.categories;
+                tags = data.message.tags;
+                return data.message;
             }
-        });
-        return CartUtility.spinShow(deferred.promise);
+        );
     };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -205,56 +197,64 @@ module.exports = function($http, $q) {
     //-* CATEGORY RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var categoryCreate = function(categoryName) {
-        var deferred = $q.defer();
-        $http({
-            method: "POST",
-            url: '/api/category/create',
-            data: $.param({
+        return CartUtility.post(
+            $http, $q, '/api/category/create', {
                 "uuid": uuid.v4(),
                 "name": categoryName
-            }),
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                // TODO
-                console.log(result);
-                deferred.resolve(result.message);
+            }, function(data) {
+                return data.message;
+            }
+        );
+    };
+    var categorySearch = function(categoryName, strict) {
+        if (_.isUndefined(strict) || !_.isBoolean(strict)) {
+            strict = true; // whether search with "strict mode" (all match), otherwise it will be "start with mode"
+        }
+
+        var found = _.filter(categories, function(category) {
+            if (strict === true) {
+                return category.title === categoryName;
             } else {
-                deferred.reject();
+                return category.title.indexOf(categoryName) === 0;
             }
         });
-        return CartUtility.spinShow(deferred.promise);
-    };
-    var categorySearch = function(categoryName) {
+        if (_.isUndefined(found)) {
+            found = [];
+        }
 
+        return found;
     };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* TAG RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var tagCreate = function(tagName) {
-        var deferred = $q.defer();
-        $http({
-            method: "POST",
-            url: '/api/tag/create',
-            data: $.param({
+        return CartUtility.post(
+            $http, $q, '/api/tag/create', {
                 "uuid": uuid.v4(),
                 "name": tagName
-            }),
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                // TODO
-                console.log(result);
-                deferred.resolve(result.message);
+            }, function(data) {
+                return data.message;
+            }
+        );
+    };
+    var tagSearch = function(tagName, strict) {
+        if (_.isUndefined(strict) || !_.isBoolean(strict)) {
+            strict = true; // whether search with "strict mode" (all match), otherwise it will be "start with mode"
+        }
+
+        var found = _.filter(tags, function(tag) {
+            if (strict === true) {
+                return tag.title === tagName;
             } else {
-                deferred.reject();
+                return tag.title.indexOf(tagName) === 0;
             }
         });
-        return CartUtility.spinShow(deferred.promise);
-    };
-    var tagSearch = function(tagName) {
+        if (_.isUndefined(found)) {
+            found = [];
+        }
 
+        return found;
     };
 
     // FIXME reformat later
