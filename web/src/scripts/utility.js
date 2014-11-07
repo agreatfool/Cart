@@ -6,6 +6,38 @@ var CartUtility = function() {
     this.pnotifyStack = {'dir1': 'up', 'dir2': 'right', 'push': 'bottom', 'spacing1': 0, 'spacing2': 0};
 };
 
+CartUtility.prototype.post = function($http, $q, url, data, onSuccess, onError) {
+    var self = this;
+    var deferred = $q.defer();
+
+    var options = {
+        method: "POST",
+        url: url,
+        headers: {"Content-type": "application/x-www-form-urlencoded"}
+    };
+    if (_.isObject(data) && !_.isEmpty(data)) {
+        options.data = $.param(data);
+    }
+
+    $http(options)
+    .success(function(data) {
+        if (self.handleResponse(data)) {
+            deferred.resolve(onSuccess(data));
+        } else {
+            deferred.reject(false);
+        }
+    })
+    .error(function(data) {
+        //self.log(data);
+        if (_.isFunction(onError)) {
+            onError(data);
+        }
+        deferred.reject(false);
+    });
+
+    return self.spinShow(deferred.promise);
+};
+
 CartUtility.prototype.spinShow = function(promise) {
     var self = this;
     self.spinTasksCount++;
