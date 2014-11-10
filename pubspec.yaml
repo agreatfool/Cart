@@ -10,3 +10,4 @@ dependencies:
   markdown: any
   uuid: any
   http_server: any
+  html5lib: any
