@@ -39,8 +39,8 @@ module.exports = function($http, $q) {
      * {
      *     "title": title string,
      *     "md": markdown string,
-     *     "category": string,
-     *     "tags": [string, ...],
+     *     "category": category structure described above,
+     *     "tags": [tag structure described above, ...],
      *     "created": timestamp,
      *     "updated": timestamp
      * }
@@ -71,16 +71,16 @@ module.exports = function($http, $q) {
         var deferred = $q.defer();
 
         if (_.isUndefined(uuid) || _.isEmpty(uuid)) {
-            CartUtility.notify('Error!', 'Post uuid invalid!', 'error');
+            CartUtility.notify('Error!', 'Post uuid empty or invalid!', 'error');
             deferred.resolve(false);
         } else if (_.isUndefined(title) || _.isEmpty(title)) {
-            CartUtility.notify('Error!', 'Post title invalid!', 'error');
+            CartUtility.notify('Error!', 'Post title empty or invalid!', 'error');
             deferred.resolve(false);
         } else if (_.isUndefined(markdown) || _.isEmpty(markdown)) {
-            CartUtility.notify('Error!', 'Post markdown invalid!', 'error');
+            CartUtility.notify('Error!', 'Post markdown empty or invalid!', 'error');
             deferred.resolve(false);
         } else if (_.isUndefined(category) || _.isEmpty(category)) {
-            CartUtility.notify('Error!', 'Post category invalid!', 'error');
+            CartUtility.notify('Error!', 'Post category empty or invalid!', 'error');
             deferred.resolve(false);
         } else {
             db.get(uuid)
