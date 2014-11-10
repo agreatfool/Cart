@@ -40,6 +40,7 @@ class CartModel {
     String html = '';
 
     try {
+
       // validate uuid
       if (!PinUtility.isUuid(uuid)) {
         throw new Exception('[CartModel] savePost: uuid format invalid: ${uuid}}');
@@ -55,18 +56,19 @@ class CartModel {
       }
       // parse markdown to html & escape html
       html = (const HtmlEscape()).convert(markdownToHtml(markdown));
+
+      // execute
+      if (posts.find(uuid) != null) {
+        // update
+        saveResult = _updatePost(uuid, markdown, header, html);
+      } else {
+        // add
+        saveResult = _addPost(uuid, markdown, header, html);
+      }
+
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
       return new Future.error(e, trace);
-    }
-
-    // execute
-    if (posts.find(uuid) != null) {
-      // update
-      saveResult = _updatePost(uuid, markdown, header, html);
-    } else {
-      // add
-      saveResult = _addPost(uuid, markdown, header, html);
     }
 
     return saveResult;
