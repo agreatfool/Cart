@@ -123,6 +123,8 @@ class CartAction {
       if (!isAuthed) {
         // add oauth owner email, and save the credentials first, since google api request need them
         credentials['email'] = email;
+        // write additional credential file for google refresh purpose, otherwise the credential file would be overwritten by google api
+        PinUtility.writeJsonFile(CartSystem.instance.oauth['web']['credentialsRefreshFilePath'],  credentials, withIndent: true);
         return PinUtility.writeJsonFile(CartSystem.instance.oauth['web']['credentialsFilePath'], credentials, withIndent: true);
       } else {
         // validate is valid owner or not

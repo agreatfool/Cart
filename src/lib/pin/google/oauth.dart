@@ -37,20 +37,20 @@ class PinGoogleOAuth {
     PinUtility.validate(json.containsKey('secret'), 'PinGoogleOAuth construct, necessary key not found: secret');
     PinUtility.validate(json.containsKey('scopes'), 'PinGoogleOAuth construct, necessary key not found: scopes');
     PinUtility.validate(json.containsKey('redirectUrl'), 'PinGoogleOAuth construct, necessary key not found: redirectUrl');
-    PinUtility.validate(json.containsKey('credentialsFilePath'), 'PinGoogleOAuth construct, necessary key not found: credentialsFilePath');
+    PinUtility.validate(json.containsKey('credentialsRefreshFilePath'), 'PinGoogleOAuth construct, necessary key not found: credentialsRefreshFilePath');
 
     // validate type
     PinUtility.validate(json['identifier'] is String, 'PinGoogleOAuth construct, value of key identifier is not String');
     PinUtility.validate(json['secret'] is String, 'PinGoogleOAuth construct, value of key secret is not String');
     PinUtility.validate(json['scopes'] == null || json['scopes'] is List, 'PinGoogleOAuth construct, value of key scopes is not List');
     PinUtility.validate(json['redirectUrl'] is String, 'PinGoogleOAuth construct, value of key redirectUrl is not String');
-    PinUtility.validate(json['credentialsFilePath'] is String, 'PinGoogleOAuth construct, value of key credentialsFilePath is not String');
+    PinUtility.validate(json['credentialsRefreshFilePath'] is String, 'PinGoogleOAuth construct, value of key credentialsRefreshFilePath is not String');
 
     _identifier = json['identifier'];
     _secret = json['secret'];
     _scopes = json['scopes'];
     _redirectUrl = json['redirectUrl'];
-    _credentialsFilePath = json['credentialsFilePath'];
+    _credentialsFilePath = json['credentialsRefreshFilePath'];
 
     _oauth2 = new GoogleOAuth.OAuth2Console(
         identifier: _identifier,

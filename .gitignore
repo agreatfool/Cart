@@ -26,6 +26,7 @@ web/src/bower/
 
 # Dart
 config/credentials.json
+config/google_credentials.json
 config/session.json
 database/*.json
 
