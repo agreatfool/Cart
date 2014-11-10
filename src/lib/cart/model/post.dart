@@ -6,7 +6,6 @@ class CartPost extends Object with PinSerializable {
   String driveId; // id of google drive
 
   String title;
-  String link;
   int created;
   int updated;
   String author;
@@ -25,9 +24,6 @@ class CartPost extends Object with PinSerializable {
     }
     if (json.containsKey('title')) {
       title = json['title'];
-    }
-    if (json.containsKey('link')) {
-      link = json['link'];
     }
     if (json.containsKey('created')) {
       created = json['created'];
@@ -300,7 +296,6 @@ class CartPostAttachment extends Object with PinSerializable {
 class CartPostHeader {
 
   String title;
-  String link;
   String category; //uuid
   List<HashMap<String, String>> tags; // [{"uuid": uuid, "name": string}, ...]
   List<HashMap<String, String>> attachments; // [{"uuid": uuid, "name": string}, ...]

@@ -125,7 +125,6 @@ class CartModel {
 
     HashMap data = {
       'title': header.title,
-      'link': header.link,
       'created': timestamp,
       'updated': timestamp,
       'author': CartSystem.instance.session['name'],
@@ -180,7 +179,6 @@ class CartModel {
 
     CartPost post = posts.find(uuid);
     post.title = header.title;
-    post.link = header.link;
     post.category = header.category;
     post.updated = timestamp;
 
