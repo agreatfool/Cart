@@ -10,9 +10,9 @@ class CartAction {
         "tags": {}
     };
 
-    Map postList = CartModel.instance.posts.toJson()['list'];
-    Map categoryList = CartModel.instance.categories.toJson()['list'];
-    Map tagList = CartModel.instance.tags.toJson()['list'];
+    Map postList = CartModel.instance.postList.toJson()['list'];
+    Map categoryList = CartModel.instance.categoryList.toJson()['list'];
+    Map tagList = CartModel.instance.tagList.toJson()['list'];
 
     if (isMaster(ctx)) {
       indexData['posts'] = postList;

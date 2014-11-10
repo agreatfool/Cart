@@ -12,16 +12,16 @@ class CartModel {
     return _model;
   }
 
-  CartPostList posts;
-  CartCategoryList categories;
-  CartTagList tags;
+  CartPostList postList;
+  CartCategoryList categoryList;
+  CartTagList tagList;
   PinGoogleDrive _drive;
 
   CartModel() {
     // init data classes
-    posts = new CartPostList();
-    categories = new CartCategoryList(posts);
-    tags = new CartTagList(posts);
+    postList = new CartPostList();
+    categoryList = new CartCategoryList(postList);
+    tagList = new CartTagList(postList);
 
     // check web public dir & post data dir
     PinUtility.checkDirExistsSync(CartConst.WWW_POST_PUB_PATH, createWhenNotExist: true);
@@ -51,14 +51,14 @@ class CartModel {
         throw new Exception('[CartModel] savePost: invalid headers format: ${uuid}}');
       }
       // validate category
-      if (categories.find(header.category) == null) {
+      if (categoryList.find(header.category) == null) {
         throw new Exception('[CartModel savePost: category not found: ${header.category}]');
       }
       // parse markdown to html & escape html
       html = (const HtmlEscape()).convert(markdownToHtml(markdown));
 
       // execute
-      if (posts.find(uuid) != null) {
+      if (postList.find(uuid) != null) {
         // update
         saveResult = _updatePost(uuid, markdown, header, html);
       } else {
@@ -84,7 +84,7 @@ class CartModel {
         throw new Exception('[CartModel] removePost: uuid format invalid: ${uuid}}');
       }
       // validate post
-      post = posts.find(uuid);
+      post = postList.find(uuid);
       if (post == null) {
         throw new Exception('[CartModel] removePost: post not found: ${uuid}');
       }
@@ -93,7 +93,7 @@ class CartModel {
       return new Future.error(e, trace);
     }
 
-    posts.remove(uuid);
+    postList.remove(uuid);
 
     String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
     var ioList = new List<Future>();
@@ -133,18 +133,18 @@ class CartModel {
     var post = new CartPost.fromJson(data);
 
     // database: category
-    CartCategory category = categories.find(post.category);
+    CartCategory category = categoryList.find(post.category);
     category.updated = timestamp;
-    categories.update(category);
+    categoryList.update(category);
 
     // database: tags
     header.tags.forEach((HashMap<String, String> tagData) {
-      CartTag tag = tags.find(tagData['uuid']);
+      CartTag tag = tagList.find(tagData['uuid']);
       if (tag != null) {
         tag.updated = timestamp;
-        tags.update(tag);
+        tagList.update(tag);
       } else {
-        tags.addNewTag(tagData['uuid'], tagData['name'], timestamp: timestamp);
+        tagList.addNewTag(tagData['uuid'], tagData['name'], timestamp: timestamp);
       }
       post.addTagUuid(tagData['uuid']);
     });
@@ -155,7 +155,7 @@ class CartModel {
     });
 
     // database: post
-    posts.add(post);
+    postList.add(post);
 
     // save db files & create html file & sync with google drive
     _saveDatabase()
@@ -177,13 +177,13 @@ class CartModel {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
-    CartPost post = posts.find(uuid);
+    CartPost post = postList.find(uuid);
     post.title = header.title;
     post.category = header.category;
     post.updated = timestamp;
 
     // tags check
-    post.checkPostTagsChange(tags, header);
+    post.checkPostTagsChange(tagList, header);
 
     // attachments check
     HashMap<String, Future> processList = post.checkPostAttachmentsChange(header);
@@ -232,16 +232,16 @@ class CartModel {
     final completer = new Completer();
     var timestamp = PinTime.getTime();
 
-    CartCategory category = categories.addNewCategory(uuid, name, timestamp: timestamp);
+    CartCategory category = categoryList.addNewCategory(uuid, name, timestamp: timestamp);
 
     _drive.drive_folder(name, parents: [CartSystem.instance.googleDriveRootFolder])
     .then((GoogleDriveClient.File file) {
       return new Future.value(file.id);
     })
     .then((String driveId) {
-      category = categories.find(uuid);
+      category = categoryList.find(uuid);
       category.driveId = driveId;
-      categories.update(category);
+      categoryList.update(category);
       return _saveDatabase();
     })
     .then((_) {
@@ -263,11 +263,11 @@ class CartModel {
       if (!PinUtility.isUuid(uuid)) {
         throw new Exception('[CartModel] removeCategory: uuid format invalid: ${uuid}}');
       }
-      category = categories.find(uuid);
+      category = categoryList.find(uuid);
       if (category == null) {
         throw new Exception('[CartModel] removeCategory: Category not found, uuid: ${uuid}');
       }
-      categories.remove(uuid, posts);
+      categoryList.remove(uuid, postList);
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
       return new Future.error(e, trace);
@@ -307,9 +307,9 @@ class CartModel {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
-    CartTag tag = tags.addNewTag(uuid, name, timestamp: timestamp);
+    CartTag tag = tagList.addNewTag(uuid, name, timestamp: timestamp);
 
-    tags.dump()
+    tagList.dump()
     .then((_) {
       completer.complete(tag);
     })
@@ -334,9 +334,9 @@ class CartModel {
 
     final completer = new Completer();
 
-    tags.remove(uuid, posts);
+    tagList.remove(uuid, postList);
 
-    tags.dump()
+    tagList.dump()
     .then((_) {
       completer.complete(true);
     })
@@ -353,9 +353,9 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Future _saveDatabase() {
     return Future.wait([
-      posts.dump(),
-      categories.dump(),
-      tags.dump()
+      postList.dump(),
+      categoryList.dump(),
+      tagList.dump()
     ]);
   }
 
@@ -419,7 +419,7 @@ class CartModel {
     })
     .then((_) {
       // upload markdown file
-      CartCategory category = categories.find(post.category);
+      CartCategory category = categoryList.find(post.category);
       if (category == null) {
         throw new Exception('[CartModel _uploadPost: category not found: ${post.category}]');
       }
@@ -427,7 +427,7 @@ class CartModel {
     })
     .then((GoogleDriveClient.File file) {
       post.driveId = file.id; // new post has no drive id, update it
-      posts.update(post);
+      postList.update(post);
       return new Future.value(true);
     })
     .then((_) {
