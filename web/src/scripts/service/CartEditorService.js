@@ -136,16 +136,37 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
             "exec": function(editor) {
                 CartUtility.log('ACE Ctrl-S triggered: Save post tmp.');
+
+                var title = editor.titleElement.text().trim();
+
+                var category = $dataService.categorySearch(editor.categoryElement.text().trim());
+                if (_.isEmpty(category)) {
+                    category = {};
+                } else {
+                    category = category.pop(); // [searchedCategory].pop()
+                }
+
                 var tags = [];
+                var tagNames = [];
                 var tagElements = $(editor.tagsIdentify);
                 if (tagElements.length > 0) {
                     _.forEach(tagElements, function(element) {
-                        tags.push($(element).text().trim());
+                        tagNames.push($(element).text().trim());
                     });
                 }
+                if (tagNames.length > 0) {
+                    _.forEach(tagNames, function(tagName) {
+                        var tag = $dataService.tagSearch(tagName);
+                        if (!_.isEmpty(tag)) {
+                            tags.push(tag.pop()); // [searchedTag].pop()
+                        }
+                    });
+                }
+
                 $dataService.postSaveTmp(
-                    postId, editor.titleElement.text().trim(), editor.getSession().getValue(),
-                    editor.categoryElement.text().trim(), tags
+                    postId, title,
+                    editor.getSession().getValue(),
+                    category, tags
                 ).then(function(result) {
                     if (true === result) {
                         CartUtility.notify('Done!', 'Tmp post saved!', 'success');

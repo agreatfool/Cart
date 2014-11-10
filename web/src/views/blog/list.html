@@ -83,7 +83,7 @@
                                             <a href="{{ rootUrl }}view/{{ post._id }}" ng-click="close()" ng-show="post.published">{{ post.title }}</a>
                                             <span ng-show="!post.published">{{ post.title }}</span>
                                         </td>
-                                        <td><a href="{{ rootUrl }}category/{{ post.category }}" ng-click="close()">{{ post.category }}</a></td>
+                                        <td><a href="{{ rootUrl }}category/{{ encodeURIComponent(post.category.title) }}" ng-click="close()">{{ post.category.title }}</a></td>
                                         <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>

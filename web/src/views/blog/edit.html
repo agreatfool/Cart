@@ -18,8 +18,8 @@
                         <div class="tagsinput-primary">
                             <div id="markdown-post-tags" class="bootstrap-tagsinput">
                                 <span class="tag label label-info" ng-repeat="tag in postTags">
-                                    {{ tag }}
-                                    <span class="tagsinput-remove-link" data-role="remove" ng-click="removePostTag(tag)"></span>
+                                    {{ tag.title }}
+                                    <span class="tagsinput-remove-link" data-role="remove" ng-click="removePostTag(tag.title)"></span>
                                 </span>
                                 <input type="text" title=""
                                     ng-keyup="$event.keyCode == 13 && addPostTag($event)"

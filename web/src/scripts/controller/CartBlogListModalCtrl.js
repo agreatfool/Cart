@@ -8,6 +8,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
 
     $scope.dataRows = [];
     $scope.rootUrl = CartUtility.getPureRootUrlFromLocation($location);
+    $scope.encodeURIComponent = encodeURIComponent;
 
     // pagination
     $scope.dataOnPage = []; // data used to be displayed on page

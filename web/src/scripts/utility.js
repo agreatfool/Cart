@@ -259,4 +259,19 @@ CartUtility.prototype.isDndSupported = function() {
     return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
 };
 
+CartUtility.prototype.focusEditor = function(editor) {
+    editor.focus(); // focus the ace editor
+    editor.resize(true); // resize the window
+
+    var editorValues = editor.getSession().getValue();
+    if (_.isEmpty(editorValues)) {
+        return; // no content, no need to redirect to end of page
+    }
+
+    editorValues = editorValues.split("\n");
+    var lineNo = editorValues.length; // count total number of lines
+    var columnNo = editorValues[lineNo - 1].split('').length;
+    editor.gotoLine(lineNo, columnNo); // go to end of document
+};
+
 module.exports = new CartUtility();

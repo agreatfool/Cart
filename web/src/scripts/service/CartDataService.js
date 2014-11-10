@@ -202,7 +202,7 @@ module.exports = function($http, $q) {
                 "uuid": uuid.v4(),
                 "name": categoryName
             }, function(data) {
-                return data.message;
+                return data.message.category;
             }
         );
     };
@@ -234,7 +234,7 @@ module.exports = function($http, $q) {
                 "uuid": uuid.v4(),
                 "name": tagName
             }, function(data) {
-                return data.message;
+                return data.message.tag;
             }
         );
     };

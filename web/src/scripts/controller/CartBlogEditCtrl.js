@@ -31,24 +31,84 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
     $scope.categoryInput = '';
     $scope.inputCategory = function(event) {
         event.preventDefault();
-        $scope.categoryInput = $scope.categoryInput.replace(/[<]br[^>]*[>]/gi, '');
+        var inputName = $scope.categoryInput.replace(/[<]br[^>]*[>]/gi, '');
+        if (_.isEmpty(inputName)) {
+            return; // empty input, ignore it
+        }
+
+        var category = $dataService.categorySearch(inputName);
+        if (!_.isEmpty(category)) {
+            // category already exists
+            $scope.postCategory = category.pop(); // [searchedCategory].pop()
+        } else {
+            // category not found, create it
+            $dataService.categoryCreate(inputName).then(function(data) { // data is category json
+                $scope.postCategory = data;
+            }, function() {
+                CartUtility.notify('Error!', 'Error in creating new category: ' + inputName, 'error');
+                $scope.categoryInput = '';
+            });
+        }
+
+        CartUtility.focusEditor($scope.aceEditor);
     };
 
     // tag related
     $scope.tagInput = '';
     $scope.addPostTag = function(event) {
         event.preventDefault();
-        if (!_.isEmpty($scope.tagInput) && $scope.postTags.indexOf($scope.tagInput) === -1) {
-            $scope.postTags.push($scope.tagInput);
+        var inputName = $scope.tagInput;
+        if (_.isEmpty(inputName)) {
+            return; // empty input, ignore it
         }
+
+        // search current post tags
+        var currentPostTagsIndex = -1;
+        if (!_.isEmpty($scope.postTags)) {
+            _.forEach($scope.postTags, function(tag, index) {
+                if (tag.title === inputName) {
+                    currentPostTagsIndex = index;
+                }
+            });
+        }
+        if (currentPostTagsIndex !== -1) {
+            CartUtility.notify('Warning!', 'Tag with name "' + inputName + '" already exists in this post!', 'notice');
+            return; // same tag already exists in post
+        }
+
+        var tag = $dataService.tagSearch(inputName);
+        if (!_.isEmpty(tag)) {
+            // tag already exists
+            $scope.postTags.push(tag.pop()); // [searchedTag].pop()
+        } else {
+            // tag not found, create it
+            $dataService.tagCreate(inputName).then(function(data) { // data is tag json
+                $scope.postTags.push(data);
+            }, function() {
+                CartUtility.notify('Error!', 'Error in creating new tag: ' + inputName, 'error');
+            });
+        }
+
         $scope.tagInput = '';
+        CartUtility.focusEditor($scope.aceEditor);
     };
     $scope.removePostTag = function(tagName) {
-        var tagIndex = $scope.postTags.indexOf(tagName);
-        if (tagIndex === -1) {
-            return;
+        if ($scope.postTags.length <= 0) {
+            return; // post has not tag yet
         }
+
+        var tagIndex = -1;
+        _.forEach($scope.postTags, function(tag, index) {
+            if (tag.title === tagName) {
+                tagIndex = index;
+            }
+        });
+        if (tagIndex === -1) {
+            return; // not found
+        }
+
         $scope.postTags.splice(tagIndex, 1);
+        CartUtility.focusEditor($scope.aceEditor);
     };
 
     $dataService.postGetTmp($routeParams.postId).then(function(data) {
