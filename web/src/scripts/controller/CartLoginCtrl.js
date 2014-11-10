@@ -6,7 +6,7 @@ module.exports = function ($scope, $window, $accessService) {
 
     $scope.startLoginProcess = function() {
         if ($accessService.isMaster()) {
-            CartUtility.notify('REQ Failed', 'Already logged in!', 'error');
+            CartUtility.notify('REQ Failed!', 'Already logged in!', 'error');
             return; // already login
         }
         $accessService.getLoginUrl().then(function(result) {

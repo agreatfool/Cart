@@ -148,7 +148,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
                     editor.categoryElement.text().trim(), tags
                 ).then(function(result) {
                     if (true === result) {
-                        CartUtility.notify('Done', 'Tmp post saved!', 'success');
+                        CartUtility.notify('Done!', 'Tmp post saved!', 'success');
                     }
                 });
             }
@@ -242,7 +242,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             }
         };
         uploader.onWhenAddingFileFailed = function(file) {
-            CartUtility.notify('Error', 'File type of "' + file.name + '" is not allowed: ' + file.type, 'error');
+            CartUtility.notify('Error!', 'File type of "' + file.name + '" is not allowed: ' + file.type, 'error');
             uploaderHideSpinner();
         };
         uploader.onProgressItem = function(fileItem, progress) {
@@ -300,7 +300,7 @@ module.exports = function($http, $q, $cookies, FileUploader, $dataService) {
             });
         } else {
             CartUtility.notify(
-                'Warning',
+                'Warning!',
                 'Drag & Drop file upload functionality is not supported in this browser. \n' +
                 'You cannot upload file with this browser! \n' +
                 'Please use modern browsers like Chrome.',

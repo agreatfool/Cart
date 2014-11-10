@@ -106,13 +106,13 @@ CartUtility.prototype.handleResponse = function(result, notifySuccess, notifyErr
     if (_.isObject(result) && result.hasOwnProperty('valid') && result.valid === false) {
         // request failed with normal framework exception
         if (notifyError) { // show failure msg box
-            this.notify('REQ Failed', result.message.error, 'error');
+            this.notify('REQ Failed!', result.message.error, 'error');
         }
         return false;
     } else if (!_.isObject(result) || (_.isObject(result) && !result.hasOwnProperty('valid'))) {
         // request failed without normal framework exception
         if (notifyError) { // show failure msg box
-            this.notify('REQ Failed');
+            this.notify('REQ Failed!');
         }
         return false;
     } else {

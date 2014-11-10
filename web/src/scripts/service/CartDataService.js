@@ -71,16 +71,16 @@ module.exports = function($http, $q) {
         var deferred = $q.defer();
 
         if (_.isUndefined(uuid) || _.isEmpty(uuid)) {
-            CartUtility.notify('Error', 'Post uuid invalid!', 'error');
+            CartUtility.notify('Error!', 'Post uuid invalid!', 'error');
             deferred.resolve(false);
         } else if (_.isUndefined(title) || _.isEmpty(title)) {
-            CartUtility.notify('Error', 'Post title invalid!', 'error');
+            CartUtility.notify('Error!', 'Post title invalid!', 'error');
             deferred.resolve(false);
         } else if (_.isUndefined(markdown) || _.isEmpty(markdown)) {
-            CartUtility.notify('Error', 'Post markdown invalid!', 'error');
+            CartUtility.notify('Error!', 'Post markdown invalid!', 'error');
             deferred.resolve(false);
         } else if (_.isUndefined(category) || _.isEmpty(category)) {
-            CartUtility.notify('Error', 'Post category invalid!', 'error');
+            CartUtility.notify('Error!', 'Post category invalid!', 'error');
             deferred.resolve(false);
         } else {
             db.get(uuid)
@@ -103,7 +103,7 @@ module.exports = function($http, $q) {
                     };
                     return db.put(doc, uuid);
                 } else if (_.isObject(err)) {
-                    CartUtility.notify('Error', err.toString(), 'error');
+                    CartUtility.notify('Error!', err.toString(), 'error');
                     var sub = $q.defer();
                     sub.resolve(false); // error encountered, resolve with false
                     return sub.promise;
@@ -116,7 +116,7 @@ module.exports = function($http, $q) {
                     deferred.resolve(false); // previous done with error, resolve with false
                 }
             }, function(err) {
-                CartUtility.notify('Error', err.toString(), 'error');
+                CartUtility.notify('Error!', err.toString(), 'error');
                 deferred.resolve(false); // error, popup notification, resolve with false
             });
         }
@@ -133,7 +133,7 @@ module.exports = function($http, $q) {
             deferred.resolve(doc);
         }, function(err) {
             if (_.isObject(err) && err.status !== 404) {
-                CartUtility.notify('Error', err.toString(), 'error');
+                CartUtility.notify('Error!', err.toString(), 'error');
             }
             deferred.resolve(false);
         });
@@ -147,7 +147,7 @@ module.exports = function($http, $q) {
                 db.remove(doc._id, doc._rev).then(function() {
                     deferred.resolve(true);
                 }, function(err) {
-                    CartUtility.notify('Error', err.toString(), 'error');
+                    CartUtility.notify('Error!', err.toString(), 'error');
                     deferred.resolve(false);
                 });
             } else {
@@ -155,7 +155,7 @@ module.exports = function($http, $q) {
             }
         }, function(err) {
             if (_.isObject(err) && err.status !== 404) {
-                CartUtility.notify('Error', err.toString(), 'error');
+                CartUtility.notify('Error!', err.toString(), 'error');
             }
             deferred.resolve(false);
         });
@@ -175,7 +175,7 @@ module.exports = function($http, $q) {
                 deferred.resolve(docs.reverse());
             }
         }, function(err) {
-            CartUtility.notify('Error', err.toString(), 'error');
+            CartUtility.notify('Error!', err.toString(), 'error');
             deferred.resolve(false);
         });
         return deferred.promise;
@@ -187,7 +187,7 @@ module.exports = function($http, $q) {
             db = new PouchDB(CartConst.DB_NAME);
             deferred.resolve(true);
         }, function(err) {
-            CartUtility.notify('Error', err.toString(), 'error');
+            CartUtility.notify('Error!', err.toString(), 'error');
             deferred.resolve(false);
         });
         return deferred.promise;
