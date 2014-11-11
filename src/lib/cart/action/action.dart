@@ -246,10 +246,24 @@ class CartAction {
       }
     })
     .then((_) {
-      return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
+      return new File(filePath).exists();
+    })
+    .then((bool uploadTargetAlreadyExists) {
+      if (uploadTargetAlreadyExists) {
+        ctx.sendJson(_buildResponse('handleUpload', { "error": "File ${fileUploaded.filename} already exists!" }, valid: false));
+        return new Future.value(false);
+      } else {
+        return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
+      }
     })
     .then((_) {
-      ctx.sendJson(_buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
+      if (_ == false) {
+        // means file already exists exception encountered, end process
+        ctx.end();
+      } else {
+        ctx.sendJson(_buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
+        ctx.end();
+      }
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
