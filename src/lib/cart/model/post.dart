@@ -8,7 +8,6 @@ class CartPost extends Object with PinSerializable {
   String title;
   int created;
   int updated;
-  bool isPublic = false;
 
   String category; // uuid
   List<String> tags; // [uuid, uuid, ...]
@@ -40,11 +39,6 @@ class CartPost extends Object with PinSerializable {
     } else {
       throw new Exception('[CartPost] CartPost.fromJson: "updated" is required!');
     }
-    if (json.containsKey('isPublic')) {
-      isPublic = json['isPublic'];
-    } else {
-      throw new Exception('[CartPost] CartPost.fromJson: "isPublic" is required!');
-    }
     if (json.containsKey('category')) {
       category = json['category'];
     } else {
@@ -59,6 +53,20 @@ class CartPost extends Object with PinSerializable {
         attachments.addAll({ attachment.uuid: attachment });
       });
     }
+  }
+
+  bool isPublic() {
+    bool isPublic = false;
+
+    for (var i = 0; i < tags.length; i++) {
+      String tagUuid = tags[i];
+      if (tagUuid == CartSystem.instance.tagPublic['uuid']) {
+        isPublic = true;
+        break;
+      }
+    }
+
+    return isPublic;
   }
 
   void addTagUuid(String uuid) {

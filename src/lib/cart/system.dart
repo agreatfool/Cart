@@ -17,6 +17,8 @@ class CartSystem {
   HashMap session = {};
 
   String googleDriveRootFolder; // google drive id string
+  HashMap tagPublic; // { "uuid": "...", "title": "..." }
+  HashMap tagPrivate; // { "uuid": "...", "title": "..." }
 
   PinGoogleDrive drive;
   PinGoogleOAuth oauth2;
