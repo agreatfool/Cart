@@ -127,7 +127,6 @@ class CartModel {
       'title': header.title,
       'created': timestamp,
       'updated': timestamp,
-      'author': CartSystem.instance.session['name'],
       'category': header.category
     };
     var post = new CartPost.fromJson(data);

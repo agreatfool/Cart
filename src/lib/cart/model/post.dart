@@ -8,7 +8,6 @@ class CartPost extends Object with PinSerializable {
   String title;
   int created;
   int updated;
-  String author;
   bool isPublic = false;
 
   String category; // uuid
@@ -38,9 +37,6 @@ class CartPost extends Object with PinSerializable {
     }
     if (json.containsKey('updated')) {
       updated = json['updated'];
-    }
-    if (json.containsKey('author')) {
-      author = json['author'];
     } else {
       throw new Exception('[CartPost] CartPost.fromJson: "updated" is required!');
     }
