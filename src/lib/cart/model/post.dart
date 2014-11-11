@@ -18,33 +18,50 @@ class CartPost extends Object with PinSerializable {
   CartPost.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
       uuid = json['uuid'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "uuid" is required!');
     }
     if (json.containsKey('driveId')) {
       driveId = json['driveId'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "driveId" is required!');
     }
     if (json.containsKey('title')) {
       title = json['title'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "title" is required!');
     }
     if (json.containsKey('created')) {
       created = json['created'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "created" is required!');
     }
     if (json.containsKey('updated')) {
       updated = json['updated'];
     }
     if (json.containsKey('author')) {
       author = json['author'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "updated" is required!');
     }
     if (json.containsKey('isPublic')) {
       isPublic = json['isPublic'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "isPublic" is required!');
     }
     if (json.containsKey('category')) {
       category = json['category'];
+    } else {
+      throw new Exception('[CartPost] CartPost.fromJson: "category" is required!');
     }
     if (json.containsKey('tags')) {
       tags = json['tags'];
     }
-    if (json.containsKey('attachments')) {
-      attachments = json['attachments'];
+    if (json.containsKey('attachments') && json['attachments'] is Iterable) {
+      json['attachments'].forEach((HashMap attachData) {
+        CartPostAttachment attachment = new CartPostAttachment.fromJson(attachData);
+        attachments.addAll({ attachment.uuid: attachment });
+      });
     }
   }
 
@@ -277,18 +294,28 @@ class CartPostAttachment extends Object with PinSerializable {
   CartPostAttachment.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
       uuid = json['uuid'];
+    } else {
+      throw new Exception('[CartPostAttachment] CartPostAttachment.fromJson: "uuid" is required!');
     }
     if (json.containsKey('driveId')) {
       driveId = json['driveId'];
+    } else {
+      throw new Exception('[CartPostAttachment] CartPostAttachment.fromJson: "driveId" is required!');
     }
     if (json.containsKey('title')) {
       title = json['title'];
+    } else {
+      throw new Exception('[CartPostAttachment] CartPostAttachment.fromJson: "title" is required!');
     }
     if (json.containsKey('created')) {
       created = json['created'];
+    } else {
+      throw new Exception('[CartPostAttachment] CartPostAttachment.fromJson: "created" is required!');
     }
     if (json.containsKey('updated')) {
       updated = json['updated'];
+    } else {
+      throw new Exception('[CartPostAttachment] CartPostAttachment.fromJson: "updated" is required!');
     }
   }
 }

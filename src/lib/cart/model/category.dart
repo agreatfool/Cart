@@ -12,18 +12,28 @@ class CartCategory extends Object with PinSerializable {
   CartCategory.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
       uuid = json['uuid'];
+    } else {
+      throw new Exception('[CartCategory] CartCategory.fromJson: "uuid" is required!');
     }
     if (json.containsKey('driveId')) {
       driveId = json['driveId'];
+    } else {
+      throw new Exception('[CartCategory] CartCategory.fromJson: "driveId" is required!');
     }
     if (json.containsKey('title')) {
       title = json['title'];
+    } else {
+      throw new Exception('[CartCategory] CartCategory.fromJson: "title" is required!');
     }
     if (json.containsKey('created')) {
       created = json['created'];
+    } else {
+      throw new Exception('[CartCategory] CartCategory.fromJson: "created" is required!');
     }
     if (json.containsKey('updated')) {
       updated = json['updated'];
+    } else {
+      throw new Exception('[CartCategory] CartCategory.fromJson: "updated" is required!');
     }
   }
 
