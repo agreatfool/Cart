@@ -68,7 +68,7 @@ var controllers = angular.module('Cart.Controllers', []);
 controllers.controller('CartMainCtrl', ['$scope', '$location', '$cookies', '$window', '$routeSegment', 'CartFixFooterService', 'CartDataService', 'CartAccessCtrlService', ctrlSources.CartMainCtrl]);
 controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', '$modal', 'CartAccessCtrlService', ctrlSources.CartBlogListCtrl]);
 controllers.controller('CartBlogListModalCtrl', ['$scope', '$location', '$modalInstance', 'CartDataService', ctrlSources.CartBlogListModalCtrl]);
-controllers.controller('CartBlogEditCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'CartEditorService', ctrlSources.CartBlogEditCtrl]);
+controllers.controller('CartBlogEditCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'CartEditorService', 'FileUploader', ctrlSources.CartBlogEditCtrl]);
 controllers.controller('CartBlogViewCtrl', ['$scope', ctrlSources.CartBlogViewCtrl]);
 controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCategoryCtrl]);
 controllers.controller('CartBlogTagCtrl', ['$scope', ctrlSources.CartBlogTagCtrl]);
@@ -85,7 +85,7 @@ var services = angular.module('Cart.Services', []);
 
 services.factory('CartAccessCtrlService', ['$http', '$q', '$cookies', serviceSources.CartAccessCtrlService]);
 services.factory('CartDataService', ['$http', '$q', serviceSources.CartDataService]);
-services.factory('CartEditorService', ['$http', '$q', '$cookies', 'FileUploader', 'CartDataService', serviceSources.CartEditorService]);
+services.factory('CartEditorService', ['$http', '$q', '$cookies', 'CartDataService', serviceSources.CartEditorService]);
 services.factory('CartFixFooterService', [function() {
     return { 'fixFooter': fixFooter };
 }]);
