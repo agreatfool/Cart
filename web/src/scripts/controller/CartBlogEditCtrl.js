@@ -1,32 +1,33 @@
 'use strict';
 
-/* global $, _, angular, CartUtility, CartConst */
-module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, $editorService, FileUploader) {
+/* global $, _, angular, uuid, moment, marked, ace, hljs, CartUtility, CartConst */
+module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, FileUploader) {
     CartUtility.log('CartBlogEditCtrl');
 
-    $scope.postCategory = '';
-    $scope.postTags = [];
-
     var postId = $routeParams.postId;
-    var editorOptions = {
-        postId: postId,
-        postBaseUrl: CartUtility.getPureAbsUrlFromLocation($location),
-        editElement: $('#markdown-edit'),
-        previewElement: $('#markdown-preview'),
-        titleElement: $('#markdown-post-title'),
-        categoryElement: $('#markdown-post-category'),
-        tagsIdentify: '#markdown-post-tags > span',
-        tocIconElement: $('.markdown-toc-icon'),
-        tocContentElement: $('.markdown-toc-content'),
-        tocFirstLinksIdentify: '.markdown-toc-content > ol > li > a',
-        topBtnElement: $('.page-to-top'),
-        spinnerElement: $('#markdown-loading'),
-        spinnerNameElement: $('.spinner-markdown-name')
-    };
-    $scope.aceEditor = $editorService.createEditor(editorOptions);
 
+    $scope.postCategory = null;
+    $scope.postTags = [];
+    $scope.postAttachments = [];
+
+    var postBaseUrl = CartUtility.getPureAbsUrlFromLocation($location);
+    var editElement = $('#markdown-edit');
+    var previewElement = $('#markdown-preview');
+    var titleElement = $('#markdown-post-title');
+    var categoryElement = $('#markdown-post-category');
+    var tagsIdentify = '#markdown-post-tags > span';
+    var tocIconElement = $('.markdown-toc-icon');
+    var tocContentElement = $('.markdown-toc-content');
+    var tocFirstLinksIdentify = '.markdown-toc-content > ol > li > a';
+    var topBtnElement = $('.page-to-top');
+    var spinnerElement = $('#markdown-loading');
+    var spinnerNameElement = $('.spinner-markdown-name');
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* LOGIC
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     $scope.toggleToc = function() {
-        CartUtility.toggleToc($('.markdown-toc-icon'), $('.markdown-toc-content'));
+        CartUtility.toggleToc(tocIconElement, tocContentElement);
     };
 
     // category related
@@ -52,7 +53,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             });
         }
 
-        CartUtility.focusEditor($scope.aceEditor);
+        CartUtility.focusEditor(aceEditor);
     };
 
     // tag related
@@ -92,7 +93,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
 
         $scope.tagInput = '';
-        CartUtility.focusEditor($scope.aceEditor);
+        CartUtility.focusEditor(aceEditor);
     };
     $scope.removePostTag = function(tagName) {
         if ($scope.postTags.length <= 0) {
@@ -110,17 +111,8 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
 
         $scope.postTags.splice(tagIndex, 1);
-        CartUtility.focusEditor($scope.aceEditor);
+        CartUtility.focusEditor(aceEditor);
     };
-
-    $dataService.postGetTmp($routeParams.postId).then(function(data) {
-        if (data === false) {
-            return; // post data not found
-        }
-        $scope.aceEditor.setValue(data.md, -1);
-        $scope.postCategory = data.category;
-        $scope.postTags = data.tags;
-    });
 
     $scope.$on('$routeChangeStart', function() {
         CartUtility.log('CartBlogNewCtrl $routeChangeStart entered!');
@@ -133,7 +125,185 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
     });
 
-    // file upload related logics
+    // post data search logic
+    $dataService.postGetTmp($routeParams.postId).then(function(tmpPostData) {
+        if (tmpPostData === false) {
+            // tmp post data not found
+            // FIXME
+            // search local post data, found, fetch post data from server, display it
+            // not found, redirect to error page
+        } else {
+            console.log(tmpPostData);
+            // tmp post data found
+            aceEditor.setValue(tmpPostData.md, -1);
+            $scope.postCategory = tmpPostData.category;
+            $scope.categoryInput = tmpPostData.category.title;
+            $scope.postTags = tmpPostData.tags;
+            $scope.postAttachments = tmpPostData.attachments;
+        }
+    });
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* EDITOR
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    // markd
+    var renderer = new marked.Renderer();
+    renderer.heading = function(text, level) { // add anchor link
+        return '' +
+            '<h' + level + '>' +
+                '<a name="' + CartUtility.escapeAnchorName(text) + '"></a>' +
+                text +
+            '</h' + level + '>';
+    };
+    marked.setOptions({
+        renderer: renderer,
+        gfm: true,
+        tables: true,
+        breaks: true,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: false,
+        highlight: function (code, lang) {
+            // since the highlight class name added with highlight lib itself not working, have to wrap code tag by self
+            return '<code class="hljs ' + lang + '">' + hljs.highlightAuto(code, [lang]).value + '</code>';
+        }
+    });
+
+    var aceEditor = ace.edit(editElement.attr('id'));
+
+    aceEditor.setOption("showPrintMargin", false);
+    aceEditor.setTheme('ace/theme/earthsong');
+    aceEditor.setHighlightActiveLine(true);
+    aceEditor.setBehavioursEnabled(true);
+
+    aceEditor.getSession().setMode('ace/mode/markdown');
+    aceEditor.getSession().on('change', function() {
+        previewMd();
+    });
+
+    aceEditor.session.setUseWrapMode(true);
+    aceEditor.session.setNewLineMode("unix");
+    aceEditor.session.setScrollTop(false);
+    aceEditor.renderer.setShowGutter(true);
+    aceEditor.renderer.setPrintMarginColumn(true);
+    aceEditor.renderer.setPadding(15);
+    aceEditor.renderer.setScrollMargin(20);
+    aceEditor.resize(true);
+
+    var collectPostData = function() {
+        var title = titleElement.text().trim();
+
+        var category = $dataService.categorySearch(categoryElement.text().trim());
+        if (_.isEmpty(category)) {
+            category = {};
+        } else {
+            category = category.pop(); // [searchedCategory].pop()
+            category.updated = moment().unix();
+        }
+
+        var tags = [];
+        var tagNames = [];
+        var tagElements = $(tagsIdentify);
+        if (tagElements.length > 0) {
+            _.forEach(tagElements, function(element) {
+                tagNames.push($(element).text().trim());
+            });
+        }
+        if (tagNames.length > 0) {
+            _.forEach(tagNames, function(tagName) {
+                var tag = $dataService.tagSearch(tagName);
+                if (!_.isEmpty(tag)) {
+                    tag = tag.pop(); // [searchedTag].pop()
+                    tag.updated = moment().unix();
+                    tags.push(tag);
+                }
+            });
+        }
+
+        // FIXME 这里获得到的category和tags的updated字段，都应该更新为当前时间，方便上传后入库
+        return {
+            "title": title,
+            "category": category,
+            "tags": tags,
+            "attachments": $scope.postAttachments
+        };
+    };
+
+    var previewMd = function() {
+        var content = aceEditor.getSession().getValue();
+        var converted = marked(content);
+
+        previewElement.html(converted);
+
+        var editHeight = parseInt(editElement.css('height'));
+        var previewHeight = parseInt(previewElement.css('height'));
+        if (editHeight > previewHeight) {
+            previewElement.css('height', editHeight);
+            aceEditor.resize();
+        } else if (editHeight < previewHeight) {
+            editElement.css('height', previewHeight);
+            aceEditor.resize();
+        }
+
+        var toc = CartUtility.buildToc(converted, postBaseUrl);
+        if (toc !== '') { // find header links
+            // apply toc html
+            tocContentElement.html(toc);
+            // apply post title
+            titleElement.text($($(tocFirstLinksIdentify)[0]).text());
+        }
+    };
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* EDITOR COMMANDS
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    aceEditor.commands.addCommand({
+        "name": "cmdSaveTmp",
+        "bindKey": {"win": "Ctrl-S", "mac": "Command-S"},
+        "exec": function(editor) {
+            CartUtility.log('ACE Ctrl-S triggered: Save post tmp.');
+
+            var postData = collectPostData(editor);
+
+            $dataService.postSaveTmp(
+                postId, postData.title,
+                editor.getSession().getValue(),
+                postData.category, postData.tags
+            ).then(function() {
+                CartUtility.notify('Done!', 'Tmp post saved!', 'success');
+            });
+        }
+    });
+    aceEditor.commands.addCommand({
+        "name": "cmdUpload",
+        "bindKey": {"win": "Ctrl-U", "mac": "Command-U"},
+        "exec": function(editor) {
+            CartUtility.log('ACE Ctrl-U triggered: Upload post.');
+
+            var postData = collectPostData(editor);
+        }
+    });
+    aceEditor.commands.addCommand({
+        "name": "cmdDisplayIndex",
+        "bindKey": {"win": "Ctrl-I", "mac": "Command-I"},
+        "exec": function() {
+            CartUtility.log('ACE Ctrl-I triggered: Display post index.');
+            CartUtility.toggleToc(tocIconElement, tocContentElement);
+        }
+    });
+    aceEditor.commands.addCommand({
+        "name": "cmdGotoTop",
+        "bindKey": {"win": "Ctrl-H", "mac": "Command-H"},
+        "exec": function() {
+            CartUtility.log('ACE Ctrl-H triggered: Goto page top.');
+            topBtnElement.click();
+        }
+    });
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* EDITOR FILE UPLOAD
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     /* HOT FIX for FileUploader.isUploading status */
     FileUploader.prototype._onCompleteItem = function(item, response, status, headers) {
         var nextItem = this.getReadyItems()[0];
@@ -188,12 +358,12 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
     };
     var uploaderReportUploadProgress = function(name, progress) {
-        editorOptions.spinnerNameElement.text('Uploading "' + name + '": ' + progress + '% ...');
+        spinnerNameElement.text('Uploading "' + name + '": ' + progress + '% ...');
     };
     var uploaderHideSpinner = function() {
         if (uploader.queue.length === 0 && !uploader.isUploading) {
-            editorOptions.spinnerElement.hide();
-            editorOptions.spinnerNameElement.text('');
+            spinnerElement.hide();
+            spinnerNameElement.text('');
         }
     };
     uploader.onWhenAddingFileFailed = function(file) {
@@ -211,6 +381,13 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         if (CartUtility.handleResponse(response)) {
             CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
         }
+        $scope.postAttachments.push({
+            created: moment().unix(),
+            driveId: null,
+            title: fileItem.file.name,
+            updated: moment().unix(),
+            uuid: uuid.v4()
+        });
         uploaderProcessNextUpload();
     };
     if (CartUtility.isDndSupported()) {
@@ -247,7 +424,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             event.preventDefault();
             // styles
             aceContent.removeClass('ace_drag_over');
-            editorOptions.spinnerElement.show();
+            spinnerElement.show();
             // upload
             var files = event.originalEvent.dataTransfer.files;
             uploader.addToQueue(files);
