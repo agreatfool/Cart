@@ -17,8 +17,6 @@ class CartCategory extends Object with PinSerializable {
     }
     if (json.containsKey('driveId')) {
       driveId = json['driveId'];
-    } else {
-      throw new Exception('[CartCategory] CartCategory.fromJson: "driveId" is required!');
     }
     if (json.containsKey('title')) {
       title = json['title'];
