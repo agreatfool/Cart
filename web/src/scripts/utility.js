@@ -259,11 +259,13 @@ CartUtility.prototype.isDndSupported = function() {
     return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
 };
 
-CartUtility.prototype.generateMdHTMLHeader = function(title, category, tags) {
+CartUtility.prototype.generateMdHTMLHeader = function(uuid, title, category, tags, attachments) {
     return '<div id="mdHeader" style="display:none;"><div class="mdHeaderData">' + JSON.stringify({
+        "uuid": uuid,
         "title": title,
         "category": category,
-        "tags": tags
+        "tags": tags,
+        "attachments": attachments
     }) + '</div></div>';
 };
 

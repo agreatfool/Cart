@@ -45,11 +45,11 @@ module.exports = function($http, $q) {
      * }
      * Structure of temporarily saved post:
      * {
-     *     "attachments": [attachment structure described above],
+     *     "attachments": {attachment uuid: attachment structure described above},
      *     "title": title string,
      *     "md": markdown string,
      *     "category": category structure described above,
-     *     "tags": [tag structure described above, ...],
+     *     "tags": {tag uuid: tag structure described above, ...},
      *     "created": timestamp,
      *     "updated": timestamp
      * }
@@ -74,7 +74,7 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* LOCAL POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var postSaveTmp = function(uuid, title, markdown, category, tags) {
+    var postSaveTmp = function(uuid, title, markdown, category, tags, attachments) {
         if (_.isUndefined(tags)) {
             tags = [];
         }
@@ -100,6 +100,7 @@ module.exports = function($http, $q) {
                 doc.md = markdown;
                 doc.category = category;
                 doc.tags = tags;
+                doc.attachments = attachments;
                 doc.updated = moment().unix();
                 return db.put(doc, uuid, doc._rev); // old doc found, update it
             }, function(err) {
@@ -109,6 +110,7 @@ module.exports = function($http, $q) {
                         "md": markdown,
                         "category": category,
                         "tags": tags,
+                        "attachments": attachments,
                         "created": moment().unix(),
                         "updated": moment().unix()
                     };

@@ -202,7 +202,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             category.updated = moment().unix();
         }
 
-        var tags = [];
+        var tags = {};
         var tagNames = [];
         var tagElements = $(tagsIdentify);
         if (tagElements.length > 0) {
@@ -216,7 +216,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
                 if (!_.isEmpty(tag)) {
                     tag = tag.pop(); // [searchedTag].pop()
                     tag.updated = moment().unix();
-                    tags.push(tag);
+                    tags[tag.uuid] = tag;
                 }
             });
         }
@@ -269,7 +269,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             $dataService.postSaveTmp(
                 postId, postData.title,
                 editor.getSession().getValue(),
-                postData.category, postData.tags
+                postData.category, postData.tags, postData.attachments
             ).then(function() {
                 CartUtility.notify('Done!', 'Tmp post saved!', 'success');
             });
