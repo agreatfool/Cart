@@ -19,11 +19,6 @@ class CartPost extends Object with PinSerializable {
     } else {
       throw new Exception('[CartPost] CartPost.fromJson: "uuid" is required!');
     }
-    if (json.containsKey('driveId')) {
-      driveId = json['driveId'];
-    } else {
-      throw new Exception('[CartPost] CartPost.fromJson: "driveId" is required!');
-    }
     if (json.containsKey('title')) {
       title = json['title'];
     } else {
@@ -43,6 +38,9 @@ class CartPost extends Object with PinSerializable {
       category = json['category'];
     } else {
       throw new Exception('[CartPost] CartPost.fromJson: "category" is required!');
+    }
+    if (json.containsKey('driveId')) {
+      driveId = json['driveId'];
     }
     if (json.containsKey('tags')) {
       tags = json['tags'];
