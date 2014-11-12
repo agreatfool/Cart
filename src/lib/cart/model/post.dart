@@ -56,12 +56,12 @@ class CartPost extends Object with PinSerializable {
   }
 
   bool isPublic() {
-    bool isPublic = false;
+    bool isPublic = true;
 
     for (var i = 0; i < tags.length; i++) {
       String tagUuid = tags[i];
-      if (tagUuid == CartSystem.instance.tagPublic['uuid']) {
-        isPublic = true;
+      if (tagUuid == CartSystem.instance.tagPrivate['uuid']) {
+        isPublic = false;
         break;
       }
     }

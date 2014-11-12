@@ -27,6 +27,10 @@ main() {
   CartSystem.instance.credentials = credentials;
   CartSystem.instance.googleDriveRootFolder = credentials['googleDriveRootFolder']; // google drive id string
   CartSystem.instance.session = session;
+  if (credentials.containsKey('tagPrivate') && credentials['tagPrivate'].length > 0) {
+    // site already initialized && restored from google drive
+    CartSystem.instance.tagPrivate = credentials['tagPrivate'];
+  }
 
   var pinGoogleOAuth = new PinGoogleOAuth.fromJson(oauth['web']);
   var pinGoogleDrive = new PinGoogleDrive(pinGoogleOAuth);
@@ -52,6 +56,7 @@ main() {
   app.post('/api/upload',             (HttpContext ctx) => CartAction.handleUpload(ctx));
   app.post('/api/tag/create',         (HttpContext ctx) => CartAction.handleTagCreate(ctx));
   app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
+  app.get('/api/restore/status',      (HttpContext ctx) => CartAction.handleRestoreStatus(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER
