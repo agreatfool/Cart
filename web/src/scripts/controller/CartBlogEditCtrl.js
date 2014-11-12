@@ -199,7 +199,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             category = {};
         } else {
             category = category.pop(); // [searchedCategory].pop()
-            category.updated = moment().unix();
+            category = $dataService.categoryUpdateTime(category);
         }
 
         var tags = {};
@@ -215,13 +215,12 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
                 var tag = $dataService.tagSearch(tagName);
                 if (!_.isEmpty(tag)) {
                     tag = tag.pop(); // [searchedTag].pop()
-                    tag.updated = moment().unix();
+                    tag = $dataService.tagUpdateTime(tag);
                     tags[tag.uuid] = tag;
                 }
             });
         }
 
-        // FIXME 这里获得到的category和tags的updated字段，都应该更新为当前时间，方便上传后入库
         return {
             "title": title,
             "category": category,

@@ -244,6 +244,19 @@ module.exports = function($http, $q) {
 
         return deferred.future;
     };
+    var categoryUpdateTime = function(category) {
+        var target = categorySearchById(category.uuid);
+        if (_.isNull(target)) {
+            CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdateTime');
+            return false;
+        }
+
+        category.updated = moment().unix();
+        target.updated = moment().unix();
+        categories[target.uuid] = target;
+
+        return category;
+    };
     var categorySearchById = function(uuid) {
         var found = _.filter(categories, function(category) {
             return category.uuid === uuid;
@@ -308,6 +321,19 @@ module.exports = function($http, $q) {
 
         return deferred.future;
     };
+    var tagUpdateTime = function(tag) {
+        var target = tagSearchById(tag.uuid);
+        if (_.isNull(target)) {
+            CartUtility.log('Target local tag data not found with input tag: ' + JSON.stringify(tag), 'DataService::tagUpdateTime');
+            return false;
+        }
+
+        tag.updated = moment().unix();
+        target.updated = moment().unix();
+        tags[target.uuid] = target;
+
+        return tag;
+    };
     var tagSearchById = function(uuid) {
         var found = _.filter(tags, function(tag) {
             return tag.uuid === uuid;
@@ -345,9 +371,15 @@ module.exports = function($http, $q) {
         'postRemoveAllTmp': postRemoveAllTmp,
         // category APIs
         'categoryCreate': categoryCreate,
+        'categoryUpdate': categoryUpdate,
+        'categoryUpdateTime': categoryUpdateTime,
+        'categorySearchById': categorySearchById,
         'categorySearch': categorySearch,
         // tag APIs
         'tagCreate': tagCreate,
+        'tagUpdate': tagUpdate,
+        'tagUpdateTime': tagUpdateTime,
+        'tagSearchById': tagSearchById,
         'tagSearch': tagSearch
     };
 
