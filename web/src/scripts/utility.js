@@ -259,6 +259,22 @@ CartUtility.prototype.isDndSupported = function() {
     return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
 };
 
+CartUtility.prototype.generateMdHTMLHeader = function(title, category, tags) {
+    return '<div id="mdHeader" style="display:none;"><div class="mdHeaderData">' + JSON.stringify({
+        "title": title,
+        "category": category,
+        "tags": tags
+    }) + '</div></div>';
+};
+
+CartUtility.prototype.parseMdHTMLHeader = function(markdown) {
+    return JSON.parse($(markdown).find('.mdHeader').text());
+};
+
+CartUtility.prototype.parseMdPureContent = function(markdown) {
+    return markdown.substr(markdown.indexOf('</div></div>') + '</div></div>'.length);
+};
+
 CartUtility.prototype.focusEditor = function(editor) {
     editor.focus(); // focus the ace editor
     editor.resize(true); // resize the window

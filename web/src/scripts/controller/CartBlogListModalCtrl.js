@@ -44,6 +44,10 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
 
     //FIXME category link on template is invalid
     $dataService.postGetAllTmp().then(function(result) {
+        // FIXME loop all tmp posts, check if it exists in local posts database, if true means published, otherwise draft
+        _.forEach(result, function(post) {
+            post.published = true;
+        });
         $scope.dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse();
         $scope.paginationTotalItems = result.length;
         $scope.paginationCurrentPage = 1;
