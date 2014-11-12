@@ -174,7 +174,7 @@ class CartModel {
     _uploadPost(post, markdown, html)
     .then((CartPost _) {
       post = _;
-      return _saveDatabase();
+      return saveDatabase();
     })
     .then((_) {
       completer.complete(post);
@@ -234,7 +234,7 @@ class CartModel {
       return new Future.value(true);
     })
     .then((_) {
-      return _saveDatabase();
+      return saveDatabase();
     })
     .then((_) {
       completer.complete(post);
@@ -274,7 +274,7 @@ class CartModel {
       category = categoryList.find(uuid);
       category.driveId = driveId;
       categoryList.update(category);
-      return _saveDatabase();
+      return saveDatabase();
     })
     .then((_) {
       completer.complete(category);
@@ -309,7 +309,7 @@ class CartModel {
 
     _drive.drive_trash(category.driveId)
     .then((GoogleDriveClient.File file) {
-      return _saveDatabase();
+      return saveDatabase();
     })
     .then((_) {
       completer.complete(true);
@@ -383,7 +383,7 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTIL: SAVE DATABASE FILES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future _saveDatabase() {
+  Future saveDatabase() {
     return Future.wait([
       postList.dump(),
       categoryList.dump(),

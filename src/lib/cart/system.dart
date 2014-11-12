@@ -23,12 +23,52 @@ class CartSystem {
   PinGoogleOAuth oauth2;
 
   bool _isRestoring = false; // is cart blog system restoring site from google drive
-  Future restoreBlogFromDrive() {
+  void restoreBlogFromDrive() {
+    PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: start ...');
+
+    _isRestoring = true; // mark status
+
+    int timestamp = PinTime.getTime();
+
+    CartModel model = CartModel.instance;
+
     // FIXME 在这里读取google drive里的文件，在web服务器上下载图片、html和markdown，重构整个数据库
     // 如果整个系统里没有任何一篇博客，或者没有任何一篇博客里带有setting.json里配置的private tag
     // 则这里需要对这个tag进行创建，并写入到credentials.json对应字段内
     // 格式见当前class的tagPrivate字段，当然这个字段也需要更新
-    return new Future.value(true);
+
+    // at the end of restore process, system need to check whether private tag exists or not, create it if no
+    CartTag private = model.tagList.findByTitle(setting['tagPrivate']);
+    if (private == null) {
+      PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: Private tag not found, create it ...');
+      private = new CartTag.fromJson({
+          "uuid": PinUtility.uuid(),
+          "title": setting['tagPrivate'],
+          "created": timestamp,
+          "updated": timestamp
+      });
+      model.tagList.add(private);
+      HashMap tagInfo = {
+          "uuid": private.uuid,
+          "title": private.title
+      };
+      tagPrivate = tagInfo;
+      credentials['tagPrivate'] = tagInfo;
+    } else {
+      PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: Private tag found: ${private.toJson()}');
+    }
+
+    PinUtility.writeJsonFile(oauth['web']['credentialsFilePath'], credentials, withIndent: true)
+    .then((_) {
+      return model.saveDatabase();
+    })
+    .then((_) {
+      // only reset status to normal when site restored normally, otherwise need Administrator to fix first
+      _isRestoring = false;
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+    });
   }
   bool actionPreProcess(HttpContext ctx, {bool responseDirectly: true}) {
     PinUtility.clearPrevErrorMsg();
