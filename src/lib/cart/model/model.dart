@@ -50,7 +50,7 @@ class CartModel {
       CartPostHeader header = CartPostHeader.parseFromMarkdown(uuid, markdown);
       // validate category
       if (categoryList.find(header.category.uuid) == null) {
-        throw new Exception('[CartModel savePost: category not found: ${header.category.toJson()}]');
+        throw new Exception('[CartModel] savePost: category not found: ${header.category.toJson()}');
       }
       // parse markdown to html & escape html
       String html = (const HtmlEscape()).convert(markdownToHtml(markdown));
@@ -104,7 +104,7 @@ class CartModel {
     try {
       // validate uuid
       if (!PinUtility.isUuid(uuid)) {
-        throw new Exception('[CartModel] removePost: uuid format invalid: ${uuid}}');
+        throw new Exception('[CartModel] removePost: uuid format invalid: ${uuid}');
       }
       // validate post
       post = postList.find(uuid);
