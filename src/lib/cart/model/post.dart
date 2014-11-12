@@ -120,6 +120,19 @@ class CartPost extends Object with PinSerializable {
     }
   }
 
+  static HashMap parseMarkdownHeader(String markdown) {
+    HashMap header = {};
+
+    LibHtml5.Document doc = LibHtml5.parse(markdown);
+    doc.querySelectorAll('div').forEach((LibHtml5.Element element) {
+      if (element.attributes.keys.contains('class') && element.attributes['class'] == 'mdHeaderData') {
+        header = JSON.decode(element.innerHtml);
+      }
+    });
+
+    return header;
+  }
+
 }
 
 class CartPostList extends Object with PinSerializable {
@@ -225,16 +238,9 @@ class CartPostHeader {
   HashMap<String, CartPostAttachment> attachments;
 
   static CartPostHeader parseFromMarkdown(String uuid, String markdown) {
-    HashMap headerUploaded = {};
-
     int timestamp = PinTime.getTime();
 
-    LibHtml5.Document doc = LibHtml5.parse(markdown);
-    doc.querySelectorAll('div').forEach((LibHtml5.Element element) {
-      if (element.attributes.keys.contains('class') && element.attributes['class'] == 'mdHeaderData') {
-        headerUploaded = JSON.decode(element.innerHtml);
-      }
-    });
+    HashMap headerUploaded = CartPost.parseMarkdownHeader(markdown);
 
     if (!headerUploaded.containsKey('uuid')) {
       throw new Exception('[CartPostHeader] Header info of post: "uuid" is required!');
