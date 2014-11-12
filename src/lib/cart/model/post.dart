@@ -120,110 +120,6 @@ class CartPost extends Object with PinSerializable {
     }
   }
 
-  void checkPostTagsChange(CartTagList tagList, CartPostHeader header) {
-    var tagsToBeRemoved = new List<String>();
-    var tagsToBeAdded = new List<String>();
-
-    // filter
-    tags.forEach((String tagUuid) {
-      var tagFound = false;
-      header.tags.forEach((HashMap<String, String> tagData) {
-        if (tagData['uuid'] == tagUuid) {
-          tagFound = true;
-        }
-      });
-      if (!tagFound) {
-        // old tag no longer exists in the post
-        tagsToBeRemoved.add(tagUuid);
-      }
-    });
-    header.tags.forEach((HashMap<String, String> tagData) {
-      var tagFound = false;
-      tags.forEach((String tagUuid) {
-        if (tagData['uuid'] == tagUuid) {
-          tagFound = true;
-        }
-      });
-      if (!tagFound) {
-        // new tag does not exist in the post
-        tagsToBeAdded.add(tagData['uuid']);
-      }
-    });
-
-    // action
-    tagsToBeRemoved.forEach((String tagUuid) {
-      removeTagUuid(tagUuid);
-    });
-    tagsToBeAdded.forEach((String tagUuid) {
-      addTagUuid(tagUuid);
-      List tagDatas = header.tags.where((HashMap<String, String> tagData) {
-        if (tagData['uuid'] == tagUuid) { // find tagData of the tag added with tagUuid
-          return true;
-        } else {
-          return false;
-        }
-      });
-      String tagName = tagDatas.removeAt(0)['name'];
-      tagList.addNewTag(tagUuid, tagName);
-    });
-  }
-
-  HashMap<String, Future> checkPostAttachmentsChange(CartPostHeader header) {
-    var attsToBeRemoved = new List<String>();
-    var attsToBeAdded = new List<String>();
-    var processFutures = new HashMap<String, Future>();
-
-    // filter
-    attachments.forEach((String attUuid, CartPostAttachment attachment) {
-      var attFound = false;
-      header.attachments.forEach((HashMap<String, String> attData) {
-        if (attData['uuid'] == attUuid) {
-          attFound = true;
-        }
-      });
-      if (!attFound) {
-        // old attachment no longer exists in the post
-        attsToBeRemoved.add(attUuid);
-      }
-    });
-    header.attachments.forEach((HashMap<String, String> attData) {
-      var attFound = false;
-      attachments.forEach((String attUuid, CartPostAttachment attachment) {
-        if (attData['uuid'] == attUuid) {
-          attFound = true;
-        }
-      });
-      if (!attFound) {
-        // new attachment does not exist in the post
-        attsToBeAdded.add(attData['uuid']);
-      }
-    });
-
-    // action
-    attsToBeRemoved.forEach((String attUuid) {
-      CartPostAttachment attachment = findAttachment(attUuid);
-      removeAttachment(attachment);
-      CartSystem.instance.drive.drive_trash(attachment.driveId); // delete it without listening to the results
-      (new File(LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attachment.title))).delete(); // also delete local files
-    });
-    attsToBeAdded.forEach((String attUuid) {
-      List attDatas = header.attachments.where((HashMap<String, String> attData) {
-        if (attData['uuid'] == attUuid) { // find attData of the attachment added with attUuid
-          return true;
-        } else {
-          return false;
-        }
-      });
-      String attName = attDatas.removeAt(0)['name'];
-      addNewAttachment(attUuid, attName);
-      processFutures.addAll({
-          attUuid: CartSystem.instance.drive.uploadFile(LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attName), parents: [category])
-      });
-    });
-
-    return processFutures;
-  }
-
 }
 
 class CartPostList extends Object with PinSerializable {
@@ -324,15 +220,71 @@ class CartPostAttachment extends Object with PinSerializable {
 
 class CartPostHeader {
 
+  String uuid;
   String title;
-  String category; //uuid
-  List<HashMap<String, String>> tags; // [{"uuid": uuid, "name": string}, ...]
-  List<HashMap<String, String>> attachments; // [{"uuid": uuid, "name": string}, ...]
+  CartCategory category;
+  HashMap<String, CartTag> tags;
+  HashMap<String, CartPostAttachment> attachments;
 
-  bool isPublic = false;
+  static CartPostHeader parseFromMarkdown(String uuid, String markdown) {
+    HashMap headerUploaded = {};
 
-  static CartPostHeader parseFromMarkdown(String markdown) {
-    // TODO return null, if format is invalid
+    int timestamp = PinTime.getTime();
+
+    LibHtml5.Document doc = LibHtml5.parse(markdown);
+    doc.querySelectorAll('div').forEach((LibHtml5.Element element) {
+      if (element.attributes.keys.contains('class') && element.attributes['class'] == 'mdHeaderData') {
+        headerUploaded = JSON.decode(element.innerHtml);
+      }
+    });
+
+    if (!headerUploaded.containsKey('uuid')) {
+      throw new Exception('[CartPostHeader] Header info of post: "uuid" is required!');
+    }
+    if (!headerUploaded.containsKey('title')) {
+      throw new Exception('[CartPostHeader] Header info of post: "title" is required!');
+    }
+    if (!headerUploaded.containsKey('category')) {
+      throw new Exception('[CartPostHeader] Header info of post: "category" is required!');
+    }
+
+    CartPostHeader header = new CartPostHeader();
+
+    if (uuid != headerUploaded['uuid']) {
+      throw new Exception('[CartPostHeader] Header info "uuid" is inconsistent with uuid in request params!');
+    }
+    header.uuid = headerUploaded['uuid'];
+    header.title = headerUploaded['title'];
+
+    CartCategory category = CartModel.instance.categoryList.find(headerUploaded['category']['uuid']);
+    if (category == null) {
+      throw new Exception('[CartPostHeader] Category specified in header info not found: ${headerUploaded['category']}');
+    }
+    category.updated = timestamp;
+    header.category = category;
+
+    if (headerUploaded.containsKey('tags')) {
+      headerUploaded['tags'].forEach((HashMap tagData) {
+        CartTag tag = CartModel.instance.tagList.find(tagData['uuid']);
+        if (tag == null) {
+          throw new Exception('[CartPostHeader] Tag specified in header info not found: ${tagData}');
+        }
+        tag.updated = timestamp;
+        header.tags.addAll({ tag.uuid: tag });
+      });
+    }
+
+    if (headerUploaded.containsKey('attachments')) {
+      headerUploaded['attachments'].forEach((HashMap attachData) {
+        CartPostAttachment attachment = new CartPostAttachment.fromJson(attachData);
+        if (!(new File(LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attachment.title))).existsSync()) {
+          throw new Exception('[CartPostHeader] Attachment specified in header info not found: ${attachData}');
+        }
+        header.attachments.addAll({ attachment.uuid: attachment });
+      });
+    }
+
+    return header;
   }
 
 }

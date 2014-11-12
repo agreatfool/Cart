@@ -34,8 +34,9 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future savePost(String uuid, String markdown) {
-    Future saveResult = null;
+  Future<HashMap> savePost(String uuid, String markdown) {
+    final completer = new Completer();
+
     CartPostHeader header = null;
     String html = '';
 
@@ -46,32 +47,54 @@ class CartModel {
         throw new Exception('[CartModel] savePost: uuid format invalid: ${uuid}}');
       }
       // parse headers
-      header = CartPostHeader.parseFromMarkdown(markdown);
-      if (header == null) {
-        throw new Exception('[CartModel] savePost: invalid headers format: ${uuid}}');
-      }
+      CartPostHeader header = CartPostHeader.parseFromMarkdown(uuid, markdown);
       // validate category
-      if (categoryList.find(header.category) == null) {
-        throw new Exception('[CartModel savePost: category not found: ${header.category}]');
+      if (categoryList.find(header.category.uuid) == null) {
+        throw new Exception('[CartModel savePost: category not found: ${header.category.toJson()}]');
       }
       // parse markdown to html & escape html
-      html = (const HtmlEscape()).convert(markdownToHtml(markdown));
-
-      // execute
-      if (postList.find(uuid) != null) {
-        // update
-        saveResult = _updatePost(uuid, markdown, header, html);
-      } else {
-        // add
-        saveResult = _addPost(uuid, markdown, header, html);
-      }
+      String html = (const HtmlEscape()).convert(markdownToHtml(markdown));
 
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
       return new Future.error(e, trace);
     }
 
-    return saveResult;
+    // execute
+    Future process = null;
+    if (postList.find(uuid) != null) {
+      // update
+      process = _updatePost(uuid, markdown, header, html);
+    } else {
+      // add
+      process = _addPost(uuid, markdown, header, html);
+    }
+
+    process.then((CartPost _) {
+      HashMap<String, HashMap> tags = {};
+      HashMap<String, HashMap> attachments = {};
+
+      _.tags.forEach((String tagUuid) {
+        tags.addAll({ tagUuid: tagList.find(tagUuid).toJson() });
+      });
+      _.attachments.forEach((String attachUuid, CartPostAttachment attachment) {
+        attachments.addAll({ attachUuid: attachment.toJson() });
+      });
+
+      completer.complete({
+          "uuid": uuid,
+          "title": _.title,
+          "category": categoryList.find(_.category).toJson(),
+          "tags": tags,
+          "attachments": attachments
+      });
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
   }
 
   Future removePost(String uuid) {
@@ -119,50 +142,42 @@ class CartModel {
     return completer.future;
   }
 
-  Future _addPost(String uuid, String markdown, CartPostHeader header, String html) {
+  Future<CartPost> _addPost(String uuid, String markdown, CartPostHeader header, String html) {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
     HashMap data = {
-      'title': header.title,
-      'created': timestamp,
-      'updated': timestamp,
-      'category': header.category
+      "uuid": uuid,
+      "title": header.title,
+      "created": timestamp,
+      "updated": timestamp,
+      "category": header.category.uuid
     };
     var post = new CartPost.fromJson(data);
 
     // database: category
-    CartCategory category = categoryList.find(post.category);
-    category.updated = timestamp;
-    categoryList.update(category);
+    categoryList.update(header.category);
 
     // database: tags
-    header.tags.forEach((HashMap<String, String> tagData) {
-      CartTag tag = tagList.find(tagData['uuid']);
-      if (tag != null) {
-        tag.updated = timestamp;
-        tagList.update(tag);
-      } else {
-        tagList.addNewTag(tagData['uuid'], tagData['name'], timestamp: timestamp);
-      }
-      post.addTagUuid(tagData['uuid']);
+    header.tags.forEach((String tagUuid, CartTag headerTag) {
+      tagList.update(headerTag);
+      post.addTagUuid(tagUuid);
     });
 
     // database: attachments
-    header.attachments.forEach((HashMap<String, String> attachmentData) {
-      post.addNewAttachment(attachmentData['uuid'], attachmentData['name'], timestamp: timestamp);
-    });
+    post.attachments = header.attachments;
 
     // database: post
     postList.add(post);
 
-    // save db files & create html file & sync with google drive
-    _saveDatabase()
-    .then((_) {
-      return _uploadPost(post, markdown, html);
+    // create html file & sync with google drive & save db files
+    _uploadPost(post, markdown, html)
+    .then((CartPost _) {
+      post = _;
+      return _saveDatabase();
     })
     .then((_) {
-      completer.complete(true);
+      completer.complete(post);
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -172,20 +187,38 @@ class CartModel {
     return completer.future;
   }
 
-  Future _updatePost(String uuid, String markdown, CartPostHeader header, String html) {
+  Future<CartPost> _updatePost(String uuid, String markdown, CartPostHeader header, String html) {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
     CartPost post = postList.find(uuid);
     post.title = header.title;
-    post.category = header.category;
+    post.category = header.category.uuid;
     post.updated = timestamp;
 
-    // tags check
-    post.checkPostTagsChange(tagList, header);
+    // database: category
+    categoryList.update(header.category);
+
+    // database: tags
+    header.tags.forEach((String tagUuid, CartTag headerTag) {
+      tagList.update(headerTag);
+    });
+    post.tags = header.tags.keys;
 
     // attachments check
-    HashMap<String, Future> processList = post.checkPostAttachmentsChange(header);
+    HashMap<String, Future> processList = {};
+
+    if (processList.length > 0) {
+      header.attachments.forEach((String attachUuid, CartPostAttachment attachment) {
+        if (attachment.driveId == null) {
+          processList.addAll({
+              attachUuid: CartSystem.instance.drive.uploadFile(
+                  LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attachment.title), parents: [post.category]
+              )
+          });
+        }
+      });
+    }
     List<String> addedAttUuids = processList.keys;
     List<Future> addedAttFutures = processList.values;
 
@@ -204,7 +237,7 @@ class CartModel {
       return _saveDatabase();
     })
     .then((_) {
-      completer.complete(true);
+      completer.complete(post);
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -388,7 +421,7 @@ class CartModel {
     return completer.future;
   }
 
-  Future _uploadPost(CartPost post, String markdown, String html) {
+  Future<CartPost> _uploadPost(CartPost post, String markdown, String html) {
     final completer = new Completer();
     String postBasePubDir = LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid);
     String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
@@ -446,11 +479,12 @@ class CartModel {
         attachment.driveId = file.id;
         post.updateAttachment(attachment);
       });
+      postList.update(post);
       return new Future.value(true);
     })
     .then((_) {
       // finish process
-      completer.complete(true);
+      completer.complete(post);
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
