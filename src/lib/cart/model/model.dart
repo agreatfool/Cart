@@ -105,12 +105,8 @@ class CartModel {
       post = _;
       return _postUpload(post, markdown);
     })
-    .then((CartPost _) {
-      return saveDatabase();
-    })
-    .then((_) {
-      completer.complete(post.generateHeaderInfo());
-    })
+    .then((CartPost _) => saveDatabase())
+    .then((_) => completer.complete(post.generateHeaderInfo()))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -184,18 +180,14 @@ class CartModel {
     CartCategory category = categoryList.addNewCategory(uuid, name, timestamp: timestamp);
 
     _drive.drive_folder(name, parents: [CartSystem.instance.googleDriveRootFolder])
-    .then((GoogleDriveClient.File file) {
-      return new Future.value(file.id);
-    })
+    .then((GoogleDriveClient.File file) => new Future.value(file.id))
     .then((String driveId) {
       category = categoryList.find(uuid);
       category.driveId = driveId;
       categoryList.update(category);
       return saveDatabase();
     })
-    .then((_) {
-      completer.complete(category);
-    })
+    .then((_) => completer.complete(category))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -225,12 +217,8 @@ class CartModel {
     final completer = new Completer();
 
     _drive.drive_trash(category.driveId)
-    .then((GoogleDriveClient.File file) {
-      return saveDatabase();
-    })
-    .then((_) {
-      completer.complete(true);
-    })
+    .then((GoogleDriveClient.File file) => saveDatabase())
+    .then((_) => completer.complete(true))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -259,9 +247,7 @@ class CartModel {
     CartTag tag = tagList.addNewTag(uuid, name, timestamp: timestamp);
 
     tagList.dump()
-    .then((_) {
-      completer.complete(tag);
-    })
+    .then((_) => completer.complete(tag))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -286,9 +272,7 @@ class CartModel {
     tagList.remove(uuid, postList);
 
     tagList.dump()
-    .then((_) {
-      completer.complete(true);
-    })
+    .then((_) => completer.complete(true))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -327,9 +311,7 @@ class CartModel {
         return new Future.value(files.items.removeAt(0)); // shall only contains 1 item
       }
     })
-    .then((GoogleDriveClient.File file) {
-      completer.complete(file.id);
-    })
+    .then((GoogleDriveClient.File file) => completer.complete(file.id))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -359,10 +341,7 @@ class CartModel {
       }
       return new Future.value(true);
     })
-    .then((_) {
-      // update or create local html file
-      return (new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).writeAsString(html);
-    })
+    .then((_) => (new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).writeAsString(html)) // update or create local html file
     .then((_) {
       // upload attachments
       post.attachments.forEach((String attachmentUuid, CartPostAttachment attachment) {
@@ -383,10 +362,7 @@ class CartModel {
       postList.update(post);
       return new Future.value(true);
     })
-    .then((_) {
-      // finish process
-      completer.complete(post);
-    })
+    .then((_) => completer.complete(post)) // finish process
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
