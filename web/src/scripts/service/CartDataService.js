@@ -76,7 +76,10 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var postSaveTmp = function(uuid, title, markdown, category, tags, attachments) {
         if (_.isUndefined(tags)) {
-            tags = [];
+            tags = {};
+        }
+        if (_.isUndefined(attachments)) {
+            attachments = {};
         }
 
         var deferred = $q.defer();
