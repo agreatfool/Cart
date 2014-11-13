@@ -6,6 +6,8 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
 
     var postId = $routeParams.postId;
 
+    $scope.postCategories = $dataService.categoryGetAll();
+
     $scope.postCategory = null;
     $scope.postTags = [];
     $scope.postAttachments = [];
@@ -32,25 +34,12 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
 
     // category related
     $scope.categoryInput = '';
-    $scope.inputCategory = function(event) {
-        event.preventDefault();
-        var inputName = $scope.categoryInput.replace(/[<]br[^>]*[>]/gi, '');
-        if (_.isEmpty(inputName)) {
-            return; // empty input, ignore it
-        }
+    $scope.selectPostCategory = function(categoryUuid) {
+        var category = $dataService.categorySearchById(categoryUuid);
 
-        var category = $dataService.categorySearch(inputName);
-        if (!_.isEmpty(category)) {
-            // category already exists
-            $scope.postCategory = category.pop(); // [searchedCategory].pop()
-        } else {
-            // category not found, create it
-            $dataService.categoryCreate(inputName).then(function(data) { // data is category json
-                $scope.postCategory = data;
-            }, function() {
-                CartUtility.notify('Error!', 'Error in creating new category: ' + inputName, 'error');
-                $scope.categoryInput = '';
-            });
+        if (!_.isNull(category)) {
+            $scope.postCategory = category;
+            $scope.categoryInput = category.title;
         }
 
         CartUtility.focusEditor(aceEditor);
@@ -123,7 +112,6 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             // search local post data, found, fetch post data from server, display it
             // not found, redirect to error page
         } else {
-            console.log(tmpPostData);
             // tmp post data found
             aceEditor.setValue(tmpPostData.md, -1);
             $scope.postCategory = tmpPostData.category;

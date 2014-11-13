@@ -16,9 +16,28 @@ $ace-color12: #7A7267;
   .blog-edit-top {
     .top-info {
       margin: 30px 0 0 0;
+      #markdown-post-category {
+        height: 27px;
+      }
       .top-input {
         cursor: text;
         min-width: 50px;
+      }
+      .dropdown {
+        display: inline-block;
+        .dropdown-toggle {
+          .caret {
+            margin: 0;
+          }
+        }
+        .scrollable-menu {
+          height: auto;
+          max-height: 360px;
+          overflow-x: hidden;
+        }
+        .dropdown-menu a:hover {
+          cursor: pointer;
+        }
       }
       .tagsinput-primary {
         display: inline-block;
@@ -36,17 +55,6 @@ $ace-color12: #7A7267;
             color: $color-white-pure;
           }
         }
-      }
-      [contenteditable="true"].single-line {
-        white-space: nowrap;
-        overflow: hidden;
-      }
-      [contenteditable="true"].single-line br {
-        display: none;
-      }
-      [contenteditable="true"].single-line * {
-        display: inline;
-        white-space: nowrap;
       }
     }
     .btn {

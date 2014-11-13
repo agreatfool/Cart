@@ -54,7 +54,6 @@ module.exports = function($http, $q) {
      *     "updated": timestamp
      * }
      */
-    //FIXME 临时存储的帖子需要添加附件信息
     //FIXME 临时帖子列表需要添加post上传功能
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -209,6 +208,9 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* CATEGORY RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var categoryGetAll = function() {
+        return categories;
+    };
     var categoryCreate = function(categoryName) {
         return CartUtility.post(
             $http, $q, '/api/category/create', {
@@ -263,6 +265,8 @@ module.exports = function($http, $q) {
         });
         if (_.isUndefined(found)) {
             found = null;
+        } else {
+            found = found.pop();
         }
         return found;
     };
@@ -286,6 +290,9 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* TAG RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var tagGetAll = function() {
+        return tags;
+    };
     var tagCreate = function(tagName) {
         return CartUtility.post(
             $http, $q, '/api/tag/create', {
@@ -340,6 +347,8 @@ module.exports = function($http, $q) {
         });
         if (_.isUndefined(found)) {
             found = null;
+        } else {
+            found = found.pop();
         }
         return found;
     };
@@ -370,12 +379,14 @@ module.exports = function($http, $q) {
         'postGetAllTmp': postGetAllTmp,
         'postRemoveAllTmp': postRemoveAllTmp,
         // category APIs
+        'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
         'categoryUpdate': categoryUpdate,
         'categoryUpdateTime': categoryUpdateTime,
         'categorySearchById': categorySearchById,
         'categorySearch': categorySearch,
         // tag APIs
+        'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
         'tagUpdate': tagUpdate,
         'tagUpdateTime': tagUpdateTime,
