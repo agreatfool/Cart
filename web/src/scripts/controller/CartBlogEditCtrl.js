@@ -201,6 +201,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
 
         return {
+            "uuid": postId,
             "title": title,
             "category": category,
             "tags": tags,
