@@ -115,6 +115,23 @@ class PinGoogleDrive {
     return completer.future;
   }
 
+  Future<GoogleDriveClient.File> renameFile(String driveId, String name) {
+    final completer = new Completer();
+
+    drive_get(driveId)
+    .then((GoogleDriveClient.File file) {
+      file.title = name;
+      return drive_patch(driveId, file);
+    })
+    .then((GoogleDriveClient.File renamedFile) => completer.complete(renamedFile))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* DRIVE ORIGINAL APIs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -231,6 +248,10 @@ class PinGoogleDrive {
     });
 
     return completer.future;
+  }
+
+  Future<GoogleDriveClient.File> drive_patch(String fileId, GoogleDriveClient.File file) {
+    return _drive.files.patch(file, fileId);
   }
 
 }
