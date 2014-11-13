@@ -120,6 +120,26 @@ class CartPost extends Object with PinSerializable {
     }
   }
 
+  HashMap generateHeaderInfo() {
+    HashMap<String, HashMap> headerTags = {};
+    HashMap<String, HashMap> headerAttachments = {};
+
+    tags.forEach((String tagUuid) {
+      headerTags.addAll({ tagUuid: CartModel.instance.tagList.find(tagUuid).toJson() });
+    });
+    attachments.forEach((String attachUuid, CartPostAttachment attachment) {
+      headerAttachments.addAll({ attachUuid: attachment.toJson() });
+    });
+
+    return {
+        "uuid": uuid,
+        "title": title,
+        "category": CartModel.instance.categoryList.find(category).toJson(),
+        "tags": headerTags,
+        "attachments": headerAttachments
+    };
+  }
+
   static HashMap parseMarkdownHeader(String markdown) {
     HashMap header = {};
 

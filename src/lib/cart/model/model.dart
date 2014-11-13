@@ -36,9 +36,11 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   Future<HashMap> savePost(String uuid, String markdown) {
     final completer = new Completer();
+    int timestamp = PinTime.getTime();
 
     CartPostHeader header = null;
     String html = '';
+    bool isAddAction;
 
     try {
 
@@ -47,13 +49,13 @@ class CartModel {
         throw new Exception('[CartModel] savePost: uuid format invalid: ${uuid}}');
       }
       // parse headers
-      CartPostHeader header = CartPostHeader.parseFromMarkdown(uuid, markdown);
+      header = CartPostHeader.parseFromMarkdown(uuid, markdown);
       // validate category
       if (categoryList.find(header.category.uuid) == null) {
         throw new Exception('[CartModel] savePost: category not found: ${header.category.toJson()}');
       }
       // parse markdown to html & escape html
-      String html = (const HtmlEscape()).convert(markdownToHtml(markdown));
+      html = (const HtmlEscape()).convert(markdownToHtml(markdown));
 
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
@@ -61,33 +63,53 @@ class CartModel {
     }
 
     // execute
-    Future process = null;
-    if (postList.find(uuid) != null) {
-      // update
-      process = _updatePost(uuid, markdown, header, html);
+    CartPost post = postList.find(uuid);
+    if (post == null) {
+      isAddAction = true;
+      post = new CartPost.fromJson({
+          "uuid": uuid,
+          "title": header.title,
+          "created": timestamp,
+          "updated": timestamp,
+          "category": header.category.uuid
+      });
     } else {
-      // add
-      process = _addPost(uuid, markdown, header, html);
+      isAddAction = false;
+      post.title = header.title;
+      post.category = header.category.uuid;
+      post.updated = timestamp;
     }
 
-    process.then((CartPost _) {
-      HashMap<String, HashMap> tags = {};
-      HashMap<String, HashMap> attachments = {};
+    // database: category
+    categoryList.update(header.category);
 
-      _.tags.forEach((String tagUuid) {
-        tags.addAll({ tagUuid: tagList.find(tagUuid).toJson() });
-      });
-      _.attachments.forEach((String attachUuid, CartPostAttachment attachment) {
-        attachments.addAll({ attachUuid: attachment.toJson() });
-      });
+    // database: tags
+    header.tags.forEach((String tagUuid, CartTag headerTag) {
+      tagList.update(headerTag);
+    });
+    post.tags = header.tags.keys;
 
-      completer.complete({
-          "uuid": uuid,
-          "title": _.title,
-          "category": categoryList.find(_.category).toJson(),
-          "tags": tags,
-          "attachments": attachments
-      });
+    // database: attachments
+    post.attachments = header.attachments;
+
+    // database: post
+    if (isAddAction) {
+      postList.add(post);
+    } else {
+      postList.update(post);
+    }
+
+    // create html file & sync with google drive & save db files
+    _preparePostUpload(post, html)
+    .then((CartPost _) {
+      post = _;
+      return _postUpload(post, markdown);
+    })
+    .then((CartPost _) {
+      return saveDatabase();
+    })
+    .then((_) {
+      completer.complete(post.generateHeaderInfo());
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
@@ -134,111 +156,6 @@ class CartModel {
 
     Future.wait(ioList)
     .then((_) => completer.complete(true))
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      completer.completeError(e, trace);
-    });
-
-    return completer.future;
-  }
-
-  Future<CartPost> _addPost(String uuid, String markdown, CartPostHeader header, String html) {
-    final completer = new Completer();
-    int timestamp = PinTime.getTime();
-
-    HashMap data = {
-      "uuid": uuid,
-      "title": header.title,
-      "created": timestamp,
-      "updated": timestamp,
-      "category": header.category.uuid
-    };
-    var post = new CartPost.fromJson(data);
-
-    // database: category
-    categoryList.update(header.category);
-
-    // database: tags
-    header.tags.forEach((String tagUuid, CartTag headerTag) {
-      tagList.update(headerTag);
-      post.addTagUuid(tagUuid);
-    });
-
-    // database: attachments
-    post.attachments = header.attachments;
-
-    // database: post
-    postList.add(post);
-
-    // create html file & sync with google drive & save db files
-    _uploadPost(post, markdown, html)
-    .then((CartPost _) {
-      post = _;
-      return saveDatabase();
-    })
-    .then((_) {
-      completer.complete(post);
-    })
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      completer.completeError(e, trace);
-    });
-
-    return completer.future;
-  }
-
-  Future<CartPost> _updatePost(String uuid, String markdown, CartPostHeader header, String html) {
-    final completer = new Completer();
-    int timestamp = PinTime.getTime();
-
-    CartPost post = postList.find(uuid);
-    post.title = header.title;
-    post.category = header.category.uuid;
-    post.updated = timestamp;
-
-    // database: category
-    categoryList.update(header.category);
-
-    // database: tags
-    header.tags.forEach((String tagUuid, CartTag headerTag) {
-      tagList.update(headerTag);
-    });
-    post.tags = header.tags.keys;
-
-    // attachments check
-    HashMap<String, Future> processList = {};
-
-    if (processList.length > 0) {
-      header.attachments.forEach((String attachUuid, CartPostAttachment attachment) {
-        if (attachment.driveId == null) {
-          processList.addAll({
-              attachUuid: CartSystem.instance.drive.uploadFile(
-                  LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attachment.title), parents: [post.category]
-              )
-          });
-        }
-      });
-    }
-    List<String> addedAttUuids = processList.keys;
-    List<Future> addedAttFutures = processList.values;
-
-    Future.wait(addedAttFutures)
-    .then((List<GoogleDriveClient.File> responses) {
-      // upload all attachments
-      addedAttUuids.forEach((String attUuid) {
-        CartPostAttachment attachment = post.findAttachment(attUuid);
-        GoogleDriveClient.File file = responses.removeAt(0);
-        attachment.driveId = file.id;
-        post.updateAttachment(attachment);
-      });
-      return new Future.value(true);
-    })
-    .then((_) {
-      return saveDatabase();
-    })
-    .then((_) {
-      completer.complete(post);
-    })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -421,11 +338,11 @@ class CartModel {
     return completer.future;
   }
 
-  Future<CartPost> _uploadPost(CartPost post, String markdown, String html) {
+  Future<CartPost> _preparePostUpload(CartPost post, String html) {
     final completer = new Completer();
+
     String postBasePubDir = LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid);
     String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
-    String mdPath = LibPath.join(postBaseDataDir, post.uuid + '.md');
     var attachmentUploadList = new List<Future>(); // store upload futures
     var attachmentList = new List<CartPostAttachment>(); // store upload attachments
 
@@ -443,24 +360,8 @@ class CartModel {
       return new Future.value(true);
     })
     .then((_) {
-      // update or create local markdown & html files
-      return Future.wait([
-          (new File(mdPath)).writeAsString(markdown),
-          (new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).writeAsString(html)
-      ]);
-    })
-    .then((_) {
-      // upload markdown file
-      CartCategory category = categoryList.find(post.category);
-      if (category == null) {
-        throw new Exception('[CartModel _uploadPost: category not found: ${post.category}]');
-      }
-      return _drive.uploadFile(mdPath, driveId: post.driveId, parents: [category.driveId]);
-    })
-    .then((GoogleDriveClient.File file) {
-      post.driveId = file.id; // new post has no drive id, update it
-      postList.update(post);
-      return new Future.value(true);
+      // update or create local html file
+      return (new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).writeAsString(html);
     })
     .then((_) {
       // upload attachments
@@ -486,6 +387,48 @@ class CartModel {
       // finish process
       completer.complete(post);
     })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
+  }
+
+  Future<CartPost> _postUpload(CartPost post, String markdown) {
+    final completer = new Completer();
+
+    String delimiter = '</div></div>';
+    CartCategory category = categoryList.find(post.category);
+
+    // save markdown
+    String mdPath = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid, post.uuid + '.md');
+
+    Future startPoint = null;
+    if (post.driveId == null) {
+      // new post, need to insert file to google drive first
+      startPoint = _drive.drive_insert(mdPath, parents: [category.driveId]);
+    } else {
+      // old post, no need to do insert action
+      startPoint = new Future.value(true);
+    }
+
+    startPoint
+    .then((_) {
+      if (post.driveId == null) {
+        post.driveId = _.id; // _ is GoogleDriveClient.File
+      }
+      postList.update(post);
+      // update markdown header to latest version
+      HashMap headerInfo = post.generateHeaderInfo();
+      // remove old header
+      markdown = markdown.substring(markdown.indexOf(delimiter) + delimiter.length);
+      // append new header
+      markdown = '<div id="mdHeader" style="display:none;"><div class="mdHeaderData">' + JSON.encode(headerInfo) + '</div></div>' + markdown;
+      return (new File(mdPath)).writeAsString(markdown);
+    })
+    .then((_) => _drive.drive_update(post.driveId, markdown))
+    .then((GoogleDriveClient.File uploadedFile) => completer.complete(post))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
