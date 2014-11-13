@@ -288,8 +288,8 @@ class CartPostHeader {
     header.category = category;
 
     if (headerUploaded.containsKey('tags')) {
-      headerUploaded['tags'].forEach((HashMap tagData) {
-        CartTag tag = CartModel.instance.tagList.find(tagData['uuid']);
+      headerUploaded['tags'].forEach((String tagUuid, HashMap tagData) {
+        CartTag tag = CartModel.instance.tagList.find(tagUuid);
         if (tag == null) {
           throw new Exception('[CartPostHeader] Tag specified in header info not found: ${tagData}');
         }
@@ -299,7 +299,7 @@ class CartPostHeader {
     }
 
     if (headerUploaded.containsKey('attachments')) {
-      headerUploaded['attachments'].forEach((HashMap attachData) {
+      headerUploaded['attachments'].forEach((String attachUuid, HashMap attachData) {
         CartPostAttachment attachment = new CartPostAttachment.fromJson(attachData);
         if (!(new File(LibPath.join(CartConst.WWW_POST_PUB_PATH, uuid, attachment.title))).existsSync()) {
           throw new Exception('[CartPostHeader] Attachment specified in header info not found: ${attachData}');
