@@ -317,7 +317,18 @@ class CartAction {
   }
 
   static handleRestoreStatus(HttpContext ctx) {
-    // 汇报系统恢复状态
+    // TODO 汇报系统恢复状态
+  }
+
+  static handlePostSave(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    // TODO
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
