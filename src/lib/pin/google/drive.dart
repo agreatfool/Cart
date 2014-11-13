@@ -157,9 +157,7 @@ class PinGoogleDrive {
 
     GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
     _drive.files.insert(file)
-    .then((GoogleDriveClient.File newFile){
-      completer.complete(newFile);
-    })
+    .then((GoogleDriveClient.File newFile) => completer.complete(newFile))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
@@ -194,9 +192,7 @@ class PinGoogleDrive {
 
         GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
         _drive.files.insert(file)
-        .then((GoogleDriveClient.File newFile){
-          completer.complete(newFile);
-        })
+        .then((GoogleDriveClient.File newFile) => completer.complete(newFile))
         .catchError((e, trace) {
           PinUtility.handleError(e, trace);
           completer.completeError(e, trace);
@@ -228,9 +224,7 @@ class PinGoogleDrive {
     .then((GoogleDriveClient.File file) {
       return _drive.files.update(file, fileId, content: base64content);
     })
-    .then((GoogleDriveClient.File updatedFile) {
-      completer.complete(updatedFile);
-    })
+    .then((GoogleDriveClient.File updatedFile) => completer.complete(updatedFile))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);

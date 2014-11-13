@@ -61,9 +61,7 @@ class PinUtility {
     }
 
     (new File(path)).writeAsString(jsonStr)
-    .then((_) {
-      completer.complete(_);
-    })
+    .then((_) => completer.complete(_))
     .catchError((e, trace) {
       handleError(e, trace);
       completer.completeError(e, trace);
@@ -174,9 +172,7 @@ class PinUtility {
         completer.complete(true);
       } else {
         dir.create(recursive: true)
-        .then((_) {
-          completer.complete(true);
-        })
+        .then((_) => completer.complete(true))
         .catchError((e, trace) {
           handleError(e, trace);
           completer.completeError(e, trace);
