@@ -78,8 +78,6 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             // tag not found, create it
             $dataService.tagCreate(inputName).then(function(data) { // data is tag json
                 $scope.postTags[data.uuid] = data;
-            }, function() {
-                CartUtility.notify('Error!', 'Error in creating new tag: ' + inputName, 'error');
             });
         }
 
@@ -107,19 +105,21 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
 
     // post data search logic
     $dataService.postGetTmp($routeParams.postId).then(function(tmpPostData) {
-        if (tmpPostData === false) {
-            // tmp post data not found
-            // FIXME
-            // search local post data, found, fetch post data from server, display it
-            // not found, redirect to error page
-        } else {
-            // tmp post data found
-            aceEditor.setValue(tmpPostData.md, -1);
-            $scope.postCategory = tmpPostData.category;
-            $scope.categoryInput = tmpPostData.category.title;
-            $scope.postTags = tmpPostData.tags;
-            $scope.postAttachments = tmpPostData.attachments;
+        // tmp post data found
+        aceEditor.setValue(tmpPostData.md, -1);
+        $scope.postCategory = tmpPostData.category;
+        $scope.categoryInput = tmpPostData.category.title;
+        $scope.postTags = tmpPostData.tags;
+        $scope.postAttachments = tmpPostData.attachments;
+    }, function(err) {
+        if (err.status !== 404) {
+            // error encountered, and is not post not found error, just return, since error message shall have already been notified
+            return;
         }
+        // tmp post data not found
+        // FIXME
+        // search local post data, found, fetch post data from server, display it
+        // not found, redirect to error page
     });
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

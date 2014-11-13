@@ -52,8 +52,6 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         $scope.paginationTotalItems = result.length;
         $scope.paginationCurrentPage = 1;
         $scope.loadPageData();
-    }, function(err) {
-        CartUtility.notify('Error!', err.toString(), 'error');
     });
 
     $scope.close = function() {

@@ -24,7 +24,7 @@ CartUtility.prototype.post = function($http, $q, url, data, onSuccess, onError) 
         if (self.handleResponse(data)) {
             deferred.resolve(onSuccess(data));
         } else {
-            deferred.reject(false);
+            deferred.reject();
         }
     })
     .error(function(data) {
@@ -32,7 +32,7 @@ CartUtility.prototype.post = function($http, $q, url, data, onSuccess, onError) 
         if (_.isFunction(onError)) {
             onError(data);
         }
-        deferred.reject(false);
+        deferred.reject();
     });
 
     return self.spinShow(deferred.promise);

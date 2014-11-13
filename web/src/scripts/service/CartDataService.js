@@ -82,16 +82,16 @@ module.exports = function($http, $q) {
 
         if (_.isUndefined(uuid) || _.isEmpty(uuid)) {
             CartUtility.notify('Error!', 'Post uuid empty or invalid!', 'error');
-            deferred.reject(false);
+            deferred.reject();
         } else if (_.isUndefined(title) || _.isEmpty(title)) {
             CartUtility.notify('Error!', 'Post title empty or invalid!', 'error');
-            deferred.reject(false);
+            deferred.reject();
         } else if (_.isUndefined(markdown) || _.isEmpty(markdown)) {
             CartUtility.notify('Error!', 'Post markdown empty or invalid!', 'error');
-            deferred.reject(false);
+            deferred.reject();
         } else if (_.isUndefined(category) || _.isEmpty(category)) {
             CartUtility.notify('Error!', 'Post category empty or invalid!', 'error');
-            deferred.reject(false);
+            deferred.reject();
         } else {
             db.get(uuid)
             .then(function(doc) {
@@ -125,11 +125,11 @@ module.exports = function($http, $q) {
                 if (response !== false) {
                     deferred.resolve(true); // previous done with no error, resolve with true
                 } else {
-                    deferred.reject(false); // previous done with error, resolve with false
+                    deferred.reject(); // previous done with error, resolve with false
                 }
             }, function(err) {
                 CartUtility.notify('Error!', err.toString(), 'error');
-                deferred.reject(false); // error, popup notification, resolve with false
+                deferred.reject(); // error, popup notification, resolve with false
             });
         }
 
@@ -147,7 +147,7 @@ module.exports = function($http, $q) {
             if (_.isObject(err) && err.status !== 404) {
                 CartUtility.notify('Error!', err.toString(), 'error');
             }
-            deferred.reject(false);
+            deferred.reject(err);
         });
         return deferred.promise;
     };
@@ -160,16 +160,16 @@ module.exports = function($http, $q) {
                     deferred.resolve(true);
                 }, function(err) {
                     CartUtility.notify('Error!', err.toString(), 'error');
-                    deferred.reject(false);
+                    deferred.reject();
                 });
             } else {
-                deferred.reject(false);
+                deferred.reject();
             }
         }, function(err) {
             if (_.isObject(err) && err.status !== 404) {
                 CartUtility.notify('Error!', err.toString(), 'error');
             }
-            deferred.reject(false);
+            deferred.reject();
         });
         return deferred.promise;
     };
@@ -188,7 +188,7 @@ module.exports = function($http, $q) {
             }
         }, function(err) {
             CartUtility.notify('Error!', err.toString(), 'error');
-            deferred.reject(false);
+            deferred.reject();
         });
         return deferred.promise;
     };
@@ -200,7 +200,7 @@ module.exports = function($http, $q) {
             deferred.resolve(true);
         }, function(err) {
             CartUtility.notify('Error!', err.toString(), 'error');
-            deferred.reject(false);
+            deferred.reject();
         });
         return deferred.promise;
     };
@@ -227,7 +227,7 @@ module.exports = function($http, $q) {
         var target = categorySearchById(category.uuid);
         if (_.isNull(target)) {
             CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdate');
-            deferred.reject(false);
+            deferred.reject();
         }
 
         var foundWithSameName = _.filter(categories, function(localCategory) {
@@ -235,7 +235,7 @@ module.exports = function($http, $q) {
         });
         if (_.isArray(foundWithSameName) && foundWithSameName.length > 0) {
             CartUtility.notify('Error!', 'Target category name has already been occupied: ' + category.title, 'error');
-            deferred.reject(false);
+            deferred.reject();
         }
 
         category.updated = moment().unix();
@@ -309,7 +309,7 @@ module.exports = function($http, $q) {
         var target = tagSearchById(tag.uuid);
         if (_.isNull(target)) {
             CartUtility.log('Target local tag data not found with input category: ' + JSON.stringify(tag), 'DataService::tagUpdate');
-            deferred.reject(false);
+            deferred.reject();
         }
 
         var foundWithSameName = _.filter(tags, function(localTag) {
@@ -317,7 +317,7 @@ module.exports = function($http, $q) {
         });
         if (_.isArray(foundWithSameName) && foundWithSameName.length > 0) {
             CartUtility.notify('Error!', 'Target tag name has already been occupied: ' + tag.title, 'error');
-            deferred.reject(false);
+            deferred.reject();
         }
 
         tag.updated = moment().unix();
