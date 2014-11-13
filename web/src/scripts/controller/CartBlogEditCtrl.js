@@ -66,15 +66,15 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
 
         // search current post tags
-        var currentPostTagsIndex = -1;
+        var currentPostTagsFound = false;
         if (!_.isEmpty($scope.postTags)) {
-            _.forEach($scope.postTags, function(tag, index) {
+            _.forEach($scope.postTags, function(tag) {
                 if (tag.title === inputName) {
-                    currentPostTagsIndex = index;
+                    currentPostTagsFound = true;
                 }
             });
         }
-        if (currentPostTagsIndex !== -1) {
+        if (currentPostTagsFound !== false) {
             CartUtility.notify('Warning!', 'Tag with name "' + inputName + '" already exists in this post!', 'notice');
             return; // same tag already exists in post
         }
@@ -82,11 +82,12 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         var tag = $dataService.tagSearch(inputName);
         if (!_.isEmpty(tag)) {
             // tag already exists
-            $scope.postTags.push(tag.pop()); // [searchedTag].pop()
+            tag = tag.pop(); // [searchedTag].pop()
+            $scope.postTags[tag.uuid] = tag;
         } else {
             // tag not found, create it
             $dataService.tagCreate(inputName).then(function(data) { // data is tag json
-                $scope.postTags.push(data);
+                $scope.postTags[data.uuid] = data;
             }, function() {
                 CartUtility.notify('Error!', 'Error in creating new tag: ' + inputName, 'error');
             });
@@ -95,22 +96,11 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         $scope.tagInput = '';
         CartUtility.focusEditor(aceEditor);
     };
-    $scope.removePostTag = function(tagName) {
-        if ($scope.postTags.length <= 0) {
-            return; // post has not tag yet
+    $scope.removePostTag = function(tagUuid) {
+        if ($scope.postTags.hasOwnProperty(tagUuid)) {
+            delete $scope.postTags[tagUuid];
         }
 
-        var tagIndex = -1;
-        _.forEach($scope.postTags, function(tag, index) {
-            if (tag.title === tagName) {
-                tagIndex = index;
-            }
-        });
-        if (tagIndex === -1) {
-            return; // not found
-        }
-
-        $scope.postTags.splice(tagIndex, 1);
         CartUtility.focusEditor(aceEditor);
     };
 
