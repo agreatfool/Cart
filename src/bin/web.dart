@@ -48,15 +48,15 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   var app = new Express();
   app.post('/api/init',               (HttpContext ctx) => CartAction.handleDataInit(ctx));
-  app.post('/api/oauth2',              (HttpContext ctx) => CartAction.handleOauth2(ctx));
-  app.post('/api/oauth2next',          (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
-  app.post('/api/isauthed',            (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
-  app.post('/api/login',               (HttpContext ctx) => CartAction.handleLogin(ctx));
+  app.post('/api/oauth2',             (HttpContext ctx) => CartAction.handleOauth2(ctx));
+  app.post('/api/oauth2next',         (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
+  app.post('/api/isauthed',           (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
+  app.post('/api/login',              (HttpContext ctx) => CartAction.handleLogin(ctx));
   app.post('/api/logout',             (HttpContext ctx) => CartAction.handleLogout(ctx));
   app.post('/api/upload',             (HttpContext ctx) => CartAction.handleUpload(ctx));
   app.post('/api/tag/create',         (HttpContext ctx) => CartAction.handleTagCreate(ctx));
   app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
-  app.post('/api/restore/status',      (HttpContext ctx) => CartAction.handleRestoreStatus(ctx));
+  app.post('/api/restore/status',     (HttpContext ctx) => CartAction.handleRestoreStatus(ctx));
   app.post('/api/post/save',          (HttpContext ctx) => CartAction.handlePostSave(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
