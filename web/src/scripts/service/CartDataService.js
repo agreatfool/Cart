@@ -11,11 +11,11 @@ module.exports = function($http, $q) {
     /**
      * categories: {
      *     bbc3440b-6e9a-4e17-8c31-534f8f58784f: {
-     *         created: 1414724441574,
-     *         driveId: "0ByO96ydBQtM2RkwtZFBGb1ZFb2M",
-     *         title: "first category",
-     *         updated: 1414724441574,
-     *         uuid: "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
+     *         "created": 1414724441574,
+     *         "driveId": "0ByO96ydBQtM2RkwtZFBGb1ZFb2M",
+     *         "title": "first category",
+     *         "updated": 1414724441574,
+     *         "uuid": "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
      *     },
      *     ...
      * }
@@ -24,11 +24,11 @@ module.exports = function($http, $q) {
     /**
      * tags: {
      *     bbc3440b-6e9a-4e17-8c31-534f8f58784f: {
-     *         created: 1414724441574,
-     *         driveId: null,
-     *         title: "first tag",
-     *         updated: 1414724441574,
-     *         uuid: "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
+     *         "created": 1414724441574,
+     *         "driveId": null,
+     *         "title": "first tag",
+     *         "updated": 1414724441574,
+     *         "uuid": "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
      *     },
      *     ...
      * }
@@ -37,21 +37,22 @@ module.exports = function($http, $q) {
     /**
      * attachments are all attached in post structure:
      * attachment: {
-     *     created: 1414724441574,
-     *     driveId: null,
-     *     title: "6afb84b0gw1em6cfs353ij20cw2nydnv.png",
-     *     updated: 1414724441574,
-     *     uuid: "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
+     *     "created": 1414724441574,
+     *     "driveId": null,
+     *     "title": "6afb84b0gw1em6cfs353ij20cw2nydnv.png",
+     *     "updated": 1414724441574,
+     *     "uuid": "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
      * }
      * Structure of temporarily saved post:
      * {
      *     "attachments": {attachment uuid: attachment structure described above},
-     *     "title": title string,
-     *     "md": markdown string,
+     *     "title": "title string",
+     *     "md": "markdown string",
      *     "category": category structure described above,
      *     "tags": {tag uuid: tag structure described above, ...},
-     *     "created": timestamp,
-     *     "updated": timestamp
+     *     "created": 1414724441574,
+     *     "updated": 1414724441574,
+     *     "uuid": "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
      * }
      */
     //FIXME 临时帖子列表需要添加post上传功能
