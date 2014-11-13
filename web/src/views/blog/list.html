@@ -85,7 +85,7 @@
                                         </td>
                                         <td><a href="{{ rootUrl }}category/{{ encodeURIComponent(post.category.title) }}" ng-click="close()">{{ post.category.title }}</a></td>
                                         <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
-                                        <td>{{ moment.unix(post.created).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                                        <td>{{ moment.unix(post.updated).format('YYYY-MM-DD HH:mm:ss') }}</td>
                                         <td>
                                             <span ng-show="post.published">Published</span>
                                             <span ng-show="!post.published">Draft</span>
