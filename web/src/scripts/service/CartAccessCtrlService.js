@@ -5,35 +5,19 @@ module.exports = function($http, $q, $cookies) {
     var masterUrls = ['master', 'new', 'update'];
 
     var isBlogAuthed = function() {
-        var deferred = $q.defer();
-        $http({
-            method: "GET",
-            url: '/api/isauthed',
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                deferred.resolve(result.message);
-            } else {
-                deferred.reject();
+        return CartUtility.post(
+            $http, $q, '/api/isauthed', {}, function(data) {
+                return data.message;
             }
-        });
-        return CartUtility.spinShow(deferred.promise);
+        );
     };
 
     var getOauthUrl = function() {
-        var deferred = $q.defer();
-        $http({
-            method: "GET",
-            url: '/api/oauth2',
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                deferred.resolve(result.message);
-            } else {
-                deferred.reject();
+        return CartUtility.post(
+            $http, $q, '/api/oauth2', {}, function(data) {
+                return data.message;
             }
-        });
-        return CartUtility.spinShow(deferred.promise);
+        );
     };
 
     var isMaster = function() {
@@ -58,35 +42,19 @@ module.exports = function($http, $q, $cookies) {
     };
 
     var getLoginUrl = function() {
-        var deferred = $q.defer();
-        $http({
-            method: "GET",
-            url: '/api/login',
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                deferred.resolve(result.message);
-            } else {
-                deferred.reject();
+        return CartUtility.post(
+            $http, $q, '/api/login', {}, function(data) {
+                return data.message;
             }
-        });
-        return CartUtility.spinShow(deferred.promise);
+        );
     };
 
     var logout = function() {
-        var deferred = $q.defer();
-        $http({
-            method: "POST",
-            url: '/api/logout',
-            headers: {"Content-type": "application/x-www-form-urlencoded"}
-        }).success(function(result) {
-            if (CartUtility.handleResponse(result)) {
-                deferred.resolve(result.message);
-            } else {
-                deferred.reject();
+        return CartUtility.post(
+            $http, $q, '/api/logout', {}, function(data) {
+                return data.message;
             }
-        });
-        return CartUtility.spinShow(deferred.promise);
+        );
     };
 
     return {
