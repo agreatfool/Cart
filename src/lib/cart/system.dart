@@ -59,16 +59,9 @@ class CartSystem {
     }
 
     PinUtility.writeJsonFile(oauth['web']['credentialsFilePath'], credentials, withIndent: true)
-    .then((_) {
-      return model.saveDatabase();
-    })
-    .then((_) {
-      // only reset status to normal when site restored normally, otherwise need Administrator to fix first
-      _isRestoring = false;
-    })
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-    });
+    .then((_) => model.saveDatabase())
+    .then((_) => _isRestoring = false) // reset status to normal only when site restored normally, otherwise need Administrator to fix first
+    .catchError((e, trace) => PinUtility.handleError(e, trace));
   }
   bool actionPreProcess(HttpContext ctx, {bool responseDirectly: true}) {
     PinUtility.clearPrevErrorMsg();
