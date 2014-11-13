@@ -46,6 +46,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
     };
 
     // tag related
+    // FIXME tag input auto complete
     $scope.tagInput = '';
     $scope.addPostTag = function(event) {
         event.preventDefault();
