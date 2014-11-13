@@ -22,6 +22,18 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         $scope.dataOnPage = $scope.dataRows.slice(startPos, endPos);
     };
 
+    $scope.uploadTmpPost = function(uuid) {
+        $dataService.postGetTmp(uuid).then(function(tmpPostData) {
+            tmpPostData.uuid = tmpPostData._id; // supply the missing "uuid" key
+            $dataService.postUpload(tmpPostData);
+        }, function(err) {
+            if (err.status === 404) {
+                // 404 not found error would not be notified in $dataService class
+                CartUtility.notify('Error!', 'Target tmp post data not found, uuid: ' + uuid, 'error');
+            }
+        });
+    };
+
     $scope.deleteTmpPost = function(uuid) {
         $dataService.postRemoveTmp(uuid).then(function(result) {
             if (result === true) {
@@ -42,7 +54,6 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         });
     };
 
-    //FIXME category link on template is invalid
     $dataService.postGetAllTmp().then(function(result) {
         // FIXME loop all tmp posts, check if it exists in local posts database, if true means published, otherwise draft
         _.forEach(result, function(post) {

@@ -206,6 +206,11 @@ module.exports = function($http, $q) {
         return deferred.promise;
     };
 
+    var postUpload = function(post) {
+        // TODO post data structure just like the one described above
+        console.log('postUpload stub', post);
+    };
+
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* CATEGORY RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -379,6 +384,7 @@ module.exports = function($http, $q) {
         'postRemoveTmp': postRemoveTmp,
         'postGetAllTmp': postGetAllTmp,
         'postRemoveAllTmp': postRemoveAllTmp,
+        'postUpload': postUpload,
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,

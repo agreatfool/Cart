@@ -61,7 +61,7 @@
                                     <span class="glyphicon glyphicon-remove" ng-click="close()"></span>
                                 </div>
                                 <div class="modal-delete-all pull-right" ng-show="dataOnPage.length > 0">
-                                    <a href="#" class="btn btn-xs btn-danger" ng-click="deleteAllTmpPost()">Delete All</a>
+                                    <a class="btn btn-xs btn-danger" ng-click="deleteAllTmpPost()">Delete All</a>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -74,6 +74,7 @@
                                         <th>Updated&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></th>
                                         <th>Status</th>
                                         <th>Edit</th>
+                                        <th>Upload</th>
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
@@ -91,7 +92,8 @@
                                             <span ng-show="!post.published">Draft</span>
                                         </td>
                                         <td><a href="{{ rootUrl }}edit/{{ post._id }}" class="btn btn-xs btn-primary" ng-click="close()">Edit</a></td>
-                                        <td><a href="#" class="btn btn-xs btn-danger" ng-click="deleteTmpPost(post._id)">Delete</a></td>
+                                        <td><a class="btn btn-xs btn-info" ng-click="uploadTmpPost(post._id)">Upload</a></td>
+                                        <td><a class="btn btn-xs btn-danger" ng-click="deleteTmpPost(post._id)">Delete</a></td>
                                     </tr>
                                 </tbody>
                             </table>
