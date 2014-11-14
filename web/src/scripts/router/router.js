@@ -6,7 +6,7 @@ module.exports = function($routeProvider, $locationProvider, $routeSegmentProvid
     $routeSegmentProvider.options.strictMode = true;
     $routeSegmentProvider.
         when('/',                    'blog_list').
-        when('/edit/:postId',        'blog_edit').
+        when('/edit/:postId',        'blog_edit').// FIXME blog post view link shall not use uuid, it's hard to remember link with uuid
         when('/view/:postId',        'blog_view').
         when('/category',            'blog_category').
         when('/category/:category',  'blog_list').
