@@ -18,6 +18,7 @@ CartConst.TOKEN_NAME = 'CART-TOKEN';
 
 // database
 CartConst.DB_NAME = 'CartDatabase';
+CartConst.HTML_DB_NAME = 'CartHtmlDatabase';
 
 // upload
 CartConst.UPLOAD_TYPES = ['image/png', 'image/gif', 'image/jpeg'];

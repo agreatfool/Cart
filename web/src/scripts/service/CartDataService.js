@@ -3,6 +3,7 @@
 /* global $, _, uuid, PouchDB, moment, CartUtility, CartConst */
 module.exports = function($http, $q) {
     var db = new PouchDB(CartConst.DB_NAME);
+    var htmlDb = new PouchDB(CartConst.HTML_DB_NAME);
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* MODELS
@@ -213,11 +214,116 @@ module.exports = function($http, $q) {
             deferred.resolve();
         }, function(err) {
             CartUtility.notify('Error!', err.toString(), 'error');
-            deferred.reject();
+            deferred.reject(err);
         });
         return deferred.promise;
     };
 
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* HTML RELATED
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var postSaveHtml = function(uuid, html, updated) {
+        var deferred = $q.defer();
+
+        if (_.isUndefined(uuid) || _.isEmpty(uuid)) {
+            CartUtility.notify('Error!', 'Html uuid empty or invalid!', 'error');
+            deferred.reject();
+        } else if (_.isUndefined(html) || _.isEmpty(html)) {
+            CartUtility.notify('Error!', 'Html html empty or invalid!', 'error');
+            deferred.reject();
+        } else if (_.isUndefined(updated) || _.isEmpty(updated)) {
+            CartUtility.notify('Error!', 'Html updated empty or invalid!', 'error');
+            deferred.reject();
+        } else {
+            htmlDb.get(uuid)
+                .then(function(doc) {
+                    doc.html = html;
+                    doc.updated = updated;
+                    return htmlDb.put(doc, uuid, doc._rev); // old doc found, update it
+                }, function(err) {
+                    if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
+                        var doc = {
+                            "uuid": uuid,
+                            "html": html,
+                            "updated": updated
+                        };
+                        return htmlDb.put(doc, uuid);
+                    } else if (_.isObject(err)) {
+                        CartUtility.notify('Error!', err.toString(), 'error');
+                        var sub = $q.defer();
+                        sub.resolve(false); // error encountered, resolve with false
+                        return sub.promise;
+                    }
+                })
+                .then(function(response) {
+                    if (response !== false) {
+                        deferred.resolve(); // previous done with no error, resolve with true
+                    } else {
+                        deferred.reject(); // previous done with error, resolve with false
+                    }
+                }, function(err) {
+                    CartUtility.notify('Error!', err.toString(), 'error');
+                    deferred.reject(err); // error, popup notification, resolve with false
+                });
+        }
+
+        return deferred.promise;
+    };
+
+    var postGetHtml = function(uuid) {
+        var deferred = $q.defer();
+        htmlDb.get(uuid).then(function(doc) {
+            if (_.isNull(doc) || !_.isObject(doc)) {
+                deferred.reject();
+            } else {
+                deferred.resolve(doc);
+            }
+        }, function(err) {
+            if (_.isObject(err) && err.status !== 404) {
+                CartUtility.notify('Error!', err.toString(), 'error');
+            }
+            deferred.reject(err);
+        });
+        return deferred.promise;
+    };
+
+    var postRemoveHtml = function(uuid) {
+        var deferred = $q.defer();
+        htmlDb.get(uuid).then(function(doc) {
+            if (!_.isNull(doc) && _.isObject(doc)) {
+                db.remove(doc._id, doc._rev).then(function() {
+                    deferred.resolve();
+                }, function(err) {
+                    CartUtility.notify('Error!', err.toString(), 'error');
+                    deferred.reject();
+                });
+            } else {
+                deferred.reject();
+            }
+        }, function(err) {
+            if (_.isObject(err) && err.status !== 404) {
+                CartUtility.notify('Error!', err.toString(), 'error');
+            }
+            deferred.reject(err);
+        });
+        return deferred.promise;
+    };
+
+    var postRemoveAllHtml = function() {
+        var deferred = $q.defer();
+        PouchDB.destroy(CartConst.HTML_DB_NAME).then(function() {
+            db = new PouchDB(CartConst.HTML_DB_NAME);
+            deferred.resolve();
+        }, function(err) {
+            CartUtility.notify('Error!', err.toString(), 'error');
+            deferred.reject(err);
+        });
+        return deferred.promise;
+    };
+
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //-* POST RELATED
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var postUpload = function(post) {
         // TODO post data structure just like the one described above
         console.log('postUpload stub', post);
@@ -400,12 +506,18 @@ module.exports = function($http, $q) {
     // FIXME reformat later
     var apis = {
         'getInitData': getInitData,
-        // post APIs
+        // local post APIs
         'postSaveTmp': postSaveTmp,
         'postGetTmp': postGetTmp,
         'postRemoveTmp': postRemoveTmp,
         'postGetAllTmp': postGetAllTmp,
         'postRemoveAllTmp': postRemoveAllTmp,
+        // html APIs
+        'postSaveHtml': postSaveHtml,
+        'postGetHtml': postGetHtml,
+        'postRemoveHtml': postRemoveHtml,
+        'postRemoveAllHtml': postRemoveAllHtml,
+        // post APIs
         'postUpload': postUpload,
         'postSearchById': postSearchById,
         // category APIs
