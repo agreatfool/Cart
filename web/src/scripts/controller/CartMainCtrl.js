@@ -29,8 +29,17 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
         if ($scope.isMaster) { // already login
             // logout
             var actionAfterLogout = function() {
+                // delete cookie
                 delete $cookies[CartConst.TOKEN_NAME];
-                $window.location.href = CartUtility.getPureRootUrlFromLocation($location);
+                // remove all tmp saved post data & html
+                $dataService.postRemoveAllTmp()
+                .then(function() {
+                    return $dataService.postRemoveAllHtml();
+                })
+                .then(function() {
+                    // redirect page
+                    $window.location.href = CartUtility.getPureRootUrlFromLocation($location);
+                });
             };
             $accessService.logout().then(actionAfterLogout, actionAfterLogout);
         } else {
