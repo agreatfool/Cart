@@ -14,6 +14,7 @@ module.exports = function($http, $q) {
      *     ...
      * }
      */
+    // FIXME fix post structure comment
     var posts = {};
     /**
      * categories: {
@@ -62,7 +63,6 @@ module.exports = function($http, $q) {
      *     "uuid": "bbc3440b-6e9a-4e17-8c31-534f8f58784f"
      * }
      */
-    //FIXME 临时帖子列表需要添加post上传功能
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* DATA RELATED
