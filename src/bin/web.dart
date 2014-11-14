@@ -49,7 +49,7 @@ main() {
   var app = new Express();
   app.post('/api/init',               (HttpContext ctx) => CartAction.handleDataInit(ctx));
   app.post('/api/oauth2',             (HttpContext ctx) => CartAction.handleOauth2(ctx));
-  app.post('/api/oauth2next',         (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
+  app.get('/api/oauth2next',          (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
   app.post('/api/isauthed',           (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
   app.post('/api/login',              (HttpContext ctx) => CartAction.handleLogin(ctx));
   app.post('/api/logout',             (HttpContext ctx) => CartAction.handleLogout(ctx));
