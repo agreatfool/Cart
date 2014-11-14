@@ -7,6 +7,13 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* MODELS
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    /**
+     * posts: {
+     *     bbc3440b-6e9a-4e17-8c31-534f8f58784f: {
+     *     },
+     *     ...
+     * }
+     */
     var posts = {};
     /**
      * categories: {
@@ -214,6 +221,16 @@ module.exports = function($http, $q) {
         console.log('postUpload stub', post);
     };
 
+    var postSearchById = function(uuid) {
+        var post = null;
+
+        if (posts.hasOwnProperty(uuid)) {
+            post = posts[uuid];
+        }
+
+        return post;
+    };
+
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* CATEGORY RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -388,6 +405,7 @@ module.exports = function($http, $q) {
         'postGetAllTmp': postGetAllTmp,
         'postRemoveAllTmp': postRemoveAllTmp,
         'postUpload': postUpload,
+        'postSearchById': postSearchById,
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,

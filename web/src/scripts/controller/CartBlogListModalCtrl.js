@@ -55,9 +55,8 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $dataService.postGetAllTmp().then(function(result) {
-        // FIXME loop all tmp posts, check if it exists in local posts database, if true means published, otherwise draft
         _.forEach(result, function(post) {
-            post.published = true;
+            post.published = _.isNull($dataService.postSearchById(post._id)) ? false : true;
         });
         $scope.dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse();
         $scope.paginationTotalItems = result.length;
