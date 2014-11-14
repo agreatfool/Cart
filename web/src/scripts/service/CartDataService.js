@@ -134,13 +134,13 @@ module.exports = function($http, $q) {
             })
             .then(function(response) {
                 if (response !== false) {
-                    deferred.resolve(true); // previous done with no error, resolve with true
+                    deferred.resolve(); // previous done with no error, resolve with true
                 } else {
                     deferred.reject(); // previous done with error, resolve with false
                 }
             }, function(err) {
                 CartUtility.notify('Error!', err.toString(), 'error');
-                deferred.reject(); // error, popup notification, resolve with false
+                deferred.reject(err); // error, popup notification, resolve with false
             });
         }
 
@@ -151,9 +151,10 @@ module.exports = function($http, $q) {
         var deferred = $q.defer();
         db.get(uuid).then(function(doc) {
             if (_.isNull(doc) || !_.isObject(doc) || !doc.hasOwnProperty('md')) {
-                doc = false;
+                deferred.reject();
+            } else {
+                deferred.resolve(doc);
             }
-            deferred.resolve(doc);
         }, function(err) {
             if (_.isObject(err) && err.status !== 404) {
                 CartUtility.notify('Error!', err.toString(), 'error');
@@ -168,7 +169,7 @@ module.exports = function($http, $q) {
         db.get(uuid).then(function(doc) {
             if (!_.isNull(doc) && _.isObject(doc) && doc.hasOwnProperty('md')) {
                 db.remove(doc._id, doc._rev).then(function() {
-                    deferred.resolve(true);
+                    deferred.resolve();
                 }, function(err) {
                     CartUtility.notify('Error!', err.toString(), 'error');
                     deferred.reject();
@@ -180,7 +181,7 @@ module.exports = function($http, $q) {
             if (_.isObject(err) && err.status !== 404) {
                 CartUtility.notify('Error!', err.toString(), 'error');
             }
-            deferred.reject();
+            deferred.reject(err);
         });
         return deferred.promise;
     };
@@ -199,7 +200,7 @@ module.exports = function($http, $q) {
             }
         }, function(err) {
             CartUtility.notify('Error!', err.toString(), 'error');
-            deferred.reject();
+            deferred.reject(err);
         });
         return deferred.promise;
     };
@@ -208,7 +209,7 @@ module.exports = function($http, $q) {
         var deferred = $q.defer();
         PouchDB.destroy(CartConst.DB_NAME).then(function() {
             db = new PouchDB(CartConst.DB_NAME);
-            deferred.resolve(true);
+            deferred.resolve();
         }, function(err) {
             CartUtility.notify('Error!', err.toString(), 'error');
             deferred.reject();
@@ -349,7 +350,7 @@ module.exports = function($http, $q) {
         tag.updated = moment().unix();
         tags[tag.uuid] = tag;
 
-        // FIXME update category with remote server
+        // FIXME update tag with remote server
         deferred.resolve(tag);
 
         return deferred.future;
