@@ -116,6 +116,7 @@ module.exports = function($http, $q) {
             }, function(err) {
                 if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
                     var doc = {
+                        "uuid": uuid,
                         "title": title,
                         "md": markdown,
                         "category": category,
