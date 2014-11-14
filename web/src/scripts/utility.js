@@ -28,7 +28,6 @@ CartUtility.prototype.post = function($http, $q, url, data, onSuccess, onError) 
         }
     })
     .error(function(data) {
-        //self.log(data);
         if (_.isFunction(onError)) {
             onError(data);
         }
