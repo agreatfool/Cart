@@ -23,6 +23,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $scope.uploadTmpPost = function(uuid) {
+        $modalInstance.close();
         $dataService.postGetTmp(uuid).then(function(tmpPostData) {
             $dataService.postUpload(tmpPostData);
         }, function(err) {
@@ -43,6 +44,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $scope.deleteAllTmpPost = function() {
+        $modalInstance.close();
         $dataService.postRemoveAllTmp().then(function() {
             CartUtility.notify('Done!', 'All tmp post data deleted!', 'success');
         }, function() {
