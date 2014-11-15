@@ -34,22 +34,19 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $scope.deleteTmpPost = function(uuid) {
-        $dataService.postRemoveTmp(uuid).then(function(result) {
-            if (result === true) {
-                CartUtility.notify('Done!', 'Tmp post data deleted!', 'success');
-            } else {
-                CartUtility.notify('Error!', 'Error in deleting tmp post data!', 'error');
-            }
+        $modalInstance.close();
+        $dataService.postRemoveTmp(uuid).then(function() {
+            CartUtility.notify('Done!', 'Tmp post data deleted!', 'success');
+        }, function() {
+            CartUtility.notify('Error!', 'Error in deleting tmp post data!', 'error');
         });
     };
 
     $scope.deleteAllTmpPost = function() {
-        $dataService.postRemoveAllTmp().then(function(result) {
-            if (result === true) {
-                CartUtility.notify('Done!', 'All tmp post data deleted!', 'success');
-            } else {
-                CartUtility.notify('Error!', 'Error in deleting all tmp post data!', 'error');
-            }
+        $dataService.postRemoveAllTmp().then(function() {
+            CartUtility.notify('Done!', 'All tmp post data deleted!', 'success');
+        }, function() {
+            CartUtility.notify('Error!', 'Error in deleting all tmp post data!', 'error');
         });
     };
 
