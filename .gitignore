@@ -33,6 +33,7 @@ database/*.json
 # HTML
 web/public
 web/**/*/packages
+web/post
 
 # SASS
 .sass-cache
