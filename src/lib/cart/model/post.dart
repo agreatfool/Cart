@@ -140,6 +140,10 @@ class CartPost extends Object with PinSerializable {
     };
   }
 
+  String generateMarkdownWithHeader(String markdown) {
+    return '<div id="mdHeader" style="display:none;"><div class="mdHeaderData">' + JSON.encode(generateHeaderInfo()) + '</div></div>' + markdown;
+  }
+
   static HashMap parseMarkdownHeader(String markdown) {
     HashMap header = {};
 
@@ -151,6 +155,12 @@ class CartPost extends Object with PinSerializable {
     });
 
     return header;
+  }
+
+  static String parseMarkdownContent(String markdown) {
+    // remove post header info from markdown string
+    String delimiter = '</div></div>';
+    return markdown.substring(markdown.indexOf(delimiter) + delimiter.length);
   }
 
 }
