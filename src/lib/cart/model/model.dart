@@ -50,12 +50,15 @@ class CartModel {
       }
       // parse headers
       header = CartPostHeader.parseFromMarkdown(uuid, markdown);
+      PinLogger.instance.fine('[CartPost] savePost: header parsed from markdown: \n${header.toJson()}');
       // validate category
       if (categoryList.find(header.category.uuid) == null) {
         throw new Exception('[CartModel] savePost: category not found: ${header.category.toJson()}');
       }
+      // remove header info from markdown string
+      markdown = CartPost.parseMarkdownContent(markdown);
       // parse markdown to html & escape html
-      html = (const HtmlEscape()).convert(markdownToHtml(markdown));
+      html = markdownToHtml(markdown);
 
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
@@ -87,10 +90,11 @@ class CartModel {
     header.tags.forEach((String tagUuid, CartTag headerTag) {
       tagList.update(headerTag);
     });
-    post.tags = header.tags.keys;
+    post.tags = header.tags.keys.toList();
 
     // database: attachments
     post.attachments = header.attachments;
+    PinLogger.instance.fine('[CartPost] savePost: post data updated: \n${post.toJson()}');
 
     // database: post
     if (isAddAction) {
@@ -331,24 +335,28 @@ class CartModel {
     PinUtility.createDir(postBasePubDir) // check & create local base public dir
     .then((bool created) {
       if (!created) {
-        throw new Exception('[CartModel] _uploadPost: Create dir failed: ${postBasePubDir}');
+        throw new Exception('[CartModel] _preparePostUpload: Create dir failed: "${postBasePubDir}"');
       }
+      PinLogger.instance.fine('[CartPost] _preparePostUpload: directory "${postBasePubDir}" checked');
       return PinUtility.createDir(postBaseDataDir);
     })
     .then((bool created) { // check & create local base data dir
       if (!created) {
-        throw new Exception('[CartModel] _uploadPost: Create dir failed: ${postBaseDataDir}');
+        throw new Exception('[CartModel] _preparePostUpload: Create dir failed: "${postBaseDataDir}"');
       }
+      PinLogger.instance.fine('[CartPost] _preparePostUpload: directory "${postBaseDataDir}" checked');
       return new Future.value(true);
     })
     .then((_) => new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))..writeAsString(html)) // update or create local html file
     .then((_) {
+      PinLogger.instance.fine('[CartPost] _preparePostUpload: html file "${LibPath.join(postBaseDataDir, post.uuid + '.html')}" wrote');
       // upload attachments
       post.attachments.forEach((String attachmentUuid, CartPostAttachment attachment) {
         if (attachment.driveId == null) {
           // need to be uploaded
           attachmentList.add(attachment);
           attachmentUploadList.add(_drive.uploadFile(LibPath.join(postBasePubDir, attachment.title), parents: [post.category]));
+          PinLogger.instance.fine('[CartPost] _preparePostUpload: attachment upload task added: "${attachment.title}"');
         }
       });
       return Future.wait(attachmentUploadList);
@@ -358,6 +366,7 @@ class CartModel {
         GoogleDriveClient.File file = responses.removeAt(0);
         attachment.driveId = file.id;
         post.updateAttachment(attachment);
+        PinLogger.instance.fine('[CartPost] _preparePostUpload: attachment upload task done: "${attachment.title}":"${attachment.driveId}"');
       });
       postList.update(post);
       return new Future.value(true);
@@ -374,37 +383,44 @@ class CartModel {
   Future<CartPost> _postUpload(CartPost post, String markdown) {
     final completer = new Completer();
 
-    String delimiter = '</div></div>';
     CartCategory category = categoryList.find(post.category);
 
-    // save markdown
     String mdPath = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid, post.uuid + '.md');
+    File mdFile = new File(mdPath);
 
-    Future startPoint = null;
-    if (post.driveId == null) {
-      // new post, need to insert file to google drive first
-      startPoint = _drive.drive_insert(mdPath, parents: [category.driveId]);
-    } else {
-      // old post, no need to do insert action
-      startPoint = new Future.value(true);
-    }
-
-    startPoint
+    mdFile.exists()
+    .then((bool exists) {
+      if (!exists) {
+        return mdFile.writeAsString(''); // create empty markdown file if it does not exist
+      } else {
+        return new Future.value(true);
+      }
+    })
+    .then((_) {
+      if (post.driveId == null) {
+        return _drive.drive_insert(mdPath, parents: [category.driveId]);
+      } else {
+        return new Future.value(true);
+      }
+    })
     .then((_) {
       if (post.driveId == null) {
         post.driveId = _.id; // _ is GoogleDriveClient.File
+        PinLogger.instance.fine('[CartPost] _postUpload: new markdown file created, driveId: "${_.id}"');
       }
       postList.update(post);
-      // update markdown header to latest version
-      HashMap headerInfo = post.generateHeaderInfo();
-      // remove old header
-      markdown = markdown.substring(markdown.indexOf(delimiter) + delimiter.length);
-      // append new header
-      markdown = '<div id="mdHeader" style="display:none;"><div class="mdHeaderData">' + JSON.encode(headerInfo) + '</div></div>' + markdown;
-      return (new File(mdPath)).writeAsString(markdown);
+      // append header info
+      markdown = post.generateMarkdownWithHeader(markdown);
+      return mdFile.writeAsString(markdown);
     })
-    .then((_) => _drive.drive_update(post.driveId, markdown))
-    .then((GoogleDriveClient.File uploadedFile) => completer.complete(post))
+    .then((_) {
+      PinLogger.instance.fine('[CartPost] _postUpload: local markdown file wrote: "${mdPath}"');
+      return _drive.drive_update(post.driveId, markdown);
+    })
+    .then((GoogleDriveClient.File uploadedFile) {
+      PinLogger.instance.fine('[CartPost] _postUpload: markdown file uploaded: "${uploadedFile.id}"');
+      completer.complete(post);
+    })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);

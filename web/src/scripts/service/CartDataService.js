@@ -324,9 +324,16 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var postUpload = function(post) {
-        // TODO post data structure just like the one described above
-        console.log('postUpload stub', post);
+    var postUpload = function(post) { // post structure is "Structure of temporarily saved post"
+        return CartUtility.post(
+            $http, $q, '/api/post/save', {
+                "postId": post.uuid,
+                "markdown": CartUtility.generateMdHTMLHeader(post) + post.md
+            }, function(data) {
+                postRemoveTmp(post.uuid);
+                return data.message;
+            }
+        );
     };
 
     var postSearchById = function(uuid) {

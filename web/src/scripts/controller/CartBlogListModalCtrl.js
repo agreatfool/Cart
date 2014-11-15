@@ -25,7 +25,9 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     $scope.uploadTmpPost = function(uuid) {
         $modalInstance.close();
         $dataService.postGetTmp(uuid).then(function(tmpPostData) {
-            $dataService.postUpload(tmpPostData);
+            $dataService.postUpload(tmpPostData).then(function() {
+                CartUtility.notify('Done!', 'Post ' + tmpPostData.uuid + ' uploaded!');
+            });
         }, function(err) {
             if (err.status === 404) {
                 // 404 not found error would not be notified in $dataService class

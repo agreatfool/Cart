@@ -328,7 +328,23 @@ class CartAction {
       return;
     }
 
-    // TODO
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      String postId = body.body['postId'];
+      String markdown = body.body['markdown'];
+      if (!PinUtility.isUuid(postId)) {
+        throw new Exception('[CartAction] handlePostSave: Invalid post uuid!');
+      } else if (markdown == null || markdown == '') {
+        throw new Exception('[CartAction] handlePostSave: Invalid markdown!');
+      } else {
+        return CartModel.instance.savePost(postId, markdown);
+      }
+    })
+    .then((_) => ctx.sendJson(buildResponse('handlePostSave', {})))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
+    });
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
