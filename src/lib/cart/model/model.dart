@@ -341,7 +341,7 @@ class CartModel {
       }
       return new Future.value(true);
     })
-    .then((_) => (new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).writeAsString(html)) // update or create local html file
+    .then((_) => new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))..writeAsString(html)) // update or create local html file
     .then((_) {
       // upload attachments
       post.attachments.forEach((String attachmentUuid, CartPostAttachment attachment) {

@@ -60,7 +60,7 @@ class PinUtility {
       completer.completeError(e, trace);
     }
 
-    (new File(path)).writeAsString(jsonStr)
+    new File(path)..writeAsString(jsonStr)
     .then((_) => completer.complete(_))
     .catchError((e, trace) {
       handleError(e, trace);

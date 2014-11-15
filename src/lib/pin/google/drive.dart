@@ -70,7 +70,7 @@ class PinGoogleDrive {
         );
       }
     })
-    .then((response) => (new File(LibPath.join(dir, fileTitle))).writeAsBytes(response.bodyBytes))
+    .then((response) => new File(LibPath.join(dir, fileTitle))..writeAsBytes(response.bodyBytes))
     .then((_) => completer.complete(true))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
