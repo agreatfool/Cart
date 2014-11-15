@@ -9,8 +9,8 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
     $scope.postCategories = $dataService.categoryGetAll();
 
     $scope.postCategory = null;
-    $scope.postTags = [];
-    $scope.postAttachments = [];
+    $scope.postTags = {};
+    $scope.postAttachments = {};
 
     var postBaseUrl = CartUtility.getPureAbsUrlFromLocation($location);
     var editElement = $('#markdown-edit');

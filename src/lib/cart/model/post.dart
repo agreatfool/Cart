@@ -259,13 +259,13 @@ class CartPostAttachment extends Object with PinSerializable {
   }
 }
 
-class CartPostHeader {
+class CartPostHeader extends Object with PinSerializable {
 
   String uuid;
   String title;
   CartCategory category;
-  HashMap<String, CartTag> tags;
-  HashMap<String, CartPostAttachment> attachments;
+  HashMap<String, CartTag> tags = {};
+  HashMap<String, CartPostAttachment> attachments = {};
 
   static CartPostHeader parseFromMarkdown(String uuid, String markdown) {
     int timestamp = PinTime.getTime();
