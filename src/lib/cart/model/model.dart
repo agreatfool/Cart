@@ -391,7 +391,7 @@ class CartModel {
     mdFile.exists()
     .then((bool exists) {
       if (!exists) {
-        return mdFile.writeAsString(''); // create empty markdown file if it does not exist
+        return mdFile.writeAsString(''); // create empty markdown file if it does not exist for google drive insert
       } else {
         return new Future.value(true);
       }
