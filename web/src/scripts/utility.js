@@ -312,6 +312,11 @@ CartUtility.prototype.parseUnixYear = function(timestamp, needFull) {
     return this.parseUnixTime(timestamp).format('YYYY') + (needFull ? '-01-01 00:00:00' : '');
 };
 
+CartUtility.prototype.parseUnixYearStartTimestamp = function(timestamp) {
+    // return 'YYYY-01-01 00:00:00'.timestamp
+    return moment(this.parseUnixYear(timestamp, true)).unix();
+};
+
 CartUtility.prototype.parseUnixYearEndTimestamp = function(timestamp) {
     // return 'NEXT_YYYY-01-01 00:00:00'.timestamp - 1
     return moment((parseInt(this.parseUnixYear(timestamp)) + 1) + '-01-01 00:00:00').unix() - 1;
@@ -330,6 +335,11 @@ CartUtility.prototype.parseUnixMonth = function(timestamp) {
     return this.parseUnixTime(timestamp).format('MM');
 };
 
+CartUtility.prototype.parseUnixDateStartTimestamp = function(timestamp) {
+    // return 'YYYY-MM-01 00:00:00'.timestamp
+    return moment(this.parseUnixDate(timestamp, true)).unix();
+};
+
 CartUtility.prototype.parseUnixDateEndTimestamp = function(timestamp) {
     var year = parseInt(this.parseUnixYear(timestamp));
     var month = parseInt(this.parseUnixMonth(timestamp));
@@ -345,6 +355,24 @@ CartUtility.prototype.parseUnixDateEndTimestamp = function(timestamp) {
     // month is 12 => return 'NEXT_YYYY-01-01 00:00:00'.timestamp - 1
     // month lower than 12 => return 'YYYY-NEXT_MM-01 00:00:00'.timestamp - 1
     return moment(year + '-' + month + '-01 00:00:00').unix() - 1;
+};
+
+CartUtility.prototype.parseUnixDay = function(timestamp, needFull) {
+    if (!_.isBoolean(needFull)) {
+        needFull = false;
+    }
+    // return 'YYYY-MM-DD' or 'YYYY-MM-DD 00:00:00'
+    return this.parseUnixTime(timestamp).format('YYYY-MM-DD') + (needFull ? ' 00:00:00' : '');
+};
+
+CartUtility.prototype.parseUnixDayStartTimestamp = function(timestamp) {
+    // return 'YYYY-MM-DD 00:00:00'.timestamp
+    return this.parseUnixDay(timestamp, true).unix();
+};
+
+CartUtility.prototype.parseUnixDayEndTimestamp = function(timestamp) {
+    // return 'YYYY-MM-NEXT_DD 00:00:00'.timestamp - 1
+    return this.parseUnixDayStartTimestamp(timestamp) + 24 * 60 * 60 - 1;
 };
 
 module.exports = new CartUtility();
