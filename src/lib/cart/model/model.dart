@@ -332,6 +332,8 @@ class CartModel {
     var attachmentUploadList = new List<Future>(); // store upload futures
     var attachmentList = new List<CartPostAttachment>(); // store upload attachments
 
+    // FIXME 需要先检查所有需要上传的附件在google drive里存在不存在，存在则报错退出
+
     PinUtility.createDir(postBasePubDir) // check & create local base public dir
     .then((bool created) {
       if (!created) {
