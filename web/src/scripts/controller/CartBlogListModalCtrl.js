@@ -4,11 +4,11 @@
 module.exports = function($scope, $location, $modalInstance, $dataService) {
     CartUtility.log('CartBlogListModalCtrl');
 
-    $scope.moment = moment;
-
-    $scope.dataRows = [];
-    $scope.rootUrl = CartUtility.getPureRootUrlFromLocation($location);
+    $scope.utility = CartUtility;
     $scope.encodeURIComponent = encodeURIComponent;
+    $scope.rootUrl = CartUtility.getPureRootUrlFromLocation($location);
+
+    var dataRows = [];
 
     // pagination
     $scope.dataOnPage = []; // data used to be displayed on page
@@ -19,7 +19,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     $scope.loadPageData = function() {
         var startPos = ($scope.paginationCurrentPage - 1) * $scope.itemsPerPage;
         var endPos = startPos + $scope.itemsPerPage;
-        $scope.dataOnPage = $scope.dataRows.slice(startPos, endPos);
+        $scope.dataOnPage = dataRows.slice(startPos, endPos);
     };
 
     $scope.uploadTmpPost = function(uuid) {
@@ -58,7 +58,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         _.forEach(result, function(post) {
             post.published = _.isNull($dataService.postSearchById(post._id)) ? false : true;
         });
-        $scope.dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse();
+        dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse();
         $scope.paginationTotalItems = result.length;
         $scope.paginationCurrentPage = 1;
         $scope.loadPageData();
