@@ -336,6 +336,101 @@ module.exports = function($http, $q) {
 
         return post;
     };
+    var postSearch = function(options, isUuidSearch) {
+        /**
+         * {
+         *     "category": categoryName|uuid,
+         *     "tags": [tagName|uuid, tagName|uuid, ...],
+         *     "year": timestamp,
+         *     "month": timestamp,
+         *     "day": timestamp,
+         * }
+         */
+        if (_.keys(options).length === 0) { // no search condition
+            return posts;
+        }
+
+        var start = [];
+        var end = [];
+
+        if (options.hasOwnProperty('year')) {
+            start.push(CartUtility.parseUnixYearStartTimestamp(options['year']));
+            end.push(CartUtility.parseUnixYearEndTimestamp(options['year']));
+        }
+        if (options.hasOwnProperty('month')) {
+            start.push(CartUtility.parseUnixDateStartTimestamp(options['month']));
+            end.push(CartUtility.parseUnixDateEndTimestamp(options['month']));
+        }
+        if (options.hasOwnProperty('day')) {
+            start.push(CartUtility.parseUnixDayStartTimestamp(options['day']));
+            end.push(CartUtility.parseUnixDayEndTimestamp(options['day']));
+        }
+        if (start.length > 0) {
+            start = _.max(start, function(item) { return item; });
+            if (!_.isNumber(start)) {
+                CartUtility.notify('Error!', 'Start time parsed is invalid: ' + start, 'error');
+            }
+        }
+        if (end.length > 0) {
+            end = _.min(end, function(item) { return item; });
+            if (!_.isNumber(end)) {
+                CartUtility.notify('Error!', 'End time parsed is invalid: ' + end, 'error');
+            }
+        }
+
+        var categoryUuid = null;
+        var tagUuids = [];
+        if (!_.isBoolean(isUuidSearch)) {
+            isUuidSearch = false;
+        }
+        if (options.hasOwnProperty('category')) {
+            var category = (!isUuidSearch) ? this.categorySearch(options['category']) : this.categorySearchById(options['category']);
+            if (category.length === 0) {
+                CartUtility.notify('Error!', 'Target category data not found, identify: ' + options['category'], 'error');
+                return; // target category not found
+            } else {
+                category = category.pop(); // shall contains only one category
+            }
+            categoryUuid = category.uuid;
+        }
+        if (options.hasOwnProperty('tags')) {
+            _.forEach(options['tags'], function(tagIdentify) {
+                var tag = (!isUuidSearch) ? this.tagSearch(tagIdentify) : this.tagSearchById(tagIdentify);
+                if (tag.length === 0) {
+                    CartUtility.notify('Error!', 'Target tag data not found, identify: ' + tagIdentify, 'error');
+                    return; // target category not found
+                } else {
+                    tag = tag.pop(); // shall contains only one category
+                }
+                tagUuids.push(tag.uuid);
+            });
+        }
+
+        var found = _.filter(posts, function(post) {
+            var match = true;
+
+            if (options.hasOwnProperty('category') && post.uuid !== categoryUuid) {
+                match = false;
+            }
+            if (options.hasOwnProperty('tags')) {
+                _.forEach(tagUuids, function(tagUuid) {
+                    if (post.tags.indexOf(tagUuid) === -1) {
+                        match = false;
+                    }
+                });
+            }
+            if (start && end && (post.created < start || post.created > end)) {
+                match = false;
+            }
+
+            return match;
+        });
+        if (_.isUndefined(found)) {
+            found = [];
+        }
+
+        return found;
+    };
     var postUpload = function(post) { // post structure is "Structure of temporarily saved post"
         return CartUtility.post(
             $http, $q, '/api/post/save', {
@@ -529,6 +624,7 @@ module.exports = function($http, $q) {
         // post APIs
         'postGetAll': postGetAll,
         'postSearchById': postSearchById,
+        'postSearch': postSearch,
         'postUpload': postUpload,
         // category APIs
         'categoryGetAll': categoryGetAll,
