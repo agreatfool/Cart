@@ -25,29 +25,26 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
         });
     };
 
-    console.log($routeParams);
-
     $scope.postsOnPage = [];
-    var posts = $dataService.postGetAll();
 
     var displayPageItems = function() {
+        var options = {};
         if ($routeParams.hasOwnProperty('category')) {
-            // list all category posts
-            var category = $dataService.categorySearch($routeParams['category']);
-            if (category.length === 0) {
-                return; // target category not found
-            } else {
-                category = category.pop(); // shall contains only one category
-            }
-            var categoryId = category.uuid;
-            var found = _.filter(posts, function(post) {
-                return post.category === categoryId;
-            });
-            if (_.isUndefined(found)) {
-                found = [];
-            }
-            $scope.postsOnPage = found;
+            options.category = $routeParams['category'];
         }
+        if ($routeParams.hasOwnProperty('tag')) {
+            options.tags = [$routeParams['tag']];
+        }
+        if ($location.url().indexOf('year') !== -1) {
+            options.year = $routeParams['datetime'];
+        }
+        if ($location.url().indexOf('month') !== -1) {
+            options.month = $routeParams['datetime'];
+        }
+        if ($location.url().indexOf('day') !== -1) {
+            options.day = $routeParams['datetime'];
+        }
+        $scope.postsOnPage = $dataService.postSearch(options);
     };
     displayPageItems();
 };
