@@ -305,7 +305,7 @@ CartUtility.prototype.parseUnixTime = function(timestamp) {
 };
 
 CartUtility.prototype.parseUnixYear = function(timestamp, needFull) {
-    if (_.isUndefined(needFull) || !_.isBoolean(needFull)) {
+    if (!_.isBoolean(needFull)) {
         needFull = false;
     }
     // return 'YYYY' or 'YYYY-01-01 00:00:00'
@@ -318,7 +318,7 @@ CartUtility.prototype.parseUnixYearEndTimestamp = function(timestamp) {
 };
 
 CartUtility.prototype.parseUnixDate = function(timestamp, needFull) {
-    if (_.isUndefined(needFull) || !_.isBoolean(needFull)) {
+    if (!_.isBoolean(needFull)) {
         needFull = false;
     }
     // return 'YYYY-MM' or 'YYYY-MM-01 00:00:00'
