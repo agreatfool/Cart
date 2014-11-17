@@ -66,7 +66,7 @@ app.config(['$routeProvider', '$locationProvider', '$routeSegmentProvider', rout
 var controllers = angular.module('Cart.Controllers', []);
 
 controllers.controller('CartMainCtrl', ['$scope', '$location', '$cookies', '$window', '$routeSegment', 'CartFixFooterService', 'CartDataService', 'CartAccessCtrlService', ctrlSources.CartMainCtrl]);
-controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', '$modal', 'CartAccessCtrlService', ctrlSources.CartBlogListCtrl]);
+controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', '$routeParams', '$modal', 'CartDataService', 'CartAccessCtrlService', ctrlSources.CartBlogListCtrl]);
 controllers.controller('CartBlogListModalCtrl', ['$scope', '$location', '$modalInstance', 'CartDataService', ctrlSources.CartBlogListModalCtrl]);
 controllers.controller('CartBlogEditCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'FileUploader', ctrlSources.CartBlogEditCtrl]);
 controllers.controller('CartBlogViewCtrl', ['$scope', ctrlSources.CartBlogViewCtrl]);
