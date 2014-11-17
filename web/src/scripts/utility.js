@@ -248,7 +248,7 @@ CartUtility.prototype.log = function(msg, facility) {
         if (_.isObject(msg)) {
             msg = JSON.stringify(msg);
         }
-        msg = '[' + moment().format('YYYY-MM-DD HH:mm:ss') + ']' + ((_.isString(facility)) ? (' ' + facility) : '') + ' ' + msg;
+        msg = '[' + this.getTimeString() + ']' + ((_.isString(facility)) ? (' ' + facility) : '') + ' ' + msg;
         console.log(msg);
     }
 };

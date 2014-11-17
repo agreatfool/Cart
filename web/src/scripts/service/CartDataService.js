@@ -112,7 +112,7 @@ module.exports = function($http, $q) {
                 doc.category = category;
                 doc.tags = tags;
                 doc.attachments = attachments;
-                doc.updated = moment().unix();
+                doc.updated = CartUtility.getTime();
                 return db.put(doc, uuid, doc._rev); // old doc found, update it
             }, function(err) {
                 if (typeof err === 'object' && err.status === 404) { // old doc not found, just create new
@@ -123,8 +123,8 @@ module.exports = function($http, $q) {
                         "category": category,
                         "tags": tags,
                         "attachments": attachments,
-                        "created": moment().unix(),
-                        "updated": moment().unix()
+                        "created": CartUtility.getTime(),
+                        "updated": CartUtility.getTime()
                     };
                     return db.put(doc, uuid);
                 } else if (_.isObject(err)) {
@@ -379,7 +379,7 @@ module.exports = function($http, $q) {
             deferred.reject();
         }
 
-        category.updated = moment().unix();
+        category.updated = CartUtility.getTime();
         categories[category.uuid] = category;
 
         // FIXME update category with remote server
@@ -394,8 +394,8 @@ module.exports = function($http, $q) {
             return false;
         }
 
-        category.updated = moment().unix();
-        target.updated = moment().unix();
+        category.updated = CartUtility.getTime();
+        target.updated = CartUtility.getTime();
         categories[target.uuid] = target;
 
         return category;
@@ -461,7 +461,7 @@ module.exports = function($http, $q) {
             deferred.reject();
         }
 
-        tag.updated = moment().unix();
+        tag.updated = CartUtility.getTime();
         tags[tag.uuid] = tag;
 
         // FIXME update tag with remote server
@@ -476,8 +476,8 @@ module.exports = function($http, $q) {
             return false;
         }
 
-        tag.updated = moment().unix();
-        target.updated = moment().unix();
+        tag.updated = CartUtility.getTime();
+        target.updated = CartUtility.getTime();
         tags[target.uuid] = target;
 
         return tag;

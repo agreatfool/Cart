@@ -362,10 +362,10 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
         }
         $scope.postAttachments.push({
-            created: moment().unix(),
+            created: CartUtility.getTime(),
             driveId: null,
             title: fileItem.file.name,
-            updated: moment().unix(),
+            updated: CartUtility.getTime(),
             uuid: uuid.v4()
         });
         uploaderProcessNextUpload();
