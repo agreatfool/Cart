@@ -324,6 +324,18 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    var postGetAll = function() {
+        return posts;
+    };
+    var postSearchById = function(uuid) {
+        var post = null;
+
+        if (posts.hasOwnProperty(uuid)) {
+            post = posts[uuid];
+        }
+
+        return post;
+    };
     var postUpload = function(post) { // post structure is "Structure of temporarily saved post"
         return CartUtility.post(
             $http, $q, '/api/post/save', {
@@ -334,16 +346,6 @@ module.exports = function($http, $q) {
                 return data.message;
             }
         );
-    };
-
-    var postSearchById = function(uuid) {
-        var post = null;
-
-        if (posts.hasOwnProperty(uuid)) {
-            post = posts[uuid];
-        }
-
-        return post;
     };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -525,8 +527,9 @@ module.exports = function($http, $q) {
         'postRemoveHtml': postRemoveHtml,
         'postRemoveAllHtml': postRemoveAllHtml,
         // post APIs
-        'postUpload': postUpload,
+        'postGetAll': postGetAll,
         'postSearchById': postSearchById,
+        'postUpload': postUpload,
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
