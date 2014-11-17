@@ -291,4 +291,60 @@ CartUtility.prototype.focusEditor = function(editor) {
     editor.gotoLine(lineNo, columnNo); // go to end of document
 };
 
+CartUtility.prototype.getTime = function() {
+    return moment().unix(); // return current timestamp
+};
+
+CartUtility.prototype.getTimeString = function(timestamp) {
+    var instance = _.isUndefined(timestamp) ? moment() : this.parseUnixTime(timestamp);
+    return instance.format('YYYY-MM-DD HH:mm:ss');
+};
+
+CartUtility.prototype.parseUnixTime = function(timestamp) {
+    return moment.unix(timestamp); // return moment instance
+};
+
+CartUtility.prototype.parseUnixYear = function(timestamp, needFull) {
+    if (_.isUndefined(needFull) || !_.isBoolean(needFull)) {
+        needFull = false;
+    }
+    // return 'YYYY' or 'YYYY-01-01 00:00:00'
+    return this.parseUnixTime(timestamp).format('YYYY') + (needFull ? '-01-01 00:00:00' : '');
+};
+
+CartUtility.prototype.parseUnixYearEndTimestamp = function(timestamp) {
+    // return 'NEXT_YYYY-01-01 00:00:00'.timestamp - 1
+    return moment((parseInt(this.parseUnixYear(timestamp)) + 1) + '-01-01 00:00:00').unix() - 1;
+};
+
+CartUtility.prototype.parseUnixDate = function(timestamp, needFull) {
+    if (_.isUndefined(needFull) || !_.isBoolean(needFull)) {
+        needFull = false;
+    }
+    // return 'YYYY-MM' or 'YYYY-MM-01 00:00:00'
+    return this.parseUnixTime(timestamp).format('YYYY-MM') + (needFull ? '-01 00:00:00' : '');
+};
+
+CartUtility.prototype.parseUnixMonth = function(timestamp) {
+    // return 'MM'
+    return this.parseUnixTime(timestamp).format('MM');
+};
+
+CartUtility.prototype.parseUnixDateEndTimestamp = function(timestamp) {
+    var year = parseInt(this.parseUnixYear(timestamp));
+    var month = parseInt(this.parseUnixMonth(timestamp));
+    if (month === 12) {
+        year++;
+        month = '01';
+    } else {
+        month++;
+    }
+    if ((month + '').length === 1) {
+        month = '0' + month;
+    }
+    // month is 12 => return 'NEXT_YYYY-01-01 00:00:00'.timestamp - 1
+    // month lower than 12 => return 'YYYY-NEXT_MM-01 00:00:00'.timestamp - 1
+    return moment(year + '-' + month + '-01 00:00:00').unix() - 1;
+};
+
 module.exports = new CartUtility();
