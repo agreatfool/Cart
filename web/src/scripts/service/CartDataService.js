@@ -347,7 +347,7 @@ module.exports = function($http, $q) {
          * }
          */
         if (_.keys(options).length === 0) { // no search condition
-            return posts;
+            return _.values(posts);
         }
 
         var start = [];
