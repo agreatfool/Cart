@@ -105,4 +105,6 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
         $scope.loadPageData();
     };
     displayPageItems();
+
+    // FIXME 页脚的分页标签的位置最好紧贴页面的footer，现在是在内容展示的div下面
 };
