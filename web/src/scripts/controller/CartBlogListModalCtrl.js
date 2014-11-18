@@ -64,7 +64,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         _.forEach(result, function(post) {
             post.published = _.isNull($dataService.postSearchById(post._id)) ? false : true;
         });
-        dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse();
+        dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse(); // orderBy "updated" DESC
         $scope.paginationTotalItems = result.length;
         $scope.paginationCurrentPage = 1;
         $scope.loadPageData();
