@@ -33,6 +33,12 @@ class CartAction {
       indexData['tags'] = tagList;
 
       ctx.sendJson(buildResponse('handleDataInit', indexData, doLog: false));
+      PinLogger.instance.fine(
+          '[CartAction] handleDataInit: ' +
+          'Posts: ${indexData['posts'].length}, ' +
+          'Categories: ${indexData['categories'].length}, ' +
+          'Tags: ${indexData['tags'].length}'
+      );
       ctx.end();
     }
   }
