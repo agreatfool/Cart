@@ -375,4 +375,8 @@ CartUtility.prototype.parseUnixDayEndTimestamp = function(timestamp) {
     return this.parseUnixDayStartTimestamp(timestamp) + 24 * 60 * 60 - 1;
 };
 
+CartUtility.prototype.parseUnixDetailTime = function(timestamp) {
+    return this.parseUnixTime(timestamp).format('HH:mm:ss');
+};
+
 module.exports = new CartUtility();
