@@ -9,6 +9,9 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
 
     $scope.isMaster = $accessService.isMaster();
 
+    // FIXME 数据加载机制需要整个重构
+    // FIXME 页面上post列表的创建时间错误"46851- 04- 46851-04-26 17:14:51"，但是在tmp 列表上是对的，是否服务器回传的时间不正确，或者说服务器创建的timestamp不正确
+
     $scope.createNewPost = function() {
         if (!$scope.isMaster) {
             return;
