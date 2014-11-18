@@ -37,6 +37,9 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $scope.deleteTmpPost = function(uuid) {
+        if (!window.confirm('Do you confirm the delete operation of the tmp data of post: ' + uuid + '?')) {
+            return;
+        }
         $modalInstance.close();
         $dataService.postRemoveTmp(uuid).then(function() {
             CartUtility.notify('Done!', 'Tmp post data deleted!', 'success');
@@ -46,6 +49,9 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $scope.deleteAllTmpPost = function() {
+        if (!window.confirm('Do you confirm the delete operation of the tmp data of all posts?')) {
+            return;
+        }
         $modalInstance.close();
         $dataService.postRemoveAllTmp().then(function() {
             CartUtility.notify('Done!', 'All tmp post data deleted!', 'success');
