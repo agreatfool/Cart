@@ -49,7 +49,7 @@ class CartAction {
       String uuid = body.body['uuid'];
       String name = body.body['name'];
       if (!PinUtility.isUuid(uuid)) {
-        throw new Exception('[CartAction] handleCategoryCreate: Invalid tag uuid!');
+        throw new Exception('[CartAction] handleCategoryCreate: Invalid tag uuid: ${uuid}');
       } else if (name == null || name == '') {
         throw new Exception('[CartAction] handleCategoryCreate: Invalid tag name!');
       } else {
@@ -77,7 +77,7 @@ class CartAction {
       String uuid = body.body['uuid'];
       String name = body.body['name'];
       if (!PinUtility.isUuid(uuid)) {
-        throw new Exception('[CartAction] handleCategoryCreate: Invalid category uuid!');
+        throw new Exception('[CartAction] handleCategoryCreate: Invalid category uuid: ${uuid}');
       } else if (name == null || name == '') {
         throw new Exception('[CartAction] handleCategoryCreate: Invalid category name!');
       } else {
@@ -284,7 +284,9 @@ class CartAction {
       if (postId == null || fileUploaded == null) {
         throw new Exception('[CartAction] handleUpload: Failed in parsing file!');
       } else if (['image/png', 'image/jpeg', 'image/gif'].indexOf(fileUploaded.contentType.toString()) == -1) {
-        throw new Exception('[CartAction] handleUpload: File type not supported: ${fileUploaded.contentType}');
+        throw new Exception('[CartAction] handleUpload: File type not supported: ${fileUploaded.contentType.toString()}');
+      } else if (!PinUtility.isUuid(postId)) {
+        throw new Exception('[CartAction] handleUpload: Invalid post uuid: ${postId}');
       } else {
         String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, postId);
         filePath = LibPath.join(postPath, fileUploaded.filename);
@@ -334,7 +336,7 @@ class CartAction {
       String postId = body.body['postId'];
       String markdown = body.body['markdown'];
       if (!PinUtility.isUuid(postId)) {
-        throw new Exception('[CartAction] handlePostSave: Invalid post uuid!');
+        throw new Exception('[CartAction] handlePostSave: Invalid post uuid: ${postId}');
       } else if (markdown == null || markdown == '') {
         throw new Exception('[CartAction] handlePostSave: Invalid markdown!');
       } else {
