@@ -356,6 +356,30 @@ class CartAction {
     });
   }
 
+  static handlePostRemove(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      String postId = body.body['postId'];
+      if (!PinUtility.isUuid(postId)) {
+        throw new Exception('[CartAction] handlePostRemove: Invalid post uuid: ${postId}');
+      } else {
+        return CartModel.instance.removePost(postId);
+      }
+    })
+    .then((_) => ctx.sendJson(buildResponse('handlePostRemove', {})))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handlePostRemove', { "error": "Error encountered in removing post!" }, valid: false));
+    });
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTILITIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

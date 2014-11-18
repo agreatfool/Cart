@@ -443,6 +443,17 @@ module.exports = function($http, $q) {
             }
         );
     };
+    var postRemove = function(uuid) {
+        return CartUtility.post(
+            $http, $q, '/api/post/remove', {
+                "postId": uuid
+            }, function(data) {
+                postRemoveTmp(uuid);
+                delete posts[uuid];
+                return data.message;
+            }
+        );
+    };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* CATEGORY RELATED
@@ -627,6 +638,7 @@ module.exports = function($http, $q) {
         'postSearchById': postSearchById,
         'postSearch': postSearch,
         'postUpload': postUpload,
+        'postRemove': postRemove,
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
