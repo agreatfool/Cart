@@ -22,7 +22,7 @@
                         <div class="post-badge"><div></div></div>
                         <div class="post-panel">
                             <div class="post-heading">
-                                <h4><a href="#">{{ post.title }}</a></h4>
+                                <h4><a href="{{ rootUrl }}view/{{ post.uuid }}" target="_blank">{{ post.title }}</a></h4>
                                 <div>
                                     <small class="text-muted">
                                         <span class="post-icon glyphicon glyphicon-time"></span>
@@ -30,19 +30,25 @@
                                         <a class="post-time" href="#">{{ utility.parseUnixMonth(post.created) }}</a>-
                                         <a class="post-time" href="#">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
                                         <span class="post-icon glyphicon glyphicon-th-list"></span>
-                                        <a href="#" class="post-btn btn btn-xs btn-default">{{ fetchCategoryDisplayName(post.category) }}</a>
+                                        <a href="{{ rootUrl }}category/{{ encodeURIComponent(fetchCategoryDisplayName(post.category)) }}" class="post-btn btn btn-xs btn-default">{{ fetchCategoryDisplayName(post.category) }}</a>
                                         <span class="post-icon glyphicon glyphicon-tag"></span>
-                                        <a href="#" class="post-btn btn btn-xs btn-default" ng-repeat="tagUuid in post.tags">{{ fetchTagDisplayName(tagUuid) }}</a>
+                                        <a class="post-btn btn btn-xs btn-default" ng-repeat="tagUuid in post.tags" href="{{ rootUrl }}tag/{{ encodeURIComponent(fetchTagDisplayName(tagUuid)) }}">{{ fetchTagDisplayName(tagUuid) }}</a>
                                     </small>
                                 </div>
                                 <div class="row">
-                                    <a class="btn btn-xs btn-primary col-md-1">View</a>
-                                    <a class="btn btn-xs btn-inverse col-md-1">Edit</a>
-                                    <a class="btn btn-xs btn-danger col-md-1" ng-click="deletePost(post.uuid)">Delete</a>
+                                    <a href="{{ rootUrl }}view/{{ post.uuid }}" target="_blank" class="btn btn-xs btn-primary col-md-1">
+                                        View
+                                    </a>
+                                    <a href="{{ rootUrl }}edit/{{ post.uuid }}" class="btn btn-xs btn-inverse col-md-1" ng-show="isMaster">
+                                        Edit
+                                    </a>
+                                    <a class="btn btn-xs btn-danger col-md-1" ng-show="isMaster" ng-click="deletePost(post.uuid)">
+                                        Delete
+                                    </a>
                                 </div>
                             </div>
                             <div class="post-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.</p>
+                                <p></p>
                             </div>
                         </div>
                     </li>

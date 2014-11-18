@@ -5,6 +5,7 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
     CartUtility.log('CartBlogListCtrl');
 
     $scope.utility = CartUtility;
+    $scope.encodeURIComponent = encodeURIComponent;
 
     $scope.isMaster = $accessService.isMaster();
 
