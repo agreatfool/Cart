@@ -14,37 +14,62 @@
             </div>
         </div>
     </div>
-    <div class="row page-body">
-        <div class="col-md-12">
-            <ul class="blog-list">
-                <li>
-                    <div class="post-badge"><div></div></div>
-                    <div class="post-panel">
-                        <div class="post-heading">
-                            <h4><a href="#">Timeline Event</a></h4>
-                            <div>
-                                <small class="text-muted">
-                                    <span class="post-icon glyphicon glyphicon-time"></span>
-                                    <a class="post-time" href="#">2014</a>-<a class="post-time" href="#">08</a>-<a class="post-time" href="#">09</a> 10:12:13
-                                    <span class="post-icon glyphicon glyphicon-th-list"></span>
-                                    <a href="#" class="post-btn btn btn-xs btn-default">Category</a>
-                                    <span class="post-icon glyphicon glyphicon-tag"></span>
-                                    <a href="#" class="post-btn btn btn-xs btn-default">PHP</a>
-                                    <a href="#" class="post-btn btn btn-xs btn-default">Web</a>
-                                </small>
+    <div class="page-body">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="blog-list">
+                    <li ng-repeat="post in postOnPage">
+                        <div class="post-badge"><div></div></div>
+                        <div class="post-panel">
+                            <div class="post-heading">
+                                <h4><a href="#">{{ post.title }}</a></h4>
+                                <div>
+                                    <small class="text-muted">
+                                        <span class="post-icon glyphicon glyphicon-time"></span>
+                                        <a class="post-time" href="#">{{ utility.parseUnixYear(post.created) }}</a>-
+                                        <a class="post-time" href="#">{{ utility.parseUnixMonth(post.created) }}</a>-
+                                        <a class="post-time" href="#">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
+                                        <span class="post-icon glyphicon glyphicon-th-list"></span>
+                                        <a href="#" class="post-btn btn btn-xs btn-default">{{ fetchCategoryDisplayName(post.category) }}</a>
+                                        <span class="post-icon glyphicon glyphicon-tag"></span>
+                                        <a href="#" class="post-btn btn btn-xs btn-default" ng-repeat="tagUuid in post.tags">{{ fetchTagDisplayName(tagUuid) }}</a>
+                                    </small>
+                                </div>
+                                <div class="row">
+                                    <a class="btn btn-xs btn-primary col-md-1">View</a>
+                                    <a class="btn btn-xs btn-inverse col-md-1">Edit</a>
+                                    <a class="btn btn-xs btn-danger col-md-1" ng-click="deletePost(post.uuid)">Delete</a>
+                                </div>
                             </div>
-                            <div class="row">
-                                <a href="#" class="btn btn-xs btn-primary col-md-1">View</a>
-                                <a href="#" class="btn btn-xs btn-inverse col-md-1">Edit</a>
-                                <a href="#" class="btn btn-xs btn-danger col-md-1">Delete</a>
+                            <div class="post-body">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.</p>
                             </div>
                         </div>
-                        <div class="post-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row blog-list-footer">
+            <div class="col-md-10 pull-right">
+                <div class="pagination pull-right">
+                    <pagination
+                            boundary-links="true"
+                            direction-links="true"
+                            total-items="paginationTotalItems"
+                            items-per-page="itemsPerPage"
+                            ng-model="paginationCurrentPage"
+                            class="pagination-sm"
+                            num-pages="paginationNumPages"
+                            ng-change="loadPageData()"
+                            max-size="paginationMaxSize"
+                            rotate="false"
+                            previous-text="&lsaquo;"
+                            next-text="&rsaquo;"
+                            first-text="&laquo;"
+                            last-text="&raquo;">
+                    </pagination>
+                </div>
+            </div>
         </div>
     </div>
     <script type="text/ng-template" id="CartBlogListModal.html">
