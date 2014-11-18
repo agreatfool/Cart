@@ -30,19 +30,19 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
     var displayPageItems = function() {
         var options = {};
         if ($routeParams.hasOwnProperty('category')) {
-            options.category = $routeParams['category'];
+            options.category = $routeParams.category;
         }
         if ($routeParams.hasOwnProperty('tag')) {
-            options.tags = [$routeParams['tag']];
+            options.tags = [$routeParams.tag];
         }
         if ($location.url().indexOf('year') !== -1) {
-            options.year = $routeParams['datetime'];
+            options.year = $routeParams.datetime;
         }
         if ($location.url().indexOf('month') !== -1) {
-            options.month = $routeParams['datetime'];
+            options.month = $routeParams.datetime;
         }
         if ($location.url().indexOf('day') !== -1) {
-            options.day = $routeParams['datetime'];
+            options.day = $routeParams.datetime;
         }
         $scope.postsOnPage = $dataService.postSearch(options);
     };

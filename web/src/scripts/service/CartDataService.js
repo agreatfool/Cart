@@ -354,16 +354,16 @@ module.exports = function($http, $q) {
         var end = [];
 
         if (options.hasOwnProperty('year')) {
-            start.push(CartUtility.parseUnixYearStartTimestamp(options['year']));
-            end.push(CartUtility.parseUnixYearEndTimestamp(options['year']));
+            start.push(CartUtility.parseUnixYearStartTimestamp(options.year));
+            end.push(CartUtility.parseUnixYearEndTimestamp(options.year));
         }
         if (options.hasOwnProperty('month')) {
-            start.push(CartUtility.parseUnixDateStartTimestamp(options['month']));
-            end.push(CartUtility.parseUnixDateEndTimestamp(options['month']));
+            start.push(CartUtility.parseUnixDateStartTimestamp(options.month));
+            end.push(CartUtility.parseUnixDateEndTimestamp(options.month));
         }
         if (options.hasOwnProperty('day')) {
-            start.push(CartUtility.parseUnixDayStartTimestamp(options['day']));
-            end.push(CartUtility.parseUnixDayEndTimestamp(options['day']));
+            start.push(CartUtility.parseUnixDayStartTimestamp(options.day));
+            end.push(CartUtility.parseUnixDayEndTimestamp(options.day));
         }
         if (start.length > 0) {
             start = _.max(start, function(item) { return item; });
@@ -384,9 +384,9 @@ module.exports = function($http, $q) {
             isUuidSearch = false;
         }
         if (options.hasOwnProperty('category')) {
-            var category = (!isUuidSearch) ? this.categorySearch(options['category']) : this.categorySearchById(options['category']);
+            var category = (!isUuidSearch) ? this.categorySearch(options.category) : this.categorySearchById(options.category);
             if (category.length === 0) {
-                CartUtility.notify('Error!', 'Target category data not found, identify: ' + options['category'], 'error');
+                CartUtility.notify('Error!', 'Target category data not found, identify: ' + options.category, 'error');
                 return; // target category not found
             } else {
                 category = category.pop(); // shall contains only one category
@@ -394,7 +394,7 @@ module.exports = function($http, $q) {
             categoryUuid = category.uuid;
         }
         if (options.hasOwnProperty('tags')) {
-            _.forEach(options['tags'], function(tagIdentify) {
+            _.forEach(options.tags, function(tagIdentify) {
                 var tag = (!isUuidSearch) ? this.tagSearch(tagIdentify) : this.tagSearchById(tagIdentify);
                 if (tag.length === 0) {
                     CartUtility.notify('Error!', 'Target tag data not found, identify: ' + tagIdentify, 'error');
