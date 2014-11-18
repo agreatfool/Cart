@@ -16,16 +16,16 @@ class CartAction {
       ctx.sendJson(buildResponse('handleDataInit', indexData, doLog: false));
       ctx.end();
     } else {
-      Map postList = CartModel.instance.postList.toJson()['list'];
+      CartPostList postList = CartModel.instance.postList;
       Map categoryList = CartModel.instance.categoryList.toJson()['list'];
       Map tagList = CartModel.instance.tagList.toJson()['list'];
 
       if (isMaster(ctx)) {
-        indexData['posts'] = postList;
+        indexData['posts'] = postList.toJson()['list'];
       } else {
-        postList.forEach((String postUuid, Map post) {
-          if (post['isPublic']) {
-            indexData['posts'].addAll({postUuid: post});
+        postList.list.forEach((String postUuid, CartPost post) {
+          if (post.isPublic()) {
+            indexData['posts'].addAll({ postUuid: post.toJson() });
           }
         });
       }
