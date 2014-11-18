@@ -63,6 +63,28 @@ main() {
   //-* SERVER
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   app.listen('127.0.0.1', setting['port']).then((_) {
+    // enable GZIP
+    app.server.autoCompress = true;
+    // handle server errors
+    app.errorHandler = (e, trace, HttpContext ctx){
+      // FIXME this is the default handler of Express, shall be fixed to own solution
+      var error = trace != null
+      ? "$e\n\nStackTrace:\n$trace"
+      : e;
+
+      try{
+        if (!ctx.closed){
+          ctx.sendText(error, contentType: ContentTypes.TEXT,
+          httpStatus: 500, statusReason: "Internal ServerError");
+        }
+      } catch(e){/*ignore*/}
+      finally{
+        ctx.end();
+      }
+
+      logError(error);
+    };
+    // log info
     PinLogger.instance.fine('[WebMain] App server started, listening on http://127.0.0.1:${setting['port']} ...');
   });
 
