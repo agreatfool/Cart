@@ -146,18 +146,20 @@ class CartModel {
     String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
     var ioList = new List<Future>();
     // post
-    ioList.add((new File(LibPath.join(postBaseDataDir, post.uuid + '.md'))).delete());
-    ioList.add((new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))).delete());
+    ioList.add(PinUtility.deleteFileIfExists(LibPath.join(postBaseDataDir, post.uuid + '.md')));
+    ioList.add(PinUtility.deleteFileIfExists(LibPath.join(postBaseDataDir, post.uuid + '.html')));
     ioList.add(_drive.drive_trash(post.driveId));
     // attachments
     if (post.attachments.length > 0) {
       post.attachments.forEach((String attUuid, CartPostAttachment attachment) {
-        ioList.add((new File(LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid, attachment.title))).delete());
+        ioList.add(PinUtility.deleteFileIfExists(LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid, attachment.title)));
         ioList.add(_drive.drive_trash(attachment.driveId));
       });
     }
 
     Future.wait(ioList)
+    .then((_) => PinUtility.deleteDirIfExists(postBaseDataDir))
+    .then((_) => saveDatabase())
     .then((_) => completer.complete(true))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);

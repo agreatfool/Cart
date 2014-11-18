@@ -70,6 +70,50 @@ class PinUtility {
     return completer.future;
   }
 
+  static Future deleteFileIfExists(String path, {bool recursive: false}) {
+    final completer = new Completer();
+
+    var file = new File(path);
+
+    file.exists()
+    .then((bool exists) {
+      if (exists) {
+        return file.delete(recursive: recursive);
+      } else {
+        return new Future.value(true);
+      }
+    })
+    .then((_) => completer.complete(true))
+    .catchError((e, trace) {
+      handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
+  }
+
+  static Future deleteDirIfExists(String path, {bool recursive: false}) {
+    final completer = new Completer();
+
+    var dir = new Directory(path);
+
+    dir.exists()
+    .then((bool exists) {
+      if (exists) {
+        return dir.delete(recursive: recursive);
+      } else {
+        return new Future.value(true);
+      }
+    })
+    .then((_) => completer.complete(true))
+    .catchError((e, trace) {
+      handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
+  }
+
   static bool isUuid(String uuid) {
     if (!(uuid is String)) {
       return false;

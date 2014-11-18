@@ -56,6 +56,12 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
             return;
         }
         $dataService.postRemove(uuid).then(function() {
+            _.forEach(postRows, function(row, index) {
+                if (row.uuid === uuid) {
+                    postRows.splice(index, 1);
+                }
+            });
+            $scope.loadPageData();
             CartUtility.notify('Done!', 'Post ' + uuid + ' deleted!');
         });
     };
