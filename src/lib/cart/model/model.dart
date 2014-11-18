@@ -34,7 +34,7 @@ class CartModel {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  Future savePost(String uuid, String markdown) {
+  Future<CartPost> savePost(String uuid, String markdown) {
     final completer = new Completer();
     int timestamp = PinTime.getTime();
 
@@ -109,8 +109,11 @@ class CartModel {
       post = _;
       return _postUpload(post, markdown);
     })
-    .then((CartPost _) => saveDatabase())
-    .then((_) => completer.complete(true))
+    .then((CartPost _) {
+      post = _;
+      return saveDatabase();
+    })
+    .then((_) => completer.complete(post))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
