@@ -10,8 +10,8 @@ class CartPost extends Object with PinSerializable {
   int updated;
 
   String category; // uuid
-  List<String> tags; // [uuid, uuid, ...]
-  HashMap<String, CartPostAttachment> attachments;
+  List<String> tags = []; // [uuid, uuid, ...]
+  HashMap<String, CartPostAttachment> attachments = {};
 
   CartPost.fromJson(HashMap<String, dynamic> json) {
     if (json.containsKey('uuid')) {
