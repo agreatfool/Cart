@@ -349,7 +349,7 @@ class CartAction {
         return CartModel.instance.savePost(postId, markdown);
       }
     })
-    .then((_) => ctx.sendJson(buildResponse('handlePostSave', {})))
+    .then((CartPost _) => ctx.sendJson(buildResponse('handlePostSave', { "post": _.toJson() })))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));

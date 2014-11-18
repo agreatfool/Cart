@@ -438,6 +438,7 @@ module.exports = function($http, $q) {
                 "markdown": CartUtility.generateMdHTMLHeader(post) + post.md
             }, function(data) {
                 postRemoveTmp(post.uuid);
+                posts[post.uuid] = data.message.post;
                 return data.message;
             }
         );
