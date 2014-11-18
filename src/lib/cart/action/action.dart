@@ -3,6 +3,7 @@ part of cart;
 class CartAction {
 
   static handleDataInit(HttpContext ctx) {
+    // FIXME init date loading mechanisum of site first page load shall be fixed, the size of the load is too large
     bool isRestoringSite = CartSystem.instance.actionPreProcess(ctx, responseDirectly: false);
 
     HashMap<String, Map> indexData = {
