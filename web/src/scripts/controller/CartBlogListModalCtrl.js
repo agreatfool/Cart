@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, moment, CartUtility */
+/* global _, moment, CartUtility, CartConst */
 module.exports = function($scope, $location, $modalInstance, $dataService) {
     CartUtility.log('CartBlogListModalCtrl');
 
@@ -14,7 +14,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     $scope.dataOnPage = []; // data used to be displayed on page
     $scope.paginationTotalItems = 0;
     $scope.paginationCurrentPage = 1;
-    $scope.itemsPerPage = 10;
+    $scope.itemsPerPage = CartConst.PAGINATION_ITEMS_PER_PAGE;
     $scope.paginationMaxSize = 5;
     $scope.loadPageData = function() {
         var startPos = ($scope.paginationCurrentPage - 1) * $scope.itemsPerPage;

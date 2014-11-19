@@ -23,4 +23,7 @@ CartConst.HTML_DB_NAME = 'CartHtmlDatabase';
 // upload
 CartConst.UPLOAD_TYPES = ['image/png', 'image/gif', 'image/jpeg'];
 
+// pagination
+CartConst.PAGINATION_ITEMS_PER_PAGE = 10;
+
 module.exports = CartConst;

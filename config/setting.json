@@ -3,5 +3,6 @@
     "port": 18090,
     "googleDriveRootFolder": "CART_BLOG",
     "cookieLive": 1296000,
-    "tagPrivate": "PRIVATE"
+    "tagPrivate": "PRIVATE",
+    "postsPerPage": 10
 }
