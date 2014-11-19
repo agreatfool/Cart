@@ -361,13 +361,14 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         if (CartUtility.handleResponse(response)) {
             CartUtility.notify('Upload Done!', 'File "' + fileItem.file.name + '" uploaded!', 'success');
         }
-        $scope.postAttachments.push({
+        var attachUuid = uuid.v4();
+        $scope.postAttachments[attachUuid] = {
             created: CartUtility.getTime(),
             driveId: null,
             title: fileItem.file.name,
             updated: CartUtility.getTime(),
-            uuid: uuid.v4()
-        });
+            uuid: attachUuid
+        };
         uploaderProcessNextUpload();
     };
     if (CartUtility.isDndSupported()) {
