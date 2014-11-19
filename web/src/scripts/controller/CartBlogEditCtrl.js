@@ -6,7 +6,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
 
     var postId = $routeParams.postId;
 
-    $scope.postCategories = $dataService.categoryGetAll();
+    $scope.postCategories = {};
 
     $scope.postCategory = null;
     $scope.postTags = {};
@@ -104,7 +104,15 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
     });
 
     // post data search logic
-    $dataService.postGetTmp($routeParams.postId).then(function(tmpPostData) {
+    $dataService.categoryGetAll()
+    .then(function(categories) {
+        $scope.postCategories = categories;
+        return $dataService.tagGetAll();
+    })
+    .then(function() {
+        return $dataService.postGetTmp($routeParams.postId);
+    })
+    .then(function(tmpPostData) {
         // tmp post data found
         aceEditor.setValue(tmpPostData.md, -1);
         $scope.postCategory = tmpPostData.category;
@@ -112,7 +120,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         $scope.postTags = tmpPostData.tags;
         $scope.postAttachments = tmpPostData.attachments;
     }, function(err) {
-        if (err.status !== 404) {
+        if (!_.isUndefined(err) && err.status !== 404) {
             // error encountered, and is not post not found error, just return, since error message shall have already been notified
             return;
         }
