@@ -59,17 +59,15 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
             return;
         }
         $dataService.postRemove(uuid).then(function() {
-            _.forEach(postRows, function(row, index) {
+            _.forEach($scope.postOnPage, function(row, index) {
                 if (row.uuid === uuid) {
-                    postRows.splice(index, 1);
+                    $scope.postOnPage.splice(index, 1);
                 }
             });
             $scope.loadPageData();
             CartUtility.notify('Done!', 'Post ' + uuid + ' deleted!');
         });
     };
-
-    var postRows = [];
 
     // pagination
     $scope.postOnPage = []; // data used to be displayed on page
@@ -79,12 +77,6 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
     $scope.paginationMaxSize = 5;
 
     $scope.loadPageData = function() {
-        var startPos = ($scope.paginationCurrentPage - 1) * $scope.itemsPerPage;
-        var endPos = startPos + $scope.itemsPerPage;
-        $scope.postOnPage = postRows.slice(startPos, endPos);
-    };
-
-    var displayPageItems = function() {
         var options = {};
         if ($routeParams.hasOwnProperty('category')) {
             options.category = $routeParams.category;
@@ -101,13 +93,20 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
         if ($location.url().indexOf('day') !== -1) {
             options.day = $routeParams.datetime;
         }
-        postRows = $dataService.postSearch(options);
-        postRows = _.sortBy(postRows, function(post) { return post.created; }).reverse(); // orderBy "created" DESC
-        $scope.paginationTotalItems = postRows.length;
-        $scope.paginationCurrentPage = 1;
-        $scope.loadPageData();
+        options.isUuidSearch = false;
+        options.pageNumber = $scope.paginationCurrentPage;
+        $dataService.postSearch(options).then(function(data) { // FIXME 修改postSearch接口，posts里带的categories和tags，都要附带下载
+            var posts = data.posts;
+            if (_.isObject(posts) && _.keys(posts).length > 0) {
+                $scope.postOnPage = _.values(posts);
+            }
+            if (_.isNumber(data.total)) {
+                $scope.paginationTotalItems = data.total;
+            }
+        });
     };
-    displayPageItems();
+
+    $scope.loadPageData();
 
     // FIXME 页脚的分页标签的位置最好紧贴页面的footer，现在是在内容展示的div下面
 };
