@@ -326,10 +326,7 @@ module.exports = function($http, $q) {
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var postGetAll = function() {
-        return posts;
-    };
-    var postSearchById = function(uuid) {
+    var postSearchLocalById = function(uuid) {
         var post = null;
 
         if (posts.hasOwnProperty(uuid)) {
@@ -338,7 +335,7 @@ module.exports = function($http, $q) {
 
         return post;
     };
-    var postSearch = function(options, isUuidSearch) {
+    var postSearch = function(options) { // serach by page
         /**
          * {
          *     "category": categoryName|uuid,
@@ -346,10 +343,20 @@ module.exports = function($http, $q) {
          *     "year": timestamp,
          *     "month": timestamp,
          *     "day": timestamp,
+         *     "isUuidSearch": boolean,
+         *     "pageNumber": int
          * }
          */
-        if (_.keys(options).length === 0) { // no search condition
-            return _.values(posts);
+        if (!_.isObject(options)) {
+            options = {};
+        }
+        if (!_.isBoolean(options.isUuidSearch)) {
+            options.isUuidSearch = false;
+        }
+        if (!_.isNumber(options.pageNumber)) {
+            options.pageNumber = 1;
+        } else {
+            options.pageNumber = parseInt(options.pageNumber);
         }
 
         var start = [];
@@ -372,66 +379,29 @@ module.exports = function($http, $q) {
             if (!_.isNumber(start)) {
                 CartUtility.notify('Error!', 'Start time parsed is invalid: ' + start, 'error');
             }
+        } else {
+            start = 0;
         }
         if (end.length > 0) {
             end = _.min(end, function(item) { return item; });
             if (!_.isNumber(end)) {
                 CartUtility.notify('Error!', 'End time parsed is invalid: ' + end, 'error');
             }
+        } else {
+            end = 2147483647;
         }
+        delete options.year; delete options.month; delete options.day;
+        options.start = start;
+        options.end = end;
 
-        var categoryUuid = null;
-        var tagUuids = [];
-        if (!_.isBoolean(isUuidSearch)) {
-            isUuidSearch = false;
-        }
-        if (options.hasOwnProperty('category')) {
-            var category = (!isUuidSearch) ? this.categorySearch(options.category) : this.categorySearchById(options.category);
-            if (category.length === 0) {
-                CartUtility.notify('Error!', 'Target category data not found, identify: ' + options.category, 'error');
-                return; // target category not found
-            } else {
-                category = category.pop(); // shall contains only one category
-            }
-            categoryUuid = category.uuid;
-        }
-        if (options.hasOwnProperty('tags')) {
-            _.forEach(options.tags, function(tagIdentify) {
-                var tag = (!isUuidSearch) ? this.tagSearch(tagIdentify) : this.tagSearchById(tagIdentify);
-                if (tag.length === 0) {
-                    CartUtility.notify('Error!', 'Target tag data not found, identify: ' + tagIdentify, 'error');
-                    return; // target category not found
-                } else {
-                    tag = tag.pop(); // shall contains only one category
-                }
-                tagUuids.push(tag.uuid);
-            });
-        }
-
-        var found = _.filter(posts, function(post) {
-            var match = true;
-
-            if (options.hasOwnProperty('category') && post.uuid !== categoryUuid) {
-                match = false;
-            }
-            if (options.hasOwnProperty('tags')) {
-                _.forEach(tagUuids, function(tagUuid) {
-                    if (post.tags.indexOf(tagUuid) === -1) {
-                        match = false;
-                    }
+        return CartUtility.post(
+            $http, $q, '/api/post/page', options, function(data) {
+                _.forEach(data.message.posts, function(post, uuid) {
+                    posts[uuid] = post;
                 });
+                return data.message;
             }
-            if (start && end && (post.created < start || post.created > end)) {
-                match = false;
-            }
-
-            return match;
-        });
-        if (_.isUndefined(found)) {
-            found = [];
-        }
-
-        return found;
+        );
     };
     var postUpload = function(post) { // post structure is "Structure of temporarily saved post"
         return CartUtility.post(
@@ -461,7 +431,12 @@ module.exports = function($http, $q) {
     //-* CATEGORY RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var categoryGetAll = function() {
-        return categories;
+        return CartUtility.post(
+            $http, $q, '/api/category/all', {}, function(data) {
+                categories = data.message.categories.list;
+                return categories;
+            }
+        );
     };
     var categoryCreate = function(categoryName) {
         return CartUtility.post(
@@ -469,7 +444,9 @@ module.exports = function($http, $q) {
                 "uuid": uuid.v4(),
                 "name": categoryName
             }, function(data) {
-                return data.message.category;
+                var category = data.message.category;
+                categories[category.uuid] = category;
+                return category;
             }
         );
     };
@@ -511,7 +488,7 @@ module.exports = function($http, $q) {
 
         return category;
     };
-    var categorySearchById = function(uuid) {
+    var categorySearchById = function(uuid) { // FIXME 改名为local
         var found = _.filter(categories, function(category) {
             return category.uuid === uuid;
         });
@@ -522,7 +499,7 @@ module.exports = function($http, $q) {
         }
         return found;
     };
-    var categorySearch = function(categoryName, strict) {
+    var categorySearch = function(categoryName, strict) { // FIXME 改名为local
         strict = _.isBoolean(strict) ? strict : true; // whether search with "strict mode" (all match), otherwise it will be "start with mode"
 
         var found = _.filter(categories, function(category) {
@@ -543,7 +520,12 @@ module.exports = function($http, $q) {
     //-* TAG RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var tagGetAll = function() {
-        return tags;
+        return CartUtility.post(
+            $http, $q, '/api/tag/all', {}, function(data) {
+                tags = data.message.tags.list;
+                return tags;
+            }
+        );
     };
     var tagCreate = function(tagName) {
         return CartUtility.post(
@@ -593,7 +575,7 @@ module.exports = function($http, $q) {
 
         return tag;
     };
-    var tagSearchById = function(uuid) {
+    var tagSearchById = function(uuid) { // FIXME 改名为local
         var found = _.filter(tags, function(tag) {
             return tag.uuid === uuid;
         });
@@ -604,7 +586,7 @@ module.exports = function($http, $q) {
         }
         return found;
     };
-    var tagSearch = function(tagName, strict) {
+    var tagSearch = function(tagName, strict) { // FIXME 改名为local
         strict = _.isBoolean(strict) ? strict : true; // whether search with "strict mode" (all match), otherwise it will be "start with mode"
 
         var found = _.filter(tags, function(tag) {
@@ -620,6 +602,7 @@ module.exports = function($http, $q) {
 
         return found;
     };
+    // FIXME 添加接口根据categories和tags id来查询本地信息，有的话返回，没的话则从服务器查询
 
     // FIXME reformat later
     var apis = {
@@ -635,8 +618,7 @@ module.exports = function($http, $q) {
         'postRemoveHtml': postRemoveHtml,
         'postRemoveAllHtml': postRemoveAllHtml,
         // post APIs
-        'postGetAll': postGetAll,
-        'postSearchById': postSearchById,
+        'postSearchLocalById': postSearchLocalById,
         'postSearch': postSearch,
         'postUpload': postUpload,
         'postRemove': postRemove,
