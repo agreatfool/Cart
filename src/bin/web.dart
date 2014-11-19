@@ -67,7 +67,7 @@ main() {
     // enable GZIP
     app.server.autoCompress = true;
     // handle server errors
-    app.errorHandler = (e, trace, HttpContext ctx){
+    app.errorHandler = (e, trace, HttpContext ctx) {
       // FIXME this is the default handler of Express, shall be fixed to own solution
       var error = trace != null
       ? "$e\n\nStackTrace:\n$trace"
