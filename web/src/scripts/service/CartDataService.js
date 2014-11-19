@@ -32,7 +32,6 @@ module.exports = function($http, $q) {
      *     ...
      * }
      */
-    // FIXME fix post structure comment
     var posts = {};
     /**
      * categories: {
