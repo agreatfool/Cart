@@ -317,7 +317,7 @@ class CartModel {
       if (files.items.length <= 0) {
         return _drive.drive_folder(rootFolderName); // necessary root blog folder does not exist, create it
       } else {
-        return new Future.value(files.items.removeAt(0)); // shall only contains 1 item
+        return new Future.value(files.items[0]); // shall only contains 1 item
       }
     })
     .then((GoogleDriveClient.File file) => completer.complete(file.id))
@@ -336,6 +336,8 @@ class CartModel {
     String postBaseDataDir = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid);
     var attachmentUploadList = new List<Future>(); // store upload futures
     var attachmentList = new List<CartPostAttachment>(); // store upload attachments
+
+    CartCategory category = categoryList.find(post.category);
 
     // FIXME 需要先检查所有需要上传的附件在google drive里存在不存在，存在则报错退出
 
@@ -362,19 +364,20 @@ class CartModel {
         if (attachment.driveId == null) {
           // need to be uploaded
           attachmentList.add(attachment);
-          attachmentUploadList.add(_drive.uploadFile(LibPath.join(postBasePubDir, attachment.title), parents: [post.category]));
+          attachmentUploadList.add(_drive.uploadFile(LibPath.join(postBasePubDir, attachment.title), parents: [category.driveId]));
           PinLogger.instance.fine('[CartPost] _preparePostUpload: attachment upload task added: "${attachment.title}"');
         }
       });
       return Future.wait(attachmentUploadList);
     })
     .then((List<GoogleDriveClient.File> responses) {
-      attachmentList.forEach((CartPostAttachment attachment) {
-        GoogleDriveClient.File file = responses.removeAt(0);
+      for (int index = 0; index < responses.length; index++) {
+        GoogleDriveClient.File file = responses[index];
+        CartPostAttachment attachment = attachmentList[index];
         attachment.driveId = file.id;
         post.updateAttachment(attachment);
         PinLogger.instance.fine('[CartPost] _preparePostUpload: attachment upload task done: "${attachment.title}":"${attachment.driveId}"');
-      });
+      }
       postList.update(post);
       return new Future.value(true);
     })
