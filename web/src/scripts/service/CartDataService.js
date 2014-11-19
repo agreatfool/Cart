@@ -11,6 +11,23 @@ module.exports = function($http, $q) {
     /**
      * posts: {
      *     bbc3440b-6e9a-4e17-8c31-534f8f58784f: {
+     *         "attachments": {
+     *             027455b6-5ef3-4332-adfd-4b527ef589f2: {
+     *                 "created": 1416373253,
+     *                 "driveId": "0ByO96ydBQtM2SVBrbHhrb1VJcHM",
+     *                 "title": "6f5ef307gw1emfk4cll1yj20fk4ua4lm.png",
+     *                 "updated": 1416373253,
+     *                 "uuid": "027455b6-5ef3-4332-adfd-4b527ef589f2"
+     *             },
+     *             ...
+     *         },
+     *         "category": "7207c5b5-c757-4013-9811-ff644fd0f8ed"
+     *         "created": 1416374416886
+     *         "driveId": "0ByO96ydBQtM2Q0ctdFVINEVPUkE"
+     *         "tags": [bbc3440b-6e9a-4e17-8c31-534f8f58784f, ...]
+     *         "title": "images"
+     *         "updated": 1416374416886
+     *         "uuid": "d16335ab-9ccb-4e9c-bb21-da28f5ee22e4"
      *     },
      *     ...
      * }
