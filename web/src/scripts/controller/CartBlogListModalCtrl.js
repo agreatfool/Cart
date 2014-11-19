@@ -60,7 +60,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         });
     };
 
-    $dataService.postGetAllTmp().then(function(result) {
+    $dataService.postGetAllTmp().then(function(result) { // FIXME 需要检查本地的categories和tags中有没有暂存post所从属的信息，没有的话从服务器上查询
         _.forEach(result, function(post) {
             post.published = _.isNull($dataService.postSearchById(post._id)) ? false : true;
         });
