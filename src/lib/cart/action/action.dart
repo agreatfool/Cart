@@ -2,6 +2,201 @@ part of cart;
 
 class CartAction {
 
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* POSTS
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  static handlePostPage(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    bool isUserMaster = isMaster(ctx);
+
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      /**
+       * options: {
+       *     "category": categoryName|uuid,
+       *     "tags": [tagName|uuid, tagName|uuid, ...],
+       *     "isUuidSearch": bool,
+       *     "start": timestamp,
+       *     "end": timestamp,
+       *     "pageNumber": int
+       * }
+       */
+      HashMap options = body.body;
+
+      options['start'] = options.containsKey('start') ? int.parse(options['start']) : 0;
+      options['end'] = options.containsKey('end') ? int.parse(options['end']) : PinTime.TIMESTAMP_MAX;
+
+      if (options['isUuidSearch'] == 'true') {
+        options['isUuidSearch'] = true;
+      } else {
+        options['isUuidSearch'] = false;
+      }
+
+      options['pageNumber'] = options.containsKey('pageNumber') ? int.parse(options['pageNumber']) : 1;
+
+      List<CartPost> result = CartModel.instance.searchPost(options, options['isUuidSearch'], isMaster: isUserMaster, pageNumber: options['pageNumber']);
+      HashMap<String, HashMap> posts = {};
+      result.forEach((CartPost post) {
+        posts[post.uuid] = post.toJson();
+      });
+      ctx.sendJson(buildResponse('handlePostPage', { "posts": posts, "total": posts.length }));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handlePostPage', { "error": "Error encountered in list pages of posts!" }, valid: false));
+    });
+  }
+
+  static handlePostSave(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      String postId = body.body['postId'];
+      String markdown = body.body['markdown'];
+      if (!PinUtility.isUuid(postId)) {
+        throw new Exception('[CartAction] handlePostSave: Invalid post uuid: ${postId}');
+      } else if (markdown == null || markdown == '') {
+        throw new Exception('[CartAction] handlePostSave: Invalid markdown!');
+      } else {
+        return CartModel.instance.savePost(postId, markdown);
+      }
+    })
+    .then((CartPost _) => ctx.sendJson(buildResponse('handlePostSave', { "post": _.toJson() })))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
+    });
+  }
+
+  static handlePostRemove(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      String postId = body.body['postId'];
+      if (!PinUtility.isUuid(postId)) {
+        throw new Exception('[CartAction] handlePostRemove: Invalid post uuid: ${postId}');
+      } else {
+        return CartModel.instance.removePost(postId);
+      }
+    })
+    .then((_) => ctx.sendJson(buildResponse('handlePostRemove', {})))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handlePostRemove', { "error": "Error encountered in removing post!" }, valid: false));
+    });
+  }
+
+  static handleUpload(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    String filePath;
+    HttpBodyFileUpload fileUploaded;
+
+    PinLogger.instance.fine('[CartAction] handleUpload: Start to handle file upload action.');
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      String postId = body.body['postId'];
+      fileUploaded = body.body['file'];
+      if (postId == null || fileUploaded == null) {
+        throw new Exception('[CartAction] handleUpload: Failed in parsing file!');
+      } else if (['image/png', 'image/jpeg', 'image/gif'].indexOf(fileUploaded.contentType.toString()) == -1) {
+        throw new Exception('[CartAction] handleUpload: File type not supported: ${fileUploaded.contentType.toString()}');
+      } else if (!PinUtility.isUuid(postId)) {
+        throw new Exception('[CartAction] handleUpload: Invalid post uuid: ${postId}');
+      } else {
+        String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, postId);
+        filePath = LibPath.join(postPath, fileUploaded.filename);
+        return PinUtility.createDir(postPath);
+      }
+    })
+    .then((_) {
+      return new File(filePath).exists();
+    })
+    .then((bool uploadTargetAlreadyExists) {
+      if (uploadTargetAlreadyExists) {
+        ctx.sendJson(buildResponse('handleUpload', { "error": "File ${fileUploaded.filename} already exists!" }, valid: false));
+        return new Future.value(false);
+      } else {
+        return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
+      }
+    })
+    .then((_) {
+      if (_ == false) {
+        // means file already exists exception encountered, end process
+        ctx.end();
+      } else {
+        ctx.sendJson(buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
+        ctx.end();
+      }
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
+    });
+  }
+
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* CATEGORIES
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  static handleCategoryCreate(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    _parseHttpReqBody(ctx)
+    .then((HttpRequestBody body) {
+      String uuid = body.body['uuid'];
+      String name = body.body['name'];
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartAction] handleCategoryCreate: Invalid category uuid: ${uuid}');
+      } else if (name == null || name == '') {
+        throw new Exception('[CartAction] handleCategoryCreate: Invalid category name!');
+      } else {
+        return CartModel.instance.addCategory(uuid, name);
+      }
+    })
+    .then((CartCategory category) {
+      ctx.sendJson(buildResponse('handleCategoryCreate', { "category": category.toJson() }));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleCategoryCreate', { "error": "Error in creating request!" }, valid: false));
+    });
+  }
+
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* TAGS
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  static handleCategoryAll(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+
+    ctx.sendJson(buildResponse('handleCategoryAll', { "categories": CartModel.instance.categoryList.toJson() }));
+  }
+
   static handleTagCreate(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
@@ -30,34 +225,60 @@ class CartAction {
     });
   }
 
-  static handleCategoryCreate(HttpContext ctx) {
+  static handleTagAll(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+
+    ctx.sendJson(buildResponse('handleTagAll', { "tags": CartModel.instance.tagList.toJson() }));
+  }
+
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* SYSTEM
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  static handleLogin(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+
+    if (CartSystem.instance.credentials.length <= 0) {
+      PinLogger.instance.shout('[CartAction] handleLogin: Site has not been initialized yet!');
+      ctx.sendJson(buildResponse('handleLogin', { "error": "Site has not been initialized yet!" }, valid: false));
+    } else {
+      ctx.sendJson(buildResponse('handleLogin', {
+          "url": CartSystem.instance.oauth2.getLoginUrl()
+      }));
+    }
+
+    ctx.end();
+  }
+
+  static void handleLogout(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
     }
     if (!_filterIsMaster(ctx)) {
       return;
     }
-    _parseHttpReqBody(ctx)
-    .then((HttpRequestBody body) {
-      String uuid = body.body['uuid'];
-      String name = body.body['name'];
-      if (!PinUtility.isUuid(uuid)) {
-        throw new Exception('[CartAction] handleCategoryCreate: Invalid category uuid: ${uuid}');
-      } else if (name == null || name == '') {
-        throw new Exception('[CartAction] handleCategoryCreate: Invalid category name!');
-      } else {
-        return CartModel.instance.addCategory(uuid, name);
-      }
-    })
-    .then((CartCategory category) {
-      ctx.sendJson(buildResponse('handleCategoryCreate', {"category": category.toJson()}));
+
+    _removeSessionToken(ctx)
+    .then((_) {
+      ctx.sendJson(buildResponse('handleLogout', {}));
+      ctx.end();
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleCategoryCreate', { "error": "Error in creating request!" }, valid: false));
+      ctx.res.redirect(Uri.parse('/error'));
     });
   }
 
+  static handleRestoreStatus(HttpContext ctx) {
+    // TODO 汇报系统恢复状态
+  }
+
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+  //-* OAUTH
+  //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   static handleOauth2(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
@@ -68,7 +289,7 @@ class CartAction {
       ctx.sendJson(buildResponse('handleOauth2', { "error": "Already authorized!" }, valid: false));
     } else {
       ctx.sendJson(buildResponse('handleOauth2', {
-        "url": CartSystem.instance.oauth2.getOAuthUrl()
+          "url": CartSystem.instance.oauth2.getOAuthUrl()
       }));
     }
     ctx.end();
@@ -189,154 +410,9 @@ class CartAction {
     }
 
     ctx.sendJson(buildResponse('handleIsAuthed', {
-      "isAuthed": isAuthed
+        "isAuthed": isAuthed
     }));
     ctx.end();
-  }
-
-  static handleLogin(HttpContext ctx) {
-    if (!CartSystem.instance.actionPreProcess(ctx)) {
-      return;
-    }
-
-    if (CartSystem.instance.credentials.length <= 0) {
-      PinLogger.instance.shout('[CartAction] handleLogin: Site has not been initialized yet!');
-      ctx.sendJson(buildResponse('handleLogin', { "error": "Site has not been initialized yet!" }, valid: false));
-    } else {
-      ctx.sendJson(buildResponse('handleLogin', {
-          "url": CartSystem.instance.oauth2.getLoginUrl()
-      }));
-    }
-
-    ctx.end();
-  }
-
-  static void handleLogout(HttpContext ctx) {
-    if (!CartSystem.instance.actionPreProcess(ctx)) {
-      return;
-    }
-    if (!_filterIsMaster(ctx)) {
-      return;
-    }
-
-    _removeSessionToken(ctx)
-    .then((_) {
-      ctx.sendJson(buildResponse('handleLogout', {}));
-      ctx.end();
-    })
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      ctx.res.redirect(Uri.parse('/error'));
-    });
-  }
-
-  static handleUpload(HttpContext ctx) {
-    if (!CartSystem.instance.actionPreProcess(ctx)) {
-      return;
-    }
-    if (!_filterIsMaster(ctx)) {
-      return;
-    }
-
-    String filePath;
-    HttpBodyFileUpload fileUploaded;
-
-    PinLogger.instance.fine('[CartAction] handleUpload: Start to handle file upload action.');
-    HttpBodyHandler.processRequest(ctx.req)
-    .then((HttpRequestBody body) {
-      String postId = body.body['postId'];
-      fileUploaded = body.body['file'];
-      if (postId == null || fileUploaded == null) {
-        throw new Exception('[CartAction] handleUpload: Failed in parsing file!');
-      } else if (['image/png', 'image/jpeg', 'image/gif'].indexOf(fileUploaded.contentType.toString()) == -1) {
-        throw new Exception('[CartAction] handleUpload: File type not supported: ${fileUploaded.contentType.toString()}');
-      } else if (!PinUtility.isUuid(postId)) {
-        throw new Exception('[CartAction] handleUpload: Invalid post uuid: ${postId}');
-      } else {
-        String postPath = LibPath.join(CartConst.WWW_POST_PUB_PATH, postId);
-        filePath = LibPath.join(postPath, fileUploaded.filename);
-        return PinUtility.createDir(postPath);
-      }
-    })
-    .then((_) {
-      return new File(filePath).exists();
-    })
-    .then((bool uploadTargetAlreadyExists) {
-      if (uploadTargetAlreadyExists) {
-        ctx.sendJson(buildResponse('handleUpload', { "error": "File ${fileUploaded.filename} already exists!" }, valid: false));
-        return new Future.value(false);
-      } else {
-        return new File(filePath)..writeAsBytes(fileUploaded.content, mode: FileMode.WRITE);
-      }
-    })
-    .then((_) {
-      if (_ == false) {
-        // means file already exists exception encountered, end process
-        ctx.end();
-      } else {
-        ctx.sendJson(buildResponse('handleUpload', { "fileName": fileUploaded.filename, "fileType": fileUploaded.contentType.toString() }));
-        ctx.end();
-      }
-    })
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
-    });
-  }
-
-  static handleRestoreStatus(HttpContext ctx) {
-    // TODO 汇报系统恢复状态
-  }
-
-  static handlePostSave(HttpContext ctx) {
-    if (!CartSystem.instance.actionPreProcess(ctx)) {
-      return;
-    }
-    if (!_filterIsMaster(ctx)) {
-      return;
-    }
-
-    HttpBodyHandler.processRequest(ctx.req)
-    .then((HttpRequestBody body) {
-      String postId = body.body['postId'];
-      String markdown = body.body['markdown'];
-      if (!PinUtility.isUuid(postId)) {
-        throw new Exception('[CartAction] handlePostSave: Invalid post uuid: ${postId}');
-      } else if (markdown == null || markdown == '') {
-        throw new Exception('[CartAction] handlePostSave: Invalid markdown!');
-      } else {
-        return CartModel.instance.savePost(postId, markdown);
-      }
-    })
-    .then((CartPost _) => ctx.sendJson(buildResponse('handlePostSave', { "post": _.toJson() })))
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleUpload', { "error": "Error encountered in handling file!" }, valid: false));
-    });
-  }
-
-  static handlePostRemove(HttpContext ctx) {
-    if (!CartSystem.instance.actionPreProcess(ctx)) {
-      return;
-    }
-    if (!_filterIsMaster(ctx)) {
-      return;
-    }
-
-    HttpBodyHandler.processRequest(ctx.req)
-    .then((HttpRequestBody body) {
-      String postId = body.body['postId'];
-      if (!PinUtility.isUuid(postId)) {
-        throw new Exception('[CartAction] handlePostRemove: Invalid post uuid: ${postId}');
-      } else {
-        return CartModel.instance.removePost(postId);
-      }
-    })
-    .then((_) => ctx.sendJson(buildResponse('handlePostRemove', {})))
-    .catchError((e, trace) {
-      PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handlePostRemove', { "error": "Error encountered in removing post!" }, valid: false));
-    });
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

@@ -56,8 +56,11 @@ main() {
   app.post('/api/tag/create',         (HttpContext ctx) => CartAction.handleTagCreate(ctx));
   app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
   app.post('/api/restore/status',     (HttpContext ctx) => CartAction.handleRestoreStatus(ctx));
+  app.post('/api/post/page',          (HttpContext ctx) => CartAction.handlePostPage(ctx));
   app.post('/api/post/save',          (HttpContext ctx) => CartAction.handlePostSave(ctx));
   app.post('/api/post/remove',        (HttpContext ctx) => CartAction.handlePostRemove(ctx));
+  app.post('/api/category/all',       (HttpContext ctx) => CartAction.handleCategoryAll(ctx));
+  app.post('/api/tag/all',            (HttpContext ctx) => CartAction.handleTagAll(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER

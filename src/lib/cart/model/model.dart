@@ -169,6 +169,103 @@ class CartModel {
     return completer.future;
   }
 
+  List<CartPost> searchPost(HashMap options, bool isUuidSearch, {bool isMaster: false, int pageNumber: 1}) {
+    int postsPerPage = CartSystem.instance.setting['postsPerPage'];
+
+    List<CartPost> posts = [];
+
+    String categoryUuid = null;
+    List<String> tagUuids = [];
+    int start = 0;
+    int end = PinTime.TIMESTAMP_MAX;
+
+    // collect conditions
+    if (options.containsKey('category')) {
+      String identify = options['category'];
+      CartCategory category = isUuidSearch ? categoryList.find(identify) : categoryList.findByTitle(identify);
+      if (category == null) {
+        throw new Exception('[CartModel] searchPost: target category data not found, identify: ${identify}');
+      }
+      categoryUuid = category.uuid;
+    }
+    if (options.containsKey('tags')) {
+      if (!(options['tags'] is List)) {
+        throw new Exception('[CartModel] searchPost: tags identify invalid: ${options['tags']}');
+      }
+      List<String> tagIdentifies = options['tags'];
+      tagIdentifies.forEach((String tagIdentify) {
+        CartTag tag = isUuidSearch ? tagList.find(tagIdentify) : tagList.findByTitle(tagIdentify);
+        if (tag == null) {
+          throw new Exception('[CartModel] searchPost: target tag data not found, identify: ${tagIdentify}');
+        }
+        tagUuids.add(tag.uuid);
+      });
+    }
+    if (options.containsKey('start') && options['start'] is int) {
+      start = options['start'];
+    }
+    if (options.containsKey('end') && options['end'] is int) {
+      end = options['end'];
+    }
+
+    print(options);
+    print('conditions:');
+    print(categoryUuid);
+    print(tagUuids);
+    print(start);
+    print(end);
+    print('-------');
+
+    // filter posts in list
+    postList.list.forEach((String uuid, CartPost post) {
+      bool match = true;
+
+      if (categoryUuid != null && post.category != categoryUuid) {
+        match = false;
+      }
+      if (tagUuids.length > 0) {
+        for (int index = 0; index < tagUuids.length; index++) {
+          if (!post.tags.contains(tagUuids[index])) {
+            match = false;
+            break;
+          }
+        }
+      }
+      if (post.created < start || post.created > end) {
+        match = false;
+      }
+      if (!isMaster && !post.isPublic()) {
+        match = false;
+      }
+
+      if (match) {
+        posts.add(post);
+      }
+    });
+
+    // sort posts, DESC by post.created
+    posts.sort((CartPost a, CartPost b) {
+      if (a.created > b.created) {
+        return -1;
+      } else if (a.created == b.created) {
+        return 0;
+      } else {
+        return 1;
+      }
+    });
+
+    int startPos = (pageNumber - 1) * postsPerPage;
+    int endPos = startPos + postsPerPage;
+    if (startPos >= posts.length) {
+      return []; // target page not exists
+    }
+    if (endPos >= posts.length) {
+      endPos = posts.length - 1;
+    }
+
+    return posts.getRange(startPos, endPos).toList();
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: CATEGORY
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
