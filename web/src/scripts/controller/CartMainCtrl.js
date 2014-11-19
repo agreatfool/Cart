@@ -71,11 +71,4 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
         footer.addClass('animated fadeIn');
     });
 
-    // get init index data
-    $dataService.getInitData().then(function() {
-        // succeeded, do nothing
-    }, function() {
-        // rejected, shall be some error
-        $location.url('/error');
-    });
 };

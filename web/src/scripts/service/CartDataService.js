@@ -82,20 +82,6 @@ module.exports = function($http, $q) {
      */
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    //-* DATA RELATED
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    var getInitData = function() {
-        return CartUtility.post(
-            $http, $q, '/api/init', {}, function(data) {
-                posts = data.message.posts;
-                categories = data.message.categories;
-                tags = data.message.tags;
-                return data.message;
-            }
-        );
-    };
-
-    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* LOCAL POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var postSaveTmp = function(uuid, title, markdown, category, tags, attachments) {
@@ -637,7 +623,6 @@ module.exports = function($http, $q) {
 
     // FIXME reformat later
     var apis = {
-        'getInitData': getInitData,
         // local post APIs
         'postSaveTmp': postSaveTmp,
         'postGetTmp': postGetTmp,

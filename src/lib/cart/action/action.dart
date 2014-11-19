@@ -2,47 +2,6 @@ part of cart;
 
 class CartAction {
 
-  static handleDataInit(HttpContext ctx) {
-    // FIXME init date loading mechanisum of site first page load shall be fixed, the size of the load is too large
-    bool isRestoringSite = CartSystem.instance.actionPreProcess(ctx, responseDirectly: false);
-
-    HashMap<String, Map> indexData = {
-        "posts": {},
-        "categories": {},
-        "tags": {}
-    };
-
-    if (!isRestoringSite) {
-      ctx.sendJson(buildResponse('handleDataInit', indexData, doLog: false));
-      ctx.end();
-    } else {
-      CartPostList postList = CartModel.instance.postList;
-      Map categoryList = CartModel.instance.categoryList.toJson()['list'];
-      Map tagList = CartModel.instance.tagList.toJson()['list'];
-
-      if (isMaster(ctx)) {
-        indexData['posts'] = postList.toJson()['list'];
-      } else {
-        postList.list.forEach((String postUuid, CartPost post) {
-          if (post.isPublic()) {
-            indexData['posts'].addAll({ postUuid: post.toJson() });
-          }
-        });
-      }
-      indexData['categories'] = categoryList;
-      indexData['tags'] = tagList;
-
-      ctx.sendJson(buildResponse('handleDataInit', indexData, doLog: false));
-      PinLogger.instance.fine(
-          '[CartAction] handleDataInit: ' +
-          'Posts: ${indexData['posts'].length}, ' +
-          'Categories: ${indexData['categories'].length}, ' +
-          'Tags: ${indexData['tags'].length}'
-      );
-      ctx.end();
-    }
-  }
-
   static handleTagCreate(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
