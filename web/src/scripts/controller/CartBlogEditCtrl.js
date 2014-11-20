@@ -35,7 +35,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
     // category related
     $scope.categoryInput = '';
     $scope.selectPostCategory = function(categoryUuid) {
-        var category = $dataService.categorySearchById(categoryUuid);
+        var category = $dataService.categorySearchLocalById(categoryUuid);
 
         if (!_.isNull(category)) {
             $scope.postCategory = category;
@@ -69,7 +69,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             return; // same tag already exists in post
         }
 
-        var tag = $dataService.tagSearch(inputName);
+        var tag = $dataService.tagSearchLocal(inputName);
         if (!_.isEmpty(tag)) {
             // tag already exists
             tag = tag.pop(); // [searchedTag].pop()
@@ -181,7 +181,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
     var collectPostData = function() {
         var title = titleElement.text().trim();
 
-        var category = $dataService.categorySearch(categoryElement.text().trim());
+        var category = $dataService.categorySearchLocal(categoryElement.text().trim());
         if (_.isEmpty(category)) {
             category = {};
         } else {
@@ -199,7 +199,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
         }
         if (tagNames.length > 0) {
             _.forEach(tagNames, function(tagName) {
-                var tag = $dataService.tagSearch(tagName);
+                var tag = $dataService.tagSearchLocal(tagName);
                 if (!_.isEmpty(tag)) {
                     tag = tag.pop(); // [searchedTag].pop()
                     tag = $dataService.tagUpdateTime(tag);

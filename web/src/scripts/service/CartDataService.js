@@ -459,7 +459,7 @@ module.exports = function($http, $q) {
     var categoryUpdate = function(category) {
         var deferred = $q.defer();
 
-        var target = categorySearchById(category.uuid);
+        var target = categorySearchLocalById(category.uuid);
         if (_.isNull(target)) {
             CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdate');
             deferred.reject();
@@ -482,7 +482,7 @@ module.exports = function($http, $q) {
         return deferred.future;
     };
     var categoryUpdateTime = function(category) {
-        var target = categorySearchById(category.uuid);
+        var target = categorySearchLocalById(category.uuid);
         if (_.isNull(target)) {
             CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdateTime');
             return false;
@@ -494,7 +494,7 @@ module.exports = function($http, $q) {
 
         return category;
     };
-    var categorySearchById = function(uuid) { // FIXME 改名为local
+    var categorySearchLocalById = function(uuid) {
         var found = _.filter(categories, function(category) {
             return category.uuid === uuid;
         });
@@ -505,7 +505,7 @@ module.exports = function($http, $q) {
         }
         return found;
     };
-    var categorySearch = function(categoryName, strict) { // FIXME 改名为local
+    var categorySearchLocal = function(categoryName, strict) {
         strict = _.isBoolean(strict) ? strict : true; // whether search with "strict mode" (all match), otherwise it will be "start with mode"
 
         var found = _.filter(categories, function(category) {
@@ -546,7 +546,7 @@ module.exports = function($http, $q) {
     var tagUpdate = function(tag) {
         var deferred = $q.defer();
 
-        var target = tagSearchById(tag.uuid);
+        var target = tagSearchLocalById(tag.uuid);
         if (_.isNull(target)) {
             CartUtility.log('Target local tag data not found with input category: ' + JSON.stringify(tag), 'DataService::tagUpdate');
             deferred.reject();
@@ -569,7 +569,7 @@ module.exports = function($http, $q) {
         return deferred.future;
     };
     var tagUpdateTime = function(tag) {
-        var target = tagSearchById(tag.uuid);
+        var target = tagSearchLocalById(tag.uuid);
         if (_.isNull(target)) {
             CartUtility.log('Target local tag data not found with input tag: ' + JSON.stringify(tag), 'DataService::tagUpdateTime');
             return false;
@@ -581,7 +581,7 @@ module.exports = function($http, $q) {
 
         return tag;
     };
-    var tagSearchById = function(uuid) { // FIXME 改名为local
+    var tagSearchLocalById = function(uuid) {
         var found = _.filter(tags, function(tag) {
             return tag.uuid === uuid;
         });
@@ -592,7 +592,7 @@ module.exports = function($http, $q) {
         }
         return found;
     };
-    var tagSearch = function(tagName, strict) { // FIXME 改名为local
+    var tagSearchLocal = function(tagName, strict) {
         strict = _.isBoolean(strict) ? strict : true; // whether search with "strict mode" (all match), otherwise it will be "start with mode"
 
         var found = _.filter(tags, function(tag) {
@@ -633,15 +633,15 @@ module.exports = function($http, $q) {
         'categoryCreate': categoryCreate,
         'categoryUpdate': categoryUpdate,
         'categoryUpdateTime': categoryUpdateTime,
-        'categorySearchById': categorySearchById,
-        'categorySearch': categorySearch,
+        "categorySearchLocalById": categorySearchLocalById,
+        "categorySearchLocal": categorySearchLocal,
         // tag APIs
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
         'tagUpdate': tagUpdate,
         'tagUpdateTime': tagUpdateTime,
-        'tagSearchById': tagSearchById,
-        'tagSearch': tagSearch
+        "tagSearchLocalById": tagSearchLocalById,
+        "tagSearchLocal": tagSearchLocal
     };
 
     global.apis = apis;
