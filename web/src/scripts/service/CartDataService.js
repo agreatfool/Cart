@@ -662,6 +662,51 @@ module.exports = function($http, $q) {
 
         return found;
     };
+    var tagSearch = function(uuids) {
+        var deferred = $q.defer();
+
+        var targetTags = {};
+        var uuidsNeedSearch = [];
+
+        // search local tags & prepare remote search uuid
+        _.forEach(uuids, function(uuid) {
+            var tag = tagSearchLocalById(uuid);
+            if (_.isNull(tag)) {
+                uuidsNeedSearch.push(uuid);
+            } else {
+                targetTags[uuid] = tag;
+            }
+        });
+
+        if (uuidsNeedSearch.length === 0) {
+            deferred.resolve(targetTags);
+        } else {
+            CartUtility.post(
+                $http, $q, '/api/tag/search', {
+                    "uuids": uuidsNeedSearch
+                }, function(data) {
+                    var result = data.message.tags;
+                    _.forEach(uuidsNeedSearch, function(uuidNeedSearch) {
+                        if (!result.hasOwnProperty(uuidNeedSearch) || result[uuidNeedSearch] === null) {
+                            CartUtility.notify('Error!', 'Target tag "' + uuidNeedSearch + '" does not exist in server!');
+                        }
+                    });
+                    _.forEach(result, function(tag, uuid) {
+                        if (tag === null) {
+                            return;
+                        }
+                        tags[uuid] = tag;
+                        targetTags[uuid] = tag;
+                    });
+                    return result;
+                }
+            ).then(function() {
+                    deferred.resolve(targetTags);
+                });
+        }
+
+        return deferred.promise;
+    };
 
     // FIXME reformat later
     var apis = {
@@ -696,7 +741,8 @@ module.exports = function($http, $q) {
         'tagUpdate': tagUpdate,
         'tagUpdateTime': tagUpdateTime,
         'tagSearchLocalById': tagSearchLocalById,
-        'tagSearchLocal': tagSearchLocal
+        'tagSearchLocal': tagSearchLocal,
+        'tagSearch': tagSearch
     };
 
     global.apis = apis;
