@@ -399,6 +399,12 @@ module.exports = function($http, $q) {
                 _.forEach(data.message.posts, function(post, uuid) {
                     posts[uuid] = post;
                 });
+                _.forEach(data.message.categories, function(category, uuid) {
+                    categories[uuid] = category;
+                });
+                _.forEach(data.message.tags, function(tag, uuid) {
+                    tags[uuid] = tag;
+                });
                 return data.message;
             }
         );

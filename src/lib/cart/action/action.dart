@@ -37,11 +37,24 @@ class CartAction {
       options['pageNumber'] = options.containsKey('pageNumber') ? int.parse(options['pageNumber']) : 1;
 
       List<CartPost> result = CartModel.instance.searchPost(options, options['isUuidSearch'], isMaster: isUserMaster, pageNumber: options['pageNumber']);
+
       HashMap<String, HashMap> posts = {};
+      HashMap<String, HashMap> categories = {};
+      HashMap<String, HashMap> tags = {};
       result.forEach((CartPost post) {
         posts[post.uuid] = post.toJson();
+        categories.addAll({ post.category: CartModel.instance.categoryList.find(post.category).toJson() });
+        post.tags.forEach((String tagUuid) {
+          tags.addAll({ tagUuid: CartModel.instance.tagList.find(tagUuid).toJson() });
+        });
       });
-      ctx.sendJson(buildResponse('handlePostPage', { "posts": posts, "total": posts.length }));
+
+      ctx.sendJson(buildResponse('handlePostPage', {
+          "posts": posts,
+          "categories": categories,
+          "tags": tags,
+          "total": posts.length
+      }));
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
