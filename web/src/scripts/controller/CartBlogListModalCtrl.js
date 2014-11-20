@@ -61,9 +61,24 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
     };
 
     $dataService.postGetAllTmp().then(function(result) { // FIXME 需要检查本地的categories和tags中有没有暂存post所从属的信息，没有的话从服务器上查询
+        if (!_.isArray(result) || result.length === 0) {
+            return; // no local tmp post data saved, list is empty
+        }
+
+        var postUuids = [];
+        var categoryUuids = [];
+
         _.forEach(result, function(post) {
-            post.published = _.isNull($dataService.postSearchById(post._id)) ? false : true;
+            postUuids.push(post.uuid);
+            categoryUuids.push(post.category);
         });
+
+        $dataService.postPublishedCheck(postUuids).then(function(published) {
+            _.forEach(result, function(post) {
+                post.published = published.hasOwnProperty(post.uuid) ? published[post.uuid] : false;
+            });
+        });
+
         dataRows = _.sortBy(result, function(post) { return post.updated; }).reverse(); // orderBy "updated" DESC
         $scope.paginationTotalItems = result.length;
         $scope.paginationCurrentPage = 1;

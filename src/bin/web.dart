@@ -59,6 +59,7 @@ main() {
   app.post('/api/post/page',          (HttpContext ctx) => CartAction.handlePostPage(ctx));
   app.post('/api/post/save',          (HttpContext ctx) => CartAction.handlePostSave(ctx));
   app.post('/api/post/remove',        (HttpContext ctx) => CartAction.handlePostRemove(ctx));
+  app.post('/api/post/published',     (HttpContext ctx) => CartAction.handlePostPublishedCheck(ctx));
   app.post('/api/category/all',       (HttpContext ctx) => CartAction.handleCategoryAll(ctx));
   app.post('/api/tag/all',            (HttpContext ctx) => CartAction.handleTagAll(ctx));
 

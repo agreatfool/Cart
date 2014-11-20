@@ -165,6 +165,34 @@ class CartAction {
     });
   }
 
+  static handlePostPublishedCheck(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    HttpBodyHandler.processRequest(ctx.req)
+    .then((HttpRequestBody body) {
+      List<String> uuids = body.body['uuids'];
+      HashMap<String, bool> published = {};
+      uuids.forEach((String uuid) {
+        CartPost post = CartModel.instance.postList.find(uuid);
+        if (post != null) {
+          published[uuid] = true;
+        } else {
+          published[uuid] = false;
+        }
+      });
+      ctx.sendJson(buildResponse('handlePostPublishedCheck', { "published": published }));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handlePostPublishedCheck', { "error": "Error encountered in handling published check!" }, valid: false));
+    });
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* CATEGORIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

@@ -432,6 +432,15 @@ module.exports = function($http, $q) {
             }
         );
     };
+    var postPublishedCheck = function(uuids) {
+        return CartUtility.post(
+            $http, $q, '/api/post/published', {
+                "uuids": uuids
+            }, function(data) {
+                return data.message.published;
+            }
+        );
+    };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* CATEGORY RELATED
@@ -628,6 +637,7 @@ module.exports = function($http, $q) {
         'postSearch': postSearch,
         'postUpload': postUpload,
         'postRemove': postRemove,
+        'postPublishedCheck': postPublishedCheck,
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
