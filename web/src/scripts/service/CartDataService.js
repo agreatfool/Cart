@@ -687,16 +687,16 @@ module.exports = function($http, $q) {
         'categoryCreate': categoryCreate,
         'categoryUpdate': categoryUpdate,
         'categoryUpdateTime': categoryUpdateTime,
-        "categorySearchLocalById": categorySearchLocalById,
-        "categorySearchLocal": categorySearchLocal,
+        'categorySearchLocalById': categorySearchLocalById,
+        'categorySearchLocal': categorySearchLocal,
         'categorySearch': categorySearch,
         // tag APIs
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
         'tagUpdate': tagUpdate,
         'tagUpdateTime': tagUpdateTime,
-        "tagSearchLocalById": tagSearchLocalById,
-        "tagSearchLocal": tagSearchLocal
+        'tagSearchLocalById': tagSearchLocalById,
+        'tagSearchLocal': tagSearchLocal
     };
 
     global.apis = apis;
