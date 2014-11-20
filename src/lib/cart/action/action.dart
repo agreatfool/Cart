@@ -225,6 +225,14 @@ class CartAction {
     });
   }
 
+  static handleCategoryAll(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+
+    ctx.sendJson(buildResponse('handleCategoryAll', { "categories": CartModel.instance.categoryList.toJson() }));
+  }
+
   static handleCategorySearch(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
@@ -253,14 +261,6 @@ class CartAction {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* TAGS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-  static handleCategoryAll(HttpContext ctx) {
-    if (!CartSystem.instance.actionPreProcess(ctx)) {
-      return;
-    }
-
-    ctx.sendJson(buildResponse('handleCategoryAll', { "categories": CartModel.instance.categoryList.toJson() }));
-  }
-
   static handleTagCreate(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
