@@ -20,8 +20,8 @@ class CartModel {
   CartModel() {
     // init data classes
     postList = new CartPostList();
-    categoryList = new CartCategoryList(postList);
-    tagList = new CartTagList(postList);
+    categoryList = new CartCategoryList();
+    tagList = new CartTagList();
 
     // check web public dir & post data dir
     PinUtility.checkDirExistsSync(CartConst.WWW_POST_PUB_PATH, createWhenNotExist: true);

@@ -41,7 +41,7 @@ class CartCategoryList extends Object with PinSerializable {
 
   HashMap<String, CartCategory> list = {};
 
-  CartCategoryList(CartPostList postList) {
+  CartCategoryList() {
     HashMap categories = PinUtility.readJsonFileSync(CartConst.DB_CATEGORIES_PATH);
 
     if (categories.length <= 0) {
