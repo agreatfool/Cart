@@ -507,7 +507,7 @@ module.exports = function($http, $q) {
         var found = _.filter(categories, function(category) {
             return category.uuid === uuid;
         });
-        if (_.isUndefined(found)) {
+        if (_.isUndefined(found) || (_.isArray(found) && found.length === 0) || _.isNull(found)) {
             found = null;
         } else {
             found = found.pop();
@@ -524,7 +524,7 @@ module.exports = function($http, $q) {
                 return category.title.indexOf(categoryName) === 0;
             }
         });
-        if (_.isUndefined(found)) {
+        if (_.isUndefined(found) || (_.isArray(found) && found.length === 0) || _.isNull(found)) {
             found = [];
         }
 
@@ -639,7 +639,7 @@ module.exports = function($http, $q) {
         var found = _.filter(tags, function(tag) {
             return tag.uuid === uuid;
         });
-        if (_.isUndefined(found)) {
+        if (_.isUndefined(found) || (_.isArray(found) && found.length === 0) || _.isNull(found)) {
             found = null;
         } else {
             found = found.pop();
@@ -656,7 +656,7 @@ module.exports = function($http, $q) {
                 return tag.title.indexOf(tagName) === 0;
             }
         });
-        if (_.isUndefined(found)) {
+        if (_.isUndefined(found) || (_.isArray(found) && found.length === 0) || _.isNull(found)) {
             found = [];
         }
 
