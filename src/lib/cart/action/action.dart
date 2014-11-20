@@ -25,16 +25,14 @@ class CartAction {
        */
       HashMap options = body.body;
 
-      options['start'] = options.containsKey('start') ? int.parse(options['start']) : 0;
-      options['end'] = options.containsKey('end') ? int.parse(options['end']) : PinTime.TIMESTAMP_MAX;
+      options['start'] = options.containsKey('start') ? options['start'] : 0;
+      options['end'] = options.containsKey('end') ? options['end'] : PinTime.TIMESTAMP_MAX;
 
-      if (options['isUuidSearch'] == 'true') {
-        options['isUuidSearch'] = true;
-      } else {
+      if (!options.containsKey('isUuidSearch') || !(options['isUuidSearch'] is bool)) {
         options['isUuidSearch'] = false;
       }
 
-      options['pageNumber'] = options.containsKey('pageNumber') ? int.parse(options['pageNumber']) : 1;
+      options['pageNumber'] = options.containsKey('pageNumber') ? options['pageNumber'] : 1;
 
       List<CartPost> result = CartModel.instance.searchPost(options, options['isUuidSearch'], isMaster: isUserMaster, pageNumber: options['pageNumber']);
 

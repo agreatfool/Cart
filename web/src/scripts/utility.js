@@ -12,11 +12,10 @@ CartUtility.prototype.post = function($http, $q, url, data, onSuccess, onError) 
 
     var options = {
         method: "POST",
-        url: url,
-        headers: {"Content-type": "application/x-www-form-urlencoded"}
+        url: url
     };
     if (_.isObject(data) && !_.isEmpty(data)) {
-        options.data = $.param(data);
+        options.data = JSON.stringify(data);
     }
 
     $http(options)
