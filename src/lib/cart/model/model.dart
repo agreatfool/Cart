@@ -251,8 +251,8 @@ class CartModel {
     if (startPos >= posts.length) {
       return []; // target page not exists
     }
-    if (endPos >= posts.length) {
-      endPos = posts.length - 1;
+    if (endPos > posts.length) {
+      endPos = posts.length; // endPos is exclusive in method "getRange"
     }
 
     return posts.getRange(startPos, endPos).toList();
