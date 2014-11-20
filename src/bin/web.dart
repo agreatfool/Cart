@@ -48,7 +48,7 @@ main() {
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   var app = new Express();
   // POSTS
-  app.post('/api/post/page',          (HttpContext ctx) => CartAction.handlePostPage(ctx));
+  app.get('/api/post/page',           (HttpContext ctx) => CartAction.handlePostPage(ctx));
   app.post('/api/post/save',          (HttpContext ctx) => CartAction.handlePostSave(ctx));
   app.post('/api/post/remove',        (HttpContext ctx) => CartAction.handlePostRemove(ctx));
   app.post('/api/upload',             (HttpContext ctx) => CartAction.handleUpload(ctx));

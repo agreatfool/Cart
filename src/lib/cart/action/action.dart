@@ -11,10 +11,9 @@ class CartAction {
     }
     bool isUserMaster = isMaster(ctx);
 
-    HttpBodyHandler.processRequest(ctx.req)
-    .then((HttpRequestBody body) {
+    try {
       /**
-       * options: {
+       * ctx.params: {
        *     "category": categoryName|uuid,
        *     "tags": [tagName|uuid, tagName|uuid, ...],
        *     "isUuidSearch": bool,
@@ -23,22 +22,38 @@ class CartAction {
        *     "pageNumber": int
        * }
        */
-      HashMap options = body.body;
+      HashMap options = ctx.params;
 
-      options['start'] = options.containsKey('start') ? options['start'] : 0;
-      options['end'] = options.containsKey('end') ? options['end'] : PinTime.TIMESTAMP_MAX;
+      options['start'] = options.containsKey('start') ? int.parse(options['start']) : 0;
+      options['end'] = options.containsKey('end') ? int.parse(options['end']) : PinTime.TIMESTAMP_MAX;
 
-      if (!options.containsKey('isUuidSearch') || !(options['isUuidSearch'] is bool)) {
+      if (!options.containsKey('isUuidSearch') || !(options['isUuidSearch'] != 'false' && options['isUuidSearch'] != 'true')) {
         options['isUuidSearch'] = false;
+      } else {
+        if (options['isUuidSearch'] == 'true') {
+          options['isUuidSearch'] = true;
+        } else if (options['isUuidSearch'] == 'false') {
+          options['isUuidSearch'] = false;
+        }
       }
 
-      options['pageNumber'] = options.containsKey('pageNumber') ? options['pageNumber'] : 1;
+      options['pageNumber'] = options.containsKey('pageNumber') ? int.parse(options['pageNumber']) : 1;
+
+      if (options.containsKey('tags')) {
+        try {
+          options['tags'] = JSON.decode(options['tags']);
+        } catch (e, trace) {
+          PinLogger.instance.shout('[CartAction] handlePostPage: Invalid input param "tags": ${options['tags']}');
+          options['tags'] = [];
+        }
+      }
 
       List<CartPost> result = CartModel.instance.searchPost(options, options['isUuidSearch'], isMaster: isUserMaster, pageNumber: options['pageNumber']);
 
       HashMap<String, HashMap> posts = {};
       HashMap<String, HashMap> categories = {};
       HashMap<String, HashMap> tags = {};
+
       result.forEach((CartPost post) {
         posts[post.uuid] = post.toJson();
         categories.addAll({ post.category: CartModel.instance.categoryList.find(post.category).toJson() });
@@ -52,12 +67,12 @@ class CartAction {
           "categories": categories,
           "tags": tags,
           "total": posts.length
-      }));
-    })
-    .catchError((e, trace) {
+      }, doLog: false));
+
+    } catch (e, trace) {
       PinUtility.handleError(e, trace);
       ctx.sendJson(buildResponse('handlePostPage', { "error": "Error encountered in list pages of posts!" }, valid: false));
-    });
+    }
   }
 
   static handlePostSave(HttpContext ctx) {

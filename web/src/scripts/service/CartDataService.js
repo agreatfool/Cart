@@ -347,6 +347,7 @@ module.exports = function($http, $q) {
          *     "pageNumber": int
          * }
          */
+        // default values
         if (!_.isObject(options)) {
             options = {};
         }
@@ -359,6 +360,7 @@ module.exports = function($http, $q) {
             options.pageNumber = parseInt(options.pageNumber);
         }
 
+        // start & end time of post created
         var start = [];
         var end = [];
 
@@ -393,6 +395,11 @@ module.exports = function($http, $q) {
         delete options.year; delete options.month; delete options.day;
         options.start = start;
         options.end = end;
+
+        // tags: since it's a 'GET' request, tags need to be encoded to a JSON string and attached in url, and decoded by server
+        if (options.hasOwnProperty('tags')) {
+            options.tags = JSON.stringify(options.tags);
+        }
 
         return CartUtility.request(
             'GET', $http, $q, '/api/post/page', options, function(data) {
