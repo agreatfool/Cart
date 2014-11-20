@@ -92,7 +92,8 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
         }
         options.isUuidSearch = false;
         options.pageNumber = $scope.paginationCurrentPage;
-        $dataService.postSearch(options).then(function(data) { // FIXME 修改postSearch接口，posts里带的categories和tags，都要附带下载
+        $dataService.postSearch(options).then(function(data) {
+            // FIXME 如果查找posts结果为空，需要在页面上展示一个友好的空白页效果
             var posts = data.posts;
             if (_.isObject(posts) && _.keys(posts).length > 0) {
                 $scope.postOnPage = _.values(posts);
@@ -104,6 +105,15 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
     };
 
     $scope.loadPageData();
+
+    // route change event, when location changed
+    $scope.$on('$routeChangeSuccess', function() {
+        CartUtility.log('CartBlogListCtrl $routeChangeSuccess entered!');
+        var rootPath = CartUtility.getRootPathFromtLocation($location);
+        if (['', 'category', 'tag', 'year', 'month', 'day'].indexOf(rootPath) !== -1) {
+            $scope.loadPageData();
+        }
+    });
 
     // FIXME 页脚的分页标签的位置最好紧贴页面的footer，现在是在内容展示的div下面
 };
