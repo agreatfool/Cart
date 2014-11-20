@@ -221,7 +221,7 @@ class CartAction {
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleCategoryCreate', { "error": "Error in creating request!" }, valid: false));
+      ctx.sendJson(buildResponse('handleCategoryCreate', { "error": "Error in creating category!" }, valid: false));
     });
   }
 
@@ -254,7 +254,7 @@ class CartAction {
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleCategorySearch', { "error": "Error in creating request!" }, valid: false));
+      ctx.sendJson(buildResponse('handleCategorySearch', { "error": "Error in category search!" }, valid: false));
     });
   }
 
@@ -295,6 +295,31 @@ class CartAction {
     }
 
     ctx.sendJson(buildResponse('handleTagAll', { "tags": CartModel.instance.tagList.toJson() }));
+  }
+
+  static handleTagSearch(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+
+    _parseHttpReqBody(ctx)
+    .then((HttpRequestBody body) {
+      List<String> uuids = body.body['uuids'];
+      HashMap<String, HashMap> tags = {};
+      uuids.forEach((String uuid) {
+        CartTag tag = CartModel.instance.tagList.find(uuid);
+        if (tag == null) {
+          tags.addAll({ uuid: null });
+        } else {
+          tags.addAll({ uuid: tag.toJson() });
+        }
+      });
+      ctx.sendJson(buildResponse('handleTagSearch', { "tags": tags }));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleTagSearch', { "error": "Error in tag search!" }, valid: false));
+    });
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
