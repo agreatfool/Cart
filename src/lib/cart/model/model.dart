@@ -208,14 +208,6 @@ class CartModel {
       end = options['end'];
     }
 
-    print(options);
-    print('conditions:');
-    print(categoryUuid);
-    print(tagUuids);
-    print(start);
-    print(end);
-    print('-------');
-
     // filter posts in list
     postList.list.forEach((String uuid, CartPost post) {
       bool match = true;
