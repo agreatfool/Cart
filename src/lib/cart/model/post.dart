@@ -45,8 +45,8 @@ class CartPost extends Object with PinSerializable {
     if (json.containsKey('tags')) {
       tags = json['tags'];
     }
-    if (json.containsKey('attachments') && json['attachments'] is Iterable) {
-      json['attachments'].forEach((HashMap attachData) {
+    if (json.containsKey('attachments')) {
+      json['attachments'].forEach((String attachUuid, HashMap attachData) {
         CartPostAttachment attachment = new CartPostAttachment.fromJson(attachData);
         attachments.addAll({ attachment.uuid: attachment });
       });
