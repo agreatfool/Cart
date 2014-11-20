@@ -530,6 +530,51 @@ module.exports = function($http, $q) {
 
         return found;
     };
+    var categorySearch = function(uuids) {
+        var deferred = $q.defer();
+
+        var targetCategories = {};
+        var uuidsNeedSearch = [];
+
+        // search local categories & prepare remote search uuid
+        _.forEach(uuids, function(uuid) {
+            var category = categorySearchLocalById(uuid);
+            if (_.isNull(category)) {
+                uuidsNeedSearch.push(uuid);
+            } else {
+                targetCategories[uuid] = category;
+            }
+        });
+
+        if (uuidsNeedSearch.length === 0) {
+            deferred.resolve(targetCategories);
+        } else {
+            CartUtility.post(
+                $http, $q, '/api/category/search', {
+                    "uuids": uuidsNeedSearch
+                }, function(data) {
+                    var result = data.message.categories;
+                    _.forEach(uuidsNeedSearch, function(uuidNeedSearch) {
+                        if (!result.hasOwnProperty(uuidNeedSearch) || result[uuidNeedSearch] === null) {
+                            CartUtility.notify('Error!', 'Target category "' + uuidNeedSearch + '" does not exist in server!');
+                        }
+                    });
+                    _.forEach(result, function(category, uuid) {
+                        if (category === null) {
+                            return;
+                        }
+                        categories[uuid] = category;
+                        targetCategories[uuid] = category;
+                    });
+                    return result;
+                }
+            ).then(function() {
+                deferred.resolve(targetCategories);
+            });
+        }
+
+        return deferred.promise;
+    };
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* TAG RELATED
@@ -617,7 +662,6 @@ module.exports = function($http, $q) {
 
         return found;
     };
-    // FIXME 添加接口根据categories和tags id来查询本地信息，有的话返回，没的话则从服务器查询
 
     // FIXME reformat later
     var apis = {
@@ -645,6 +689,7 @@ module.exports = function($http, $q) {
         'categoryUpdateTime': categoryUpdateTime,
         "categorySearchLocalById": categorySearchLocalById,
         "categorySearchLocal": categorySearchLocal,
+        'categorySearch': categorySearch,
         // tag APIs
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
