@@ -394,8 +394,8 @@ module.exports = function($http, $q) {
         options.start = start;
         options.end = end;
 
-        return CartUtility.post(
-            $http, $q, '/api/post/page', options, function(data) {
+        return CartUtility.request(
+            'GET', $http, $q, '/api/post/page', options, function(data) {
                 _.forEach(data.message.posts, function(post, uuid) {
                     posts[uuid] = post;
                 });
@@ -410,8 +410,8 @@ module.exports = function($http, $q) {
         );
     };
     var postUpload = function(post) { // post structure is "Structure of temporarily saved post"
-        return CartUtility.post(
-            $http, $q, '/api/post/save', {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/post/save', {
                 "postId": post.uuid,
                 "markdown": CartUtility.generateMdHTMLHeader(post) + post.md
             }, function(data) {
@@ -422,8 +422,8 @@ module.exports = function($http, $q) {
         );
     };
     var postRemove = function(uuid) {
-        return CartUtility.post(
-            $http, $q, '/api/post/remove', {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/post/remove', {
                 "postId": uuid
             }, function(data) {
                 postRemoveTmp(uuid);
@@ -433,8 +433,8 @@ module.exports = function($http, $q) {
         );
     };
     var postPublishedCheck = function(uuids) {
-        return CartUtility.post(
-            $http, $q, '/api/post/published', {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/post/published', {
                 "uuids": uuids
             }, function(data) {
                 return data.message.published;
@@ -446,16 +446,16 @@ module.exports = function($http, $q) {
     //-* CATEGORY RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var categoryGetAll = function() {
-        return CartUtility.post(
-            $http, $q, '/api/category/all', {}, function(data) {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/category/all', {}, function(data) {
                 categories = data.message.categories.list;
                 return categories;
             }
         );
     };
     var categoryCreate = function(categoryName) {
-        return CartUtility.post(
-            $http, $q, '/api/category/create', {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/category/create', {
                 "uuid": uuid.v4(),
                 "name": categoryName
             }, function(data) {
@@ -549,8 +549,8 @@ module.exports = function($http, $q) {
         if (uuidsNeedSearch.length === 0) {
             deferred.resolve(targetCategories);
         } else {
-            CartUtility.post(
-                $http, $q, '/api/category/search', {
+            CartUtility.request(
+                'POST', $http, $q, '/api/category/search', {
                     "uuids": uuidsNeedSearch
                 }, function(data) {
                     var result = data.message.categories;
@@ -580,16 +580,16 @@ module.exports = function($http, $q) {
     //-* TAG RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     var tagGetAll = function() {
-        return CartUtility.post(
-            $http, $q, '/api/tag/all', {}, function(data) {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/tag/all', {}, function(data) {
                 tags = data.message.tags.list;
                 return tags;
             }
         );
     };
     var tagCreate = function(tagName) {
-        return CartUtility.post(
-            $http, $q, '/api/tag/create', {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/tag/create', {
                 "uuid": uuid.v4(),
                 "name": tagName
             }, function(data) {
@@ -681,8 +681,8 @@ module.exports = function($http, $q) {
         if (uuidsNeedSearch.length === 0) {
             deferred.resolve(targetTags);
         } else {
-            CartUtility.post(
-                $http, $q, '/api/tag/search', {
+            CartUtility.request(
+                'POST', $http, $q, '/api/tag/search', {
                     "uuids": uuidsNeedSearch
                 }, function(data) {
                     var result = data.message.tags;

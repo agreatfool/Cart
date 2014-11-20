@@ -5,16 +5,16 @@ module.exports = function($http, $q, $cookies) {
     var masterUrls = ['master', 'new', 'update'];
 
     var isBlogAuthed = function() {
-        return CartUtility.post(
-            $http, $q, '/api/isauthed', {}, function(data) {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/isauthed', {}, function(data) {
                 return data.message;
             }
         );
     };
 
     var getOauthUrl = function() {
-        return CartUtility.post(
-            $http, $q, '/api/oauth2', {}, function(data) {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/oauth2', {}, function(data) {
                 return data.message;
             }
         );
@@ -42,16 +42,16 @@ module.exports = function($http, $q, $cookies) {
     };
 
     var getLoginUrl = function() {
-        return CartUtility.post(
-            $http, $q, '/api/login', {}, function(data) {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/login', {}, function(data) {
                 return data.message;
             }
         );
     };
 
     var logout = function() {
-        return CartUtility.post(
-            $http, $q, '/api/logout', {}, function(data) {
+        return CartUtility.request(
+            'POST', $http, $q, '/api/logout', {}, function(data) {
                 return data.message;
             }
         );

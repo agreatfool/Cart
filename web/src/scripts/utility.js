@@ -6,16 +6,24 @@ var CartUtility = function() {
     this.pnotifyStack = {'dir1': 'up', 'dir2': 'right', 'push': 'bottom', 'spacing1': 0, 'spacing2': 0};
 };
 
-CartUtility.prototype.post = function($http, $q, url, data, onSuccess, onError) {
+CartUtility.prototype.request = function(method, $http, $q, url, data, onSuccess, onError) {
     var self = this;
     var deferred = $q.defer();
 
+    if (!_.isString(method) || (method.toLowerCase() !== 'get' && method.toLowerCase() !== 'post')) {
+        method = 'GET';
+    }
+
     var options = {
-        method: "POST",
+        method: method,
         url: url
     };
     if (_.isObject(data) && !_.isEmpty(data)) {
-        options.data = JSON.stringify(data);
+        if (method.toLowerCase() === 'post') {
+            options.data = JSON.stringify(data);
+        } else {
+            options.url += '?' + $.param(data);
+        }
     }
 
     $http(options)
