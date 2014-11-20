@@ -6,7 +6,7 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
 
     $scope.segment = $routeSegment;
     $scope.location = $location;
-    $scope.rootPath = $location.path().split('/')[1]; // for nav highlight
+    $scope.rootPath = CartUtility.getRootPathFromtLocation($location); // for nav highlight
     $scope.indexPaths = ['', 'new', 'update', 'year', 'month', 'day']; // for index nav high light
     $scope.isMaster = $accessService.isMaster();
 
@@ -52,7 +52,7 @@ module.exports = function($scope, $location, $cookies, $window, $routeSegment, $
     $scope.$on('$routeChangeStart', function(event, next, current) {
         CartUtility.log('CartMainCtrl $routeChangeStart entered!');
         // reset the rootPath in url
-        $scope.rootPath = $location.path().split('/')[1]; // $scope.rootPath: "http://host/post/postId" => "post"
+        $scope.rootPath = CartUtility.getRootPathFromtLocation($location);
         // validate accessible
         var validateUrl = $scope.rootPath;
         if (!_.isUndefined(next) && next.hasOwnProperty('originalPath')) {

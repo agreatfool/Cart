@@ -231,12 +231,16 @@ CartUtility.prototype.escapeAnchorName = function(anchorName) {
     return encodeURIComponent(anchorName);
 };
 
+CartUtility.prototype.getRootPathFromtLocation = function($location) {
+    return $location.path().split('/')[1]; // rootPath: "http://host/post/postId" => "post"
+};
+
 CartUtility.prototype.getPureRootUrlFromLocation = function($location) {
-    return $location.protocol() + '://' + $location.host() + '/';
+    return $location.protocol() + '://' + $location.host() + '/'; // "http://host/"
 };
 
 CartUtility.prototype.getPureAbsUrlFromLocation = function($location) {
-    return $location.protocol() + '://' + $location.host() + '/' + $location.path();
+    return $location.protocol() + '://' + $location.host() + '/' + $location.path(); // "http://cart.com/edit/0dcec492-3f9b-442b-95b1-60b3e0c92f7b"
 };
 
 CartUtility.prototype.log = function(msg, facility) {
