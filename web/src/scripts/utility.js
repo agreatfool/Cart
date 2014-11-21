@@ -282,7 +282,7 @@ CartUtility.prototype.generateMdHTMLHeader = function(post) {
 };
 
 CartUtility.prototype.parseMdHTMLHeader = function(markdown) {
-    return JSON.parse($(markdown).find('.mdHeader').text());
+    return JSON.parse($(markdown).find('.mdHeaderData').text());
 };
 
 CartUtility.prototype.parseMdPureContent = function(markdown) {
