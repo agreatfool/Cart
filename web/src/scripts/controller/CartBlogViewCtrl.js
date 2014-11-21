@@ -1,6 +1,6 @@
 'use strict';
 
-/* global $, marked, CartUtility */
+/* global $, _, marked, uuid, CartUtility */
 module.exports = function ($scope, $location, $window, $routeParams, $anchorScroll, $accessSerivce, $dataService) {
     CartUtility.log('CartBlogViewCtrl');
 

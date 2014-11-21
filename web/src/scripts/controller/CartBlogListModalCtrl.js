@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, moment, CartUtility, CartConst */
+/* global $, _, moment, CartUtility, CartConst */
 module.exports = function($scope, $location, $modalInstance, $dataService) {
     CartUtility.log('CartBlogListModalCtrl');
 
