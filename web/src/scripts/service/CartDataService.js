@@ -717,8 +717,8 @@ module.exports = function($http, $q) {
                     return result;
                 }
             ).then(function() {
-                    deferred.resolve(targetTags);
-                });
+                deferred.resolve(targetTags);
+            });
         }
 
         return deferred.promise;
