@@ -248,7 +248,10 @@ CartUtility.prototype.getPureRootUrlFromLocation = function($location) {
 };
 
 CartUtility.prototype.getPureAbsUrlFromLocation = function($location) {
-    return $location.protocol() + '://' + $location.host() + '/' + $location.path(); // "http://cart.com/edit/0dcec492-3f9b-442b-95b1-60b3e0c92f7b"
+    // "http://cart.com/edit/0dcec492-3f9b-442b-95b1-60b3e0c92f7b#firsttitle"
+    // =>
+    // "http://cart.com/edit/0dcec492-3f9b-442b-95b1-60b3e0c92f7b"
+    return $location.protocol() + '://' + $location.host() + '/' + $location.path();
 };
 
 CartUtility.prototype.log = function(msg, facility) {
