@@ -9,6 +9,8 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
 
     $scope.isMaster = $accessService.isMaster();
 
+    $scope.rootUrl = CartUtility.getPureRootUrlFromLocation($location);
+
     $scope.createNewPost = function() {
         if (!$scope.isMaster) {
             return;
