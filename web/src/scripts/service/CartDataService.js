@@ -340,9 +340,9 @@ module.exports = function($http, $q) {
          * {
          *     "category": categoryName|uuid,
          *     "tags": [tagName|uuid, tagName|uuid, ...],
-         *     "year": timestamp,
-         *     "month": timestamp,
-         *     "day": timestamp,
+         *     "year": "2014",
+         *     "month": "2014-11",
+         *     "day": "2014-11-21",
          *     "isUuidSearch": boolean,
          *     "pageNumber": int
          * }
@@ -365,16 +365,19 @@ module.exports = function($http, $q) {
         var end = [];
 
         if (options.hasOwnProperty('year')) {
-            start.push(CartUtility.parseUnixYearStartTimestamp(options.year));
-            end.push(CartUtility.parseUnixYearEndTimestamp(options.year));
+            var yearTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.year + '-01-01 00:00:00'));
+            start.push(CartUtility.parseUnixYearStartTimestamp(yearTimestamp));
+            end.push(CartUtility.parseUnixYearEndTimestamp(yearTimestamp));
         }
         if (options.hasOwnProperty('month')) {
-            start.push(CartUtility.parseUnixDateStartTimestamp(options.month));
-            end.push(CartUtility.parseUnixDateEndTimestamp(options.month));
+            var monthTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.month + '-01 00:00:00'));
+            start.push(CartUtility.parseUnixDateStartTimestamp(monthTimestamp));
+            end.push(CartUtility.parseUnixDateEndTimestamp(monthTimestamp));
         }
         if (options.hasOwnProperty('day')) {
-            start.push(CartUtility.parseUnixDayStartTimestamp(options.day));
-            end.push(CartUtility.parseUnixDayEndTimestamp(options.day));
+            var dayTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.day + ' 00:00:00'));
+            start.push(CartUtility.parseUnixDayStartTimestamp(dayTimestamp));
+            end.push(CartUtility.parseUnixDayEndTimestamp(dayTimestamp));
         }
         if (start.length > 0) {
             start = _.max(start, function(item) { return item; });

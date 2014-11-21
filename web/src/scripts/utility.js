@@ -336,6 +336,10 @@ CartUtility.prototype.getTimeString = function(timestamp) {
     return instance.format('YYYY-MM-DD HH:mm:ss');
 };
 
+CartUtility.prototype.parseTimeStringToUnix = function(time) { // timeString || new Date(timeString)
+    return moment(time).unix();
+};
+
 CartUtility.prototype.parseUnixTime = function(timestamp) {
     return moment.unix(timestamp); // return moment instance
 };
@@ -407,7 +411,7 @@ CartUtility.prototype.parseUnixDay = function(timestamp) {
 
 CartUtility.prototype.parseUnixDayStartTimestamp = function(timestamp) {
     // return 'YYYY-MM-DD 00:00:00'.timestamp
-    return this.parseUnixDateDay(timestamp, true).unix();
+    return moment(this.parseUnixDateDay(timestamp, true)).unix();
 };
 
 CartUtility.prototype.parseUnixDayEndTimestamp = function(timestamp) {

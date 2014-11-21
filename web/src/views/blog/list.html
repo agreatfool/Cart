@@ -26,9 +26,9 @@
                                 <div>
                                     <small class="text-muted">
                                         <span class="post-icon glyphicon glyphicon-time"></span>
-                                        <a href="#" class="post-time">{{ utility.parseUnixYear(post.created) }}</a>-
-                                        <a href="#" class="post-time">{{ utility.parseUnixMonth(post.created) }}</a>-
-                                        <a href="#" class="post-time">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
+                                        <a href="{{ rootUrl }}year/{{ utility.parseUnixYear(post.created) }}" class="post-time">{{ utility.parseUnixYear(post.created) }}</a>-
+                                        <a href="{{ rootUrl }}month/{{ utility.parseUnixDate(post.created) }}" class="post-time">{{ utility.parseUnixMonth(post.created) }}</a>-
+                                        <a href="{{ rootUrl }}day/{{ utility.parseUnixDateDay(post.created) }}" class="post-time">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
                                         <span class="post-icon glyphicon glyphicon-th-list"></span>
                                         <a href="{{ rootUrl }}category/{{ encodeURIComponent(fetchCategoryDisplayName(post.category)) }}" class="post-btn btn btn-xs btn-default">{{ fetchCategoryDisplayName(post.category) }}</a>
                                         <span class="post-icon glyphicon glyphicon-tag"></span>
