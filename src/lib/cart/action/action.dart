@@ -245,7 +245,7 @@ class CartAction {
       return;
     }
 
-    ctx.sendJson(buildResponse('handleCategoryAll', { "categories": CartModel.instance.categoryList.toJson() }));
+    ctx.sendJson(buildResponse('handleCategoryAll', { "categories": CartModel.instance.categoryList.toJson() }, doLog: false));
   }
 
   static handleCategorySearch(HttpContext ctx) {
@@ -309,7 +309,7 @@ class CartAction {
       return;
     }
 
-    ctx.sendJson(buildResponse('handleTagAll', { "tags": CartModel.instance.tagList.toJson() }));
+    ctx.sendJson(buildResponse('handleTagAll', { "tags": CartModel.instance.tagList.toJson() }, doLog: false));
   }
 
   static handleTagSearch(HttpContext ctx) {
