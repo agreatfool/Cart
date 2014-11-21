@@ -124,10 +124,16 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             // error encountered, and is not post not found error, just return, since error message shall have already been notified
             return;
         }
-        // tmp post data not found
-        // FIXME
-        // search local post data, found, fetch post data from server, display it
-        // not found, redirect to error page
+        // tmp post data not found, fetch from server
+        $dataService.postMdFetch(postId).then(function(markdown) {
+            var header = CartUtility.parseMdHTMLHeader(markdown);
+            var md = CartUtility.parseMdPureContent(markdown);
+            aceEditor.setValue(md, -1);
+            $scope.postCategory = header.category;
+            $scope.categoryInput = header.category.title;
+            $scope.postTags = header.tags;
+            $scope.postAttachments = header.attachments;
+        });
     });
 
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

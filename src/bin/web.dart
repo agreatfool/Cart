@@ -53,6 +53,7 @@ main() {
   app.post('/api/post/remove',        (HttpContext ctx) => CartAction.handlePostRemove(ctx));
   app.post('/api/attach/upload',      (HttpContext ctx) => CartAction.handlePostAttachUpload(ctx));
   app.post('/api/post/published',     (HttpContext ctx) => CartAction.handlePostPublishedCheck(ctx));
+  app.post('/api/post/markdown',      (HttpContext ctx) => CartAction.handlePostMarkdownFetch(ctx));
   // CATEGORIES
   app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
   app.post('/api/category/all',       (HttpContext ctx) => CartAction.handleCategoryAll(ctx));
