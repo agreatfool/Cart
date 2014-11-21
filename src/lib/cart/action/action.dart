@@ -227,17 +227,22 @@ class CartAction {
       }
       CartPost post = CartModel.instance.postList.find(uuid);
       if (post == null) {
-        throw new Exception('[CartAction] handlePostMarkdownFetch: Target post not found: ${uuid}');
+        return new Future.value(null); // post not exists, null return
+      } else {
+        String mdPath = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid, post.uuid + '.md');
+        mdFile = new File(mdPath);
+        return mdFile.exists();
       }
-      String mdPath = LibPath.join(CartConst.WWW_POST_DATA_PATH, post.uuid, post.uuid + '.md');
-      mdFile = new File(mdPath);
-      return mdFile.exists();
     })
-    .then((bool exists) {
-      if (!exists) {
-        throw new Exception('[CartAction] handlePostMarkdownFetch: Target markdown file of the post not found: ${uuid}');
+    .then((_) {
+      if (_ == null) {
+        return new Future.value(''); // post not exists, '' markdown return
+      } else {
+        if (_ == false) { // post exists, markdown file not exists, error
+          throw new Exception('[CartAction] handlePostMarkdownFetch: Target markdown file of the post not found: ${uuid}');
+        }
+        return mdFile.readAsString();
       }
-      return mdFile.readAsString();
     })
     .then((String markdown) => ctx.sendJson(buildResponse('handlePostMarkdownFetch', { "markdown": markdown })))
     .catchError((e, trace) {

@@ -8,7 +8,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
 
     $scope.postCategories = {};
 
-    $scope.postCategory = null;
+    $scope.postCategory = {};
     $scope.postTags = {};
     $scope.postAttachments = {};
 
@@ -130,7 +130,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             var md = CartUtility.parseMdPureContent(markdown);
             aceEditor.setValue(md, -1);
             $scope.postCategory = header.category;
-            $scope.categoryInput = header.category.title;
+            $scope.categoryInput = _.isEmpty(header.category) ? '' : header.category.title;
             $scope.postTags = header.tags;
             $scope.postAttachments = header.attachments;
         });

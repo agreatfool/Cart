@@ -282,7 +282,27 @@ CartUtility.prototype.generateMdHTMLHeader = function(post) {
 };
 
 CartUtility.prototype.parseMdHTMLHeader = function(markdown) {
-    return JSON.parse($(markdown).find('.mdHeaderData').text());
+    var header = { // default structure
+        "category": {},
+        "tags": {},
+        "attachments": {}
+    };
+
+    if (!_.isString(markdown) || _.isEmpty(markdown)) {
+        return header;
+    }
+    var headerText = $(markdown).find('.mdHeaderData').text();
+    if (!_.isString(headerText) || _.isEmpty(headerText)) {
+        return header;
+    }
+
+    try {
+        header = JSON.parse($(markdown).find('.mdHeaderData').text());
+    } catch (e) {
+        this.log('Error in parsing markdown file fetched: ' + markdown + ', e: ' + e.message + ', stack: ' + e.stack.toString());
+    }
+
+    return header;
 };
 
 CartUtility.prototype.parseMdPureContent = function(markdown) {
