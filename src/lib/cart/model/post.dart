@@ -136,7 +136,9 @@ class CartPost extends Object with PinSerializable {
         "title": title,
         "category": CartModel.instance.categoryList.find(category).toJson(),
         "tags": headerTags,
-        "attachments": headerAttachments
+        "attachments": headerAttachments,
+        "created": created,
+        "updated": updated
     };
   }
 
