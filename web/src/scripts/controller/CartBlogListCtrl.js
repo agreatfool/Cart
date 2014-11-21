@@ -21,10 +21,15 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
         if (!$scope.isMaster) {
             return;
         }
-        $modal.open({
+        var modal = $modal.open({
             templateUrl: 'CartBlogListModal.html',
             controller: 'CartBlogListModalCtrl',
             size: 'lg'
+        });
+        modal.result.then(function(action) {
+            if (_.isString(action) && action === 'upload') { // upload action done, reload post list
+                $scope.loadPageData();
+            }
         });
     };
 

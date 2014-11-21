@@ -275,7 +275,11 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             CartUtility.log('ACE Ctrl-U triggered: Upload post.');
 
             var postData = collectPostData(editor);
-            // TODO
+            postData.updated = CartUtility.getTime();
+            postData.md = editor.getSession().getValue();
+            $dataService.postUpload(postData).then(function() {
+                CartUtility.notify('Done!', 'Post ' + postData.uuid + ' uploaded!');
+            });
         }
     });
     aceEditor.commands.addCommand({

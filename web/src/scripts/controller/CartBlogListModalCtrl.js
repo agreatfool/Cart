@@ -22,11 +22,14 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         $scope.dataOnPage = dataRows.slice(startPos, endPos);
     };
 
-    $scope.uploadTmpPost = function(uuid) {
-        $modalInstance.close();
+    $scope.uploadTmpPost = function(uuid) { // FIXME 需要在上传结束后通知主界面刷新post列表
+        $('.modal-content').css('visibility', 'hidden');
         $dataService.postGetTmp(uuid).then(function(tmpPostData) {
             $dataService.postUpload(tmpPostData).then(function() {
                 CartUtility.notify('Done!', 'Post ' + tmpPostData.uuid + ' uploaded!');
+                $scope.close('upload'); // notify parent page to reload post list
+            }, function() {
+                $scope.close(); // rejected with errors, close modal, but do not notify reload
             });
         }, function(err) {
             if (err.status === 404) {
@@ -40,7 +43,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         if (!window.confirm('Do you confirm the delete operation of the tmp data of post: ' + uuid + '?')) {
             return;
         }
-        $modalInstance.close();
+        $scope.close();
         $dataService.postRemoveTmp(uuid).then(function() {
             CartUtility.notify('Done!', 'Tmp post data deleted!', 'success');
         }, function() {
@@ -52,7 +55,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         if (!window.confirm('Do you confirm the delete operation of the tmp data of all posts?')) {
             return;
         }
-        $modalInstance.close();
+        $scope.close();
         $dataService.postRemoveAllTmp().then(function() {
             CartUtility.notify('Done!', 'All tmp post data deleted!', 'success');
         }, function() {
@@ -60,8 +63,8 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         });
     };
 
-    $scope.close = function() {
-        $modalInstance.close();
+    $scope.close = function(action) {
+        $modalInstance.close(action);
     };
 
     $dataService.postGetAllTmp().then(function(result) {
