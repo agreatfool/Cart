@@ -96,17 +96,17 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
             $scope.subTitle2 = $routeParams.tag;
         }
         if ($location.url().indexOf('year') !== -1) {
-            options.year = $routeParams.datetime;
+            options.year = $routeParams.datetime; // 2014
             $scope.subTitle1 = 'Year';
             $scope.subTitle2 = $routeParams.datetime;
         }
         if ($location.url().indexOf('month') !== -1) {
-            options.month = $routeParams.datetime;
+            options.month = $routeParams.datetime; // 2014-11
             $scope.subTitle1 = 'Month';
             $scope.subTitle2 = $routeParams.datetime;
         }
         if ($location.url().indexOf('day') !== -1) {
-            options.day = $routeParams.datetime;
+            options.day = $routeParams.datetime; // 2014-11-21
             $scope.subTitle1 = 'Day';
             $scope.subTitle2 = $routeParams.datetime;
         }
