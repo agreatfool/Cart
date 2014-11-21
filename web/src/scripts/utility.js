@@ -275,7 +275,9 @@ CartUtility.prototype.generateMdHTMLHeader = function(post) {
         "title": post.title,
         "category": post.category,
         "tags": post.tags,
-        "attachments": post.attachments
+        "attachments": post.attachments,
+        "created": post.created,
+        "updated": post.updated
     }) + '</div></div>';
 };
 
