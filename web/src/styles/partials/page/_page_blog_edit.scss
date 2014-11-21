@@ -77,79 +77,6 @@ $ace-color12: #7A7267;
     min-height: 750px;
   }
 
-  #markdown-preview {
-    min-height: 750px;
-    background-color: $color-white-pure;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', STHeiti, 'Microsoft YaHei', 'WenQuanYi Micro Hei', SimSun, Song, sans-serif;
-
-    h1, h2, h3 {
-      margin-top: 0px;
-      margin-bottom: 15px;
-    }
-    h4, h5, h6 {
-      margin-top: 0px;
-      margin-bottom: 15px;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 700;
-    }
-    h1, .h1 {
-      font-size: 28px;
-    }
-    h2, .h2 {
-      font-size: 26px;
-    }
-    h3, .h3 {
-      font-size: 24px;
-    }
-    h4, .h4 {
-      font-size: 22px;
-    }
-    h5, .h5 {
-      font-size: 20px;
-    }
-    h6, .h6 {
-      font-size: 18px;
-    }
-
-    p {
-      margin: 0 0 10px 0;
-      line-height: 22px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-
-    blockquote {
-      margin: 0 0 15px;
-      padding: 15px 20px;
-      border-left: 5px solid #ddd;
-      background-color: rgba(102,128,153,.05);
-      p {
-        font-size: inherit;
-      }
-    }
-
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-      margin-bottom: 20px;
-    }
-    th, td {
-      padding: 10px;
-      border: 2px solid $color-gray;
-    }
-
-    pre {
-      padding: 0;
-      margin: 0;
-      font-size: 16px;
-      border: 0 solid $color-white-pure;
-      border-radius: 0;
-    }
-  }
-
   #markdown-toc {
     position: absolute;
     top: 0;
@@ -327,4 +254,77 @@ $ace-color12: #7A7267;
     }
   }
 
+}
+
+#markdown-preview {
+  min-height: 750px;
+  background-color: $color-white-pure;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', STHeiti, 'Microsoft YaHei', 'WenQuanYi Micro Hei', SimSun, Song, sans-serif;
+
+  h1, h2, h3 {
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+  h4, h5, h6 {
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+  }
+  h1, .h1 {
+    font-size: 28px;
+  }
+  h2, .h2 {
+    font-size: 26px;
+  }
+  h3, .h3 {
+    font-size: 24px;
+  }
+  h4, .h4 {
+    font-size: 22px;
+  }
+  h5, .h5 {
+    font-size: 20px;
+  }
+  h6, .h6 {
+    font-size: 18px;
+  }
+
+  p {
+    margin: 0 0 10px 0;
+    line-height: 22px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  blockquote {
+    margin: 0 0 15px;
+    padding: 15px 20px;
+    border-left: 5px solid #ddd;
+    background-color: rgba(102,128,153,.05);
+    p {
+      font-size: inherit;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px;
+  }
+  th, td {
+    padding: 10px;
+    border: 2px solid $color-gray;
+  }
+
+  pre {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    border: 0 solid $color-white-pure;
+    border-radius: 0;
+  }
 }
