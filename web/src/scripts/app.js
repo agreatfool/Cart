@@ -140,3 +140,29 @@ var fixFooter = function() {
         pageContentTop.css('min-height', pageTopMinHeight);
     }
 };
+
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+//- MARKED
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+var renderer = new marked.Renderer();
+renderer.heading = function(text, level) { // add anchor link
+    return '' +
+        '<h' + level + '>' +
+        '<a name="' + CartUtility.escapeAnchorName(text) + '"></a>' +
+        text +
+        '</h' + level + '>';
+};
+marked.setOptions({
+    renderer: renderer,
+    gfm: true,
+    tables: true,
+    breaks: true,
+    pedantic: false,
+    sanitize: true,
+    smartLists: true,
+    smartypants: false,
+    highlight: function (code, lang) {
+        // since the highlight class name added with highlight lib itself not working, have to wrap code tag by self
+        return '<code class="hljs ' + lang + '">' + hljs.highlightAuto(code, [lang]).value + '</code>';
+    }
+});
