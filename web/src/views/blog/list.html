@@ -26,13 +26,13 @@
                                 <div>
                                     <small class="text-muted">
                                         <span class="post-icon glyphicon glyphicon-time"></span>
-                                        <a class="post-time" href="#">{{ utility.parseUnixYear(post.created) }}</a>-
-                                        <a class="post-time" href="#">{{ utility.parseUnixMonth(post.created) }}</a>-
-                                        <a class="post-time" href="#">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
+                                        <a href="#" class="post-time">{{ utility.parseUnixYear(post.created) }}</a>-
+                                        <a href="#" class="post-time">{{ utility.parseUnixMonth(post.created) }}</a>-
+                                        <a href="#" class="post-time">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
                                         <span class="post-icon glyphicon glyphicon-th-list"></span>
                                         <a href="{{ rootUrl }}category/{{ encodeURIComponent(fetchCategoryDisplayName(post.category)) }}" class="post-btn btn btn-xs btn-default">{{ fetchCategoryDisplayName(post.category) }}</a>
                                         <span class="post-icon glyphicon glyphicon-tag"></span>
-                                        <a class="post-btn btn btn-xs btn-default" ng-repeat="tagUuid in post.tags" href="{{ rootUrl }}tag/{{ encodeURIComponent(fetchTagDisplayName(tagUuid)) }}">{{ fetchTagDisplayName(tagUuid) }}</a>
+                                        <a ng-repeat="tagUuid in post.tags" href="{{ rootUrl }}tag/{{ encodeURIComponent(fetchTagDisplayName(tagUuid)) }}" class="post-btn btn btn-xs btn-default">{{ fetchTagDisplayName(tagUuid) }}</a>
                                     </small>
                                 </div>
                                 <div class="row">

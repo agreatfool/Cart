@@ -390,7 +390,7 @@ CartUtility.prototype.parseUnixDateEndTimestamp = function(timestamp) {
     return moment(year + '-' + month + '-01 00:00:00').unix() - 1;
 };
 
-CartUtility.prototype.parseUnixDay = function(timestamp, needFull) {
+CartUtility.prototype.parseUnixDateDay = function(timestamp, needFull) {
     if (!_.isBoolean(needFull)) {
         needFull = false;
     }
@@ -398,9 +398,13 @@ CartUtility.prototype.parseUnixDay = function(timestamp, needFull) {
     return this.parseUnixTime(timestamp).format('YYYY-MM-DD') + (needFull ? ' 00:00:00' : '');
 };
 
+CartUtility.prototype.parseUnixDay = function(timestamp) {
+    return this.parseUnixTime(timestamp).format('DD');
+};
+
 CartUtility.prototype.parseUnixDayStartTimestamp = function(timestamp) {
     // return 'YYYY-MM-DD 00:00:00'.timestamp
-    return this.parseUnixDay(timestamp, true).unix();
+    return this.parseUnixDateDay(timestamp, true).unix();
 };
 
 CartUtility.prototype.parseUnixDayEndTimestamp = function(timestamp) {
