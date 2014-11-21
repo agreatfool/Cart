@@ -4,6 +4,9 @@
 module.exports = function ($scope, $location, $window, $routeParams, $modal, $dataService, $accessService) {
     CartUtility.log('CartBlogListCtrl');
 
+    $scope.subTitle1 = '';
+    $scope.subTitle2 = '';
+
     $scope.utility = CartUtility;
     $scope.encodeURIComponent = encodeURIComponent;
 
@@ -84,18 +87,28 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
         var options = {};
         if ($routeParams.hasOwnProperty('category')) {
             options.category = $routeParams.category;
+            $scope.subTitle1 = 'Category';
+            $scope.subTitle2 = $routeParams.category;
         }
         if ($routeParams.hasOwnProperty('tag')) {
             options.tags = [$routeParams.tag];
+            $scope.subTitle1 = 'Tag';
+            $scope.subTitle2 = $routeParams.tag;
         }
         if ($location.url().indexOf('year') !== -1) {
             options.year = $routeParams.datetime;
+            $scope.subTitle1 = 'Year';
+            $scope.subTitle2 = $routeParams.datetime;
         }
         if ($location.url().indexOf('month') !== -1) {
             options.month = $routeParams.datetime;
+            $scope.subTitle1 = 'Month';
+            $scope.subTitle2 = $routeParams.datetime;
         }
         if ($location.url().indexOf('day') !== -1) {
             options.day = $routeParams.datetime;
+            $scope.subTitle1 = 'Day';
+            $scope.subTitle2 = $routeParams.datetime;
         }
         options.isUuidSearch = false;
         options.pageNumber = $scope.paginationCurrentPage;
@@ -116,6 +129,8 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
     // route change event, when location changed
     $scope.$on('$routeChangeSuccess', function() {
         CartUtility.log('CartBlogListCtrl $routeChangeSuccess entered!');
+        $scope.subTitle1 = '';
+        $scope.subTitle2 = '';
         var rootPath = CartUtility.getRootPathFromtLocation($location);
         if (['', 'category', 'tag', 'year', 'month', 'day'].indexOf(rootPath) !== -1) {
             $scope.loadPageData();

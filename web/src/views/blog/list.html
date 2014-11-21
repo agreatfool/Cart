@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-md-12 page-top blog-list-top">
             <div class="row">
-                <div class="col-md-1">
-                    <h3>Blog</h3>
+                <div ng-class="{'col-md-1': (subTitle1 === '' && subTitle2 === ''), 'col-md-2': (subTitle1 !== '' && subTitle2 !== '')}">
+                    <h3>Blog<span ng-show="subTitle1 !== '' && subTitle2 !== ''">{{ subTitle1 }}: {{ subTitle2 }}</span></h3>
                 </div>
                 <div class="col-md-2" ng-show="isMaster">
                     <div class="top-button">
