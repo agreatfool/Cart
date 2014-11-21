@@ -248,7 +248,7 @@ class CartAction {
         // post exists && private post
         markdown = '';
       }
-      ctx.sendJson(buildResponse('handlePostMarkdownFetch', { "markdown": markdown }));
+      ctx.sendJson(buildResponse('handlePostMarkdownFetch', { "markdown": markdown }, doLog: false));
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
