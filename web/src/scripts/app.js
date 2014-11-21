@@ -1,6 +1,6 @@
 'use strict';
 
-/* global _, $, PNotify, angular, moment, pouchdb, md5, uuid, marked, CartConst, CartUtility */
+/* global _, $, PNotify, angular, moment, hljs, pouchdb, md5, uuid, marked, CartConst, CartUtility */
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //- LIB & ANNOUNCEMENT
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
