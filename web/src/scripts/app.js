@@ -69,7 +69,7 @@ controllers.controller('CartMainCtrl', ['$scope', '$location', '$cookies', '$win
 controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', '$routeParams', '$modal', 'CartDataService', 'CartAccessCtrlService', ctrlSources.CartBlogListCtrl]);
 controllers.controller('CartBlogListModalCtrl', ['$scope', '$location', '$modalInstance', 'CartDataService', ctrlSources.CartBlogListModalCtrl]);
 controllers.controller('CartBlogEditCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'FileUploader', ctrlSources.CartBlogEditCtrl]);
-controllers.controller('CartBlogViewCtrl', ['$scope', ctrlSources.CartBlogViewCtrl]);
+controllers.controller('CartBlogViewCtrl', ['$scope', '$location', '$window', '$routeParams', '$anchorScroll', 'CartAccessCtrlService', 'CartDataService', ctrlSources.CartBlogViewCtrl]);
 controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCategoryCtrl]);
 controllers.controller('CartBlogTagCtrl', ['$scope', ctrlSources.CartBlogTagCtrl]);
 controllers.controller('CartSearchCtrl', ['$scope', '$compile', ctrlSources.CartSearchCtrl]);

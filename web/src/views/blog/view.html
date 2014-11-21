@@ -1,7 +1,21 @@
 <div class="container-fluid page-content-container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>blog/view</h2>
+    <div class="row blog-list-top">
+        <div class="col-md-12 page-top">
+            <div class="row">
+                <div class="col-md-1">
+                    <h3>View</h3>
+                </div>
+                <div class="col-md-2" ng-show="isMaster">
+                    <div class="top-button">
+                        <a class="btn btn-xs btn-primary" ng-click="createNewPost()">New</a>
+                        <a href="{{ rootUrl }}edit/{{ postId }}" class="btn btn-xs btn-primary">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row page-body">
+        <div id="markdown-preview" class="col-md-12 post-view">
         </div>
     </div>
 </div>
