@@ -126,7 +126,7 @@ class CartAction {
     });
   }
 
-  static handleUpload(HttpContext ctx) {
+  static handlePostAttachUpload(HttpContext ctx) {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
     }

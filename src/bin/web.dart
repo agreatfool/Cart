@@ -51,7 +51,7 @@ main() {
   app.get('/api/post/page',           (HttpContext ctx) => CartAction.handlePostPage(ctx));
   app.post('/api/post/save',          (HttpContext ctx) => CartAction.handlePostSave(ctx));
   app.post('/api/post/remove',        (HttpContext ctx) => CartAction.handlePostRemove(ctx));
-  app.post('/api/upload',             (HttpContext ctx) => CartAction.handleUpload(ctx));
+  app.post('/api/attach/upload',      (HttpContext ctx) => CartAction.handlePostAttachUpload(ctx));
   app.post('/api/post/published',     (HttpContext ctx) => CartAction.handlePostPublishedCheck(ctx));
   // CATEGORIES
   app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
