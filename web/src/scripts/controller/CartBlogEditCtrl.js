@@ -1,6 +1,6 @@
 'use strict';
 
-/* global $, _, angular, uuid, moment, marked, ace, hljs, CartUtility, CartConst */
+/* global $, _, angular, uuid, moment, marked, ace, CartUtility, CartConst */
 module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataService, FileUploader) {
     CartUtility.log('CartBlogEditCtrl');
 
