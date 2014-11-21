@@ -212,11 +212,10 @@ class CartAction {
     if (!CartSystem.instance.actionPreProcess(ctx)) {
       return;
     }
-    if (!_filterIsMaster(ctx)) {
-      return;
-    }
+    bool isUserMaster = isMaster(ctx);
 
     String uuid;
+    CartPost post;
     File mdFile;
 
     HttpBodyHandler.processRequest(ctx.req)
@@ -225,7 +224,7 @@ class CartAction {
       if (!PinUtility.isUuid(uuid)) {
         throw new Exception('[CartAction] handlePostMarkdownFetch: Invalid post uuid: ${uuid}');
       }
-      CartPost post = CartModel.instance.postList.find(uuid);
+      post = CartModel.instance.postList.find(uuid);
       if (post == null) {
         return new Future.value(null); // post not exists, null return
       } else {
@@ -236,7 +235,7 @@ class CartAction {
     })
     .then((_) {
       if (_ == null) {
-        return new Future.value(''); // post not exists, '' markdown return
+        return new Future.value(''); // post not exists, '' return
       } else {
         if (_ == false) { // post exists, markdown file not exists, error
           throw new Exception('[CartAction] handlePostMarkdownFetch: Target markdown file of the post not found: ${uuid}');
@@ -244,7 +243,13 @@ class CartAction {
         return mdFile.readAsString();
       }
     })
-    .then((String markdown) => ctx.sendJson(buildResponse('handlePostMarkdownFetch', { "markdown": markdown })))
+    .then((String markdown) {
+      if (post != null && !post.isPublic()) {
+        // post exists && private post
+        markdown = '';
+      }
+      ctx.sendJson(buildResponse('handlePostMarkdownFetch', { "markdown": markdown }));
+    })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       ctx.sendJson(buildResponse('handlePostMarkdownFetch', { "error": "Error encountered in handling markdown fetch!" }, valid: false));
