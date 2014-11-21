@@ -325,7 +325,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
      * }
      */
     var uploader = new FileUploader({
-        url: '/api/upload',
+        url: '/api/attach/upload',
         removeAfterUpload: true
     });
     uploader.filters.push({
