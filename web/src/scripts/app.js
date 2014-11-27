@@ -70,8 +70,8 @@ controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', '$
 controllers.controller('CartBlogListModalCtrl', ['$scope', '$location', '$modalInstance', 'CartDataService', ctrlSources.CartBlogListModalCtrl]);
 controllers.controller('CartBlogEditCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'FileUploader', ctrlSources.CartBlogEditCtrl]);
 controllers.controller('CartBlogViewCtrl', ['$scope', '$location', '$window', '$routeParams', '$anchorScroll', 'CartAccessCtrlService', 'CartDataService', ctrlSources.CartBlogViewCtrl]);
-controllers.controller('CartBlogCategoryCtrl', ['$scope', ctrlSources.CartBlogCategoryCtrl]);
-controllers.controller('CartBlogTagCtrl', ['$scope', ctrlSources.CartBlogTagCtrl]);
+controllers.controller('CartBlogCategoryCtrl', ['$scope', '$location', '$window', 'CartDataService', ctrlSources.CartBlogCategoryCtrl]);
+controllers.controller('CartBlogTagCtrl', ['$scope', '$location', '$window', 'CartDataService', ctrlSources.CartBlogTagCtrl]);
 controllers.controller('CartSearchCtrl', ['$scope', '$compile', ctrlSources.CartSearchCtrl]);
 controllers.controller('CartOauthCtrl', ['$scope', '$location', '$window', 'CartAccessCtrlService', ctrlSources.CartOauthCtrl]);
 controllers.controller('CartLoginCtrl', ['$scope', '$window', 'CartAccessCtrlService', ctrlSources.CartLoginCtrl]);

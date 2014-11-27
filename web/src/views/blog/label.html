@@ -1,14 +1,16 @@
 <div class="container-fluid page-content-container page-label">
     <div class="row">
         <div class="col-md-12 page-top">
-            <h3>Category | Tag</h3>
+            <h3>{{ pageType }}</h3>
         </div>
     </div>
     <div class="row page-body">
         <div class="col-md-2">
             <div class="input-group">
                 <span class="input-group-addon">Search: </span>
-                <input type="text" class="form-control" placeholder="Search Content ...">
+                <input type="text" class="form-control" placeholder="Search Content ..."
+                    ng-change="searchItem()"
+                    ng-model="searchContent">
             </div>
         </div>
         <div class="col-md-3">
@@ -16,10 +18,12 @@
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button">
                         <span class="label-create-btn glyphicon glyphicon-plus"></span>
-                        New Category | Tag
+                        New {{ pageType }}
                     </button>
                 </span>
-                <input type="text" class="form-control" placeholder="Input Category | Tag Name ...">
+                <input type="text" class="form-control" placeholder="Input {{ pageType }} Name ..."
+                    ng-keyup="$event.keyCode == 13 && addItem($event)"
+                    ng-model="createContent">
             </div>
         </div>
         <div class="col-md-2">
@@ -28,20 +32,16 @@
                     Sort By <span class="caret"></span>
                 </button>
                 <ul role="menu" class="dropdown-menu">
-                    <li><a href="#">Category | Tag Name</a></li>
-                    <li class="active"><a href="#">Category | Tag Count</a></li>
+                    <li ng-class="{active: pageOrder === 'title'}"><a ng-click="changeOrder('title')">{{ pageType }} Name</a></li>
+                    <li ng-class="{active: pageOrder === 'updated'}"><a ng-click="changeOrder('updated')">{{ pageType }} Updated Time</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="row tagsinput-primary">
         <div class="col-md-12 bootstrap-tagsinput">
-            <span class="tag label label-info">
-                This is a very long long tag name, longer than you can imagine
-                <span class="tagsinput-remove-link" data-role="remove"></span>
-            </span>
-            <span class="tag label label-info">
-                Clean
+            <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)">
+                {{ item.title }}
                 <span class="tagsinput-remove-link" data-role="remove"></span>
             </span>
         </div>
