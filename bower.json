@@ -46,6 +46,7 @@
     "angular-file-upload": "~1.1.5",
     "angular-ui-utils": "bower",
     "angular-contenteditable": "~0.3.7",
-    "angular-bootstrap": "~0.11.2"
+    "angular-bootstrap": "~0.11.2",
+    "bootstrap-contextmenu": "~0.3.1"
   }
 }

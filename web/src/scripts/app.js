@@ -13,6 +13,7 @@ require('./../bower/jquery-ui/ui/jquery-ui.js');
 require('./../bower/letteringjs/jquery.lettering.js');
 require('./../bower/textillate/jquery.textillate.js');
 require('./../bower/bootstrap/dist/js/bootstrap.js');
+require('./../bower/bootstrap-contextmenu/bootstrap-contextmenu.js');
 require('./../bower/fullcalendar/fullcalendar.js');
 require('./../bower/pnotify/pnotify.core.js'); // PNotify core
 require('./../bower/pnotify/pnotify.buttons.js'); // PNotify buttons
@@ -70,8 +71,9 @@ controllers.controller('CartBlogListCtrl', ['$scope', '$location', '$window', '$
 controllers.controller('CartBlogListModalCtrl', ['$scope', '$location', '$modalInstance', 'CartDataService', ctrlSources.CartBlogListModalCtrl]);
 controllers.controller('CartBlogEditCtrl', ['$scope', '$location', '$anchorScroll', '$routeParams', 'CartDataService', 'FileUploader', ctrlSources.CartBlogEditCtrl]);
 controllers.controller('CartBlogViewCtrl', ['$scope', '$location', '$window', '$routeParams', '$anchorScroll', 'CartAccessCtrlService', 'CartDataService', ctrlSources.CartBlogViewCtrl]);
-controllers.controller('CartBlogCategoryCtrl', ['$scope', '$location', '$window', 'CartDataService', ctrlSources.CartBlogCategoryCtrl]);
-controllers.controller('CartBlogTagCtrl', ['$scope', '$location', '$window', 'CartDataService', ctrlSources.CartBlogTagCtrl]);
+controllers.controller('CartBlogCategoryCtrl', ['$scope', '$location', '$window', '$modal', 'CartDataService', ctrlSources.CartBlogCategoryCtrl]);
+controllers.controller('CartBlogTagCtrl', ['$scope', '$location', '$window', '$modal', 'CartDataService', ctrlSources.CartBlogTagCtrl]);
+controllers.controller('CartBlogLabelModalCtrl', ['$scope', '$modalInstance', ctrlSources.CartBlogLabelModalCtrl]);
 controllers.controller('CartSearchCtrl', ['$scope', '$compile', ctrlSources.CartSearchCtrl]);
 controllers.controller('CartOauthCtrl', ['$scope', '$location', '$window', 'CartAccessCtrlService', ctrlSources.CartOauthCtrl]);
 controllers.controller('CartLoginCtrl', ['$scope', '$window', 'CartAccessCtrlService', ctrlSources.CartLoginCtrl]);

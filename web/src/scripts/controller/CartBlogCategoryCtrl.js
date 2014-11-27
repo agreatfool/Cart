@@ -1,7 +1,7 @@
 'use strict';
 
 /* global _, CartUtility */
-module.exports = function ($scope, $location, $window, $dataService) {
+module.exports = function($scope, $location, $window, $modal, $dataService) {
     CartUtility.log('CartBlogCategoryCtrl');
 
     $scope.pageType = 'Category';
@@ -65,11 +65,23 @@ module.exports = function ($scope, $location, $window, $dataService) {
             // open category detailed page
             $window.open(CartUtility.getPureRootUrlFromLocation($location) + 'category/' + CartUtility.escapeAnchorName(title));
         } else {
-            if (!confirm('Are you really sure to delete the ' + $scope.pageType.toLowerCase() + ': ' + title + '?')) {
+            if (!$window.confirm('Are you really sure to delete the ' + $scope.pageType.toLowerCase() + ': ' + title + '?')) {
                 return; // rejected
             }
             console.log('here');
         }
+    };
+
+    $scope.openModal = function(uuid) {
+        var modal = $modal.open({
+            templateUrl: 'CartBlogLabelModal.html',
+            controller: 'CartBlogLabelModalCtrl',
+            size: 'sm'
+        });
+        modal.result.then(function(name) {
+            console.log(name);
+            // FIXME update name with remote server
+        });
     };
 
     $scope.changeOrder = function(order) {

@@ -40,10 +40,31 @@
     </div>
     <div class="row tagsinput-primary">
         <div class="col-md-12 bootstrap-tagsinput">
-            <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)">
+            <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)" data-toggle="context" data-target="#context-menu-{{ item.uuid }}">
                 {{ item.title }}
                 <span class="tagsinput-remove-link" data-role="remove"></span>
             </span>
         </div>
     </div>
+    <div class="row" ng-show="itemsOnPage">
+        <div ng-repeat="item in itemsOnPage" id="context-menu-{{ item.uuid }}">
+            <ul class="dropdown-menu" role="menu">
+                <li><a tabindex="-1" ng-click="openModal(item.uuid)">Rename</a></li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/ng-template" id="CartBlogLabelModal.html">
+        <div class="blog-label-modal">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="input-group">
+                        <span class="input-group-addon">Name: </span>
+                        <input type="text" class="form-control" placeholder="Input new name ..."
+                            ng-keyup="$event.keyCode == 13 && enterData($event)"
+                            ng-model="newName">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
 </div>
