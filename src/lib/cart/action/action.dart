@@ -414,6 +414,35 @@ class CartAction {
     });
   }
 
+  static handleTagUpdate(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    _parseHttpReqBody(ctx)
+    .then((HttpRequestBody body) {
+      String uuid = body.body['uuid'];
+      String name = body.body['name'];
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartAction] handleTagUpdate: Invalid tag uuid: ${uuid}');
+      } else if (name == null || name == '') {
+        throw new Exception('[CartAction] handleTagUpdate: Invalid tag name!');
+      } else {
+        return CartModel.instance.updateTagName(uuid, name);
+      }
+    })
+    .then((CartTag tag) {
+      ctx.sendJson(buildResponse('handleTagUpdate', { "tag": tag.toJson() }));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleTagUpdate', { "error": "Error in updating tag!" }, valid: false));
+    });
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SYSTEM
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

@@ -416,6 +416,42 @@ class CartModel {
     return completer.future;
   }
 
+  Future updateTagName(String uuid, String name) {
+    CartTag tag = null;
+
+    try {
+      // validate uuid
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartModel] updateTagName: uuid format invalid: ${uuid}}');
+      }
+      tag = tagList.find(uuid);
+      if (tag == null) {
+        throw new Exception('[CartModel] updateTagName: Tag not found, uuid: ${uuid}');
+      }
+      if (tagList.findByTitle(name) != null) {
+        throw new Exception('[CartModel] updateTagName: Tag with name ${name} already exists');
+      }
+    } catch (e, trace) {
+      PinUtility.handleError(e, trace);
+      return new Future.error(e, trace);
+    }
+
+    tag.title = name;
+    tag.updated = PinTime.getTime();
+    tagList.update(tag);
+
+    final completer = new Completer();
+
+    saveDatabase()
+    .then((_) => completer.complete(tag))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTIL: SAVE DATABASE FILES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

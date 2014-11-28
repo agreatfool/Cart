@@ -513,7 +513,6 @@ module.exports = function($http, $q) {
                 return category;
             }
         ).then(function(category) {
-            console.log('im here: categoryUpdateName', category);
             deferred.resolve(category);
         }, function() {
             deferred.reject();
@@ -628,30 +627,39 @@ module.exports = function($http, $q) {
             }
         );
     };
-    var tagUpdate = function(tag) {
+    var tagUpdateName = function(tagUuid, name) {
         var deferred = $q.defer();
 
-        var target = tagSearchLocalById(tag.uuid);
+        var target = tagSearchLocalById(tagUuid);
         if (_.isNull(target)) {
-            CartUtility.log('Target local tag data not found with input category: ' + JSON.stringify(tag), 'DataService::tagUpdate');
+            CartUtility.log('Target local tag data not found with input tag uuid: ' + tagUuid, 'DataService::tagUpdateName');
             deferred.reject();
             return deferred.promise;
         }
 
         var foundWithSameName = _.filter(tags, function(localTag) {
-            return localTag.title === tag.title;
+            return localTag.title === name;
         });
         if (_.isArray(foundWithSameName) && foundWithSameName.length > 0) {
-            CartUtility.notify('Error!', 'Target tag name has already been occupied: ' + tag.title, 'error');
+            CartUtility.notify('Error!', 'Target tag name has already been occupied: ' + name, 'error');
             deferred.reject();
             return deferred.promise;
         }
 
-        tag.updated = CartUtility.getTime();
-        tags[tag.uuid] = tag;
-
-        // FIXME update tag with remote server
-        deferred.resolve(tag);
+        CartUtility.request(
+            'POST', $http, $q, '/api/tag/update', {
+                "uuid": tagUuid,
+                "name": name
+            }, function(data) {
+                var tag = data.message.tag;
+                tags[tag.uuid] = tag;
+                return tag;
+            }
+        ).then(function(tag) {
+            deferred.resolve(tag);
+        }, function() {
+            deferred.reject();
+        });
 
         return deferred.promise;
     };
@@ -772,7 +780,7 @@ module.exports = function($http, $q) {
         // tag APIs
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
-        'tagUpdate': tagUpdate,
+        "tagUpdateName": tagUpdateName,
         'tagUpdateTime': tagUpdateTime,
         'tagSearchLocalById': tagSearchLocalById,
         'tagSearchLocal': tagSearchLocal,
