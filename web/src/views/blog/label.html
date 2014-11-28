@@ -13,7 +13,7 @@
                     ng-model="searchContent">
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" ng-show="isMaster">
             <div class="input-group">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button">
@@ -39,14 +39,19 @@
         </div>
     </div>
     <div class="row tagsinput-primary">
-        <div class="col-md-12 bootstrap-tagsinput">
+        <div class="col-md-12 bootstrap-tagsinput" ng-show="isMaster">
             <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)" data-toggle="context" data-target="#context-menu-{{ item.uuid }}">
                 {{ item.title }}
                 <span class="tagsinput-remove-link" data-role="remove"></span>
             </span>
         </div>
+        <div class="col-md-12 bootstrap-tagsinput" ng-show="!isMaster">
+            <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)">
+                {{ item.title }}
+            </span>
+        </div>
     </div>
-    <div class="row" ng-show="itemsOnPage">
+    <div class="row" ng-show="itemsOnPage && isMaster">
         <div ng-repeat="item in itemsOnPage" id="context-menu-{{ item.uuid }}">
             <ul class="dropdown-menu" role="menu">
                 <li><a tabindex="-1" ng-click="openModal(item.uuid)">Rename</a></li>

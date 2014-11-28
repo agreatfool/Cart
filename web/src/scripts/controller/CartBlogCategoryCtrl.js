@@ -1,8 +1,10 @@
 'use strict';
 
 /* global _, CartUtility */
-module.exports = function($scope, $location, $window, $modal, $dataService) {
+module.exports = function($scope, $location, $window, $modal, $accessService, $dataService) {
     CartUtility.log('CartBlogCategoryCtrl');
+
+    $scope.isMaster = $accessService.isMaster();
 
     $scope.pageType = 'Category';
     $scope.pageOrder = 'title'; // title || updated
@@ -37,6 +39,10 @@ module.exports = function($scope, $location, $window, $modal, $dataService) {
     $scope.addItem = function(event) {
         event.preventDefault();
 
+        if (!$scope.isMaster) {
+            return; // no privilege to do it
+        }
+
         var inputName = $scope.createContent;
         if (_.isEmpty(inputName)) {
             return; // empty input, ignore it
@@ -58,12 +64,21 @@ module.exports = function($scope, $location, $window, $modal, $dataService) {
     };
 
     $scope.selectItem = function(title, event) {
+        var categoryUrl = CartUtility.getPureRootUrlFromLocation($location) + 'category/' + CartUtility.escapeAnchorName(title);
+
+        // non master logic
+        if (!$scope.isMaster) {
+            $window.open(categoryUrl); // no privilege to delete item, thus, always open category page
+            return;
+        }
+
+        // master logic
         var offset = event.offsetX;
         var edge = event.target.clientWidth * 0.6;
-        console.log('offset: ', offset, 'edge: ', edge, 'pass: ', (offset >= edge));
+
         if (offset < edge) {
             // open category detailed page
-            $window.open(CartUtility.getPureRootUrlFromLocation($location) + 'category/' + CartUtility.escapeAnchorName(title));
+            $window.open(categoryUrl);
         } else {
             if (!$window.confirm('Are you really sure to delete the ' + $scope.pageType.toLowerCase() + ': ' + title + '?')) {
                 return; // rejected
@@ -73,6 +88,9 @@ module.exports = function($scope, $location, $window, $modal, $dataService) {
     };
 
     $scope.openModal = function(uuid) {
+        if (!$scope.isMaster) {
+            return; // no privilege to rename item, no need to open modal window
+        }
         var modal = $modal.open({
             templateUrl: 'CartBlogLabelModal.html',
             controller: 'CartBlogLabelModalCtrl',
