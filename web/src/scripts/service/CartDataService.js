@@ -484,30 +484,42 @@ module.exports = function($http, $q) {
             }
         );
     };
-    var categoryUpdate = function(category) {
+    var categoryUpdateName = function(categoryUuid, name) {
         var deferred = $q.defer();
 
-        var target = categorySearchLocalById(category.uuid);
+        var target = categorySearchLocalById(categoryUuid);
         if (_.isNull(target)) {
-            CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdate');
+            CartUtility.log('Target local category data not found with input category uuid: ' + categoryUuid, 'DataService::categoryUpdateName');
             deferred.reject();
+            return deferred.promise;
         }
 
         var foundWithSameName = _.filter(categories, function(localCategory) {
-            return localCategory.title === category.title;
+            return localCategory.title === name;
         });
         if (_.isArray(foundWithSameName) && foundWithSameName.length > 0) {
-            CartUtility.notify('Error!', 'Target category name has already been occupied: ' + category.title, 'error');
+            CartUtility.notify('Error!', 'Target category name has already been occupied: ' + name, 'error');
             deferred.reject();
+            return deferred.promise;
         }
 
-        category.updated = CartUtility.getTime();
-        categories[category.uuid] = category;
+        CartUtility.request(
+           'POST', $http, $q, '/api/category/update', {
+                "uuid": categoryUuid,
+                "name": name
+            }, function(data) {
+                var category = data.message.category;
+                categories[category.uuid] = category;
+                return category;
+            }
+        ).then(function(category) {
+            console.log('im here: categoryUpdateName', category);
+            deferred.resolve(category);
+        }, function() {
+            deferred.reject();
+        });
 
-        // FIXME update category with remote server
-        deferred.resolve(category);
-
-        return deferred.future;
+        return deferred.promise;
     };
     var categoryUpdateTime = function(category) {
         var target = categorySearchLocalById(category.uuid);
@@ -623,6 +635,7 @@ module.exports = function($http, $q) {
         if (_.isNull(target)) {
             CartUtility.log('Target local tag data not found with input category: ' + JSON.stringify(tag), 'DataService::tagUpdate');
             deferred.reject();
+            return deferred.promise;
         }
 
         var foundWithSameName = _.filter(tags, function(localTag) {
@@ -631,6 +644,7 @@ module.exports = function($http, $q) {
         if (_.isArray(foundWithSameName) && foundWithSameName.length > 0) {
             CartUtility.notify('Error!', 'Target tag name has already been occupied: ' + tag.title, 'error');
             deferred.reject();
+            return deferred.promise;
         }
 
         tag.updated = CartUtility.getTime();
@@ -639,7 +653,7 @@ module.exports = function($http, $q) {
         // FIXME update tag with remote server
         deferred.resolve(tag);
 
-        return deferred.future;
+        return deferred.promise;
     };
     var tagUpdateTime = function(tag) {
         var target = tagSearchLocalById(tag.uuid);
@@ -750,7 +764,7 @@ module.exports = function($http, $q) {
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
-        'categoryUpdate': categoryUpdate,
+        "categoryUpdateName": categoryUpdateName,
         'categoryUpdateTime': categoryUpdateTime,
         'categorySearchLocalById': categorySearchLocalById,
         'categorySearchLocal': categorySearchLocal,

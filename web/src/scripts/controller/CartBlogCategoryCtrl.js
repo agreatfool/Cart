@@ -97,8 +97,17 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             size: 'sm'
         });
         modal.result.then(function(name) {
-            console.log(name);
-            // FIXME update name with remote server
+            $dataService.categoryUpdateName(uuid, name).then(function(category) {
+                _.forEach($scope.items, function(item, index) {
+                    // FIXME 页面上会短暂存在改名前和改名后的两个item，然后改名前的才消失，应该同时出现和消失
+                    if (item.uuid === category.uuid) {
+                        $scope.items[index] = category;
+                    }
+                });
+                $scope.itemsOnPage = $scope.items;
+                sortItemsOnPage();
+                CartUtility.notify('Done!', $scope.pageType + ' renamed to ' + name);
+            });
         });
     };
 

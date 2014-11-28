@@ -321,6 +321,35 @@ class CartAction {
     });
   }
 
+  static handleCategoryUpdate(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    _parseHttpReqBody(ctx)
+    .then((HttpRequestBody body) {
+      String uuid = body.body['uuid'];
+      String name = body.body['name'];
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartAction] handleCategoryUpdate: Invalid category uuid: ${uuid}');
+      } else if (name == null || name == '') {
+        throw new Exception('[CartAction] handleCategoryUpdate: Invalid category name!');
+      } else {
+        return CartModel.instance.updateCategoryName(uuid, name);
+      }
+    })
+    .then((CartCategory category) {
+      ctx.sendJson(buildResponse('handleCategoryUpdate', { "category": category.toJson() }));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleCategoryUpdate', { "error": "Error in updating category!" }, valid: false));
+    });
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* TAGS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

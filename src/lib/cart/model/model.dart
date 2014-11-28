@@ -325,6 +325,43 @@ class CartModel {
     return completer.future;
   }
 
+  Future updateCategoryName(String uuid, String name) {
+    CartCategory category = null;
+
+    try {
+      // validate uuid
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartModel] updateCategoryName: uuid format invalid: ${uuid}}');
+      }
+      category = categoryList.find(uuid);
+      if (category == null) {
+        throw new Exception('[CartModel] updateCategoryName: Category not found, uuid: ${uuid}');
+      }
+      if (categoryList.findByTitle(name) != null) {
+        throw new Exception('[CartModel] updateCategoryName: Category with name ${name} already exists');
+      }
+    } catch (e, trace) {
+      PinUtility.handleError(e, trace);
+      return new Future.error(e, trace);
+    }
+
+    category.title = name;
+    category.updated = PinTime.getTime();
+    categoryList.update(category);
+
+    final completer = new Completer();
+
+    _drive.renameFile(category.driveId, name)
+    .then((GoogleDriveClient.File file) => saveDatabase())
+    .then((_) => completer.complete(category))
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      completer.completeError(e, trace);
+    });
+
+    return completer.future;
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: TAG
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

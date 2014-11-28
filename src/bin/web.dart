@@ -58,6 +58,7 @@ main() {
   app.post('/api/category/create',    (HttpContext ctx) => CartAction.handleCategoryCreate(ctx));
   app.post('/api/category/all',       (HttpContext ctx) => CartAction.handleCategoryAll(ctx));
   app.post('/api/category/search',    (HttpContext ctx) => CartAction.handleCategorySearch(ctx));
+  app.post('/api/category/update',    (HttpContext ctx) => CartAction.handleCategoryUpdate(ctx));
   // TAGS
   app.post('/api/tag/create',         (HttpContext ctx) => CartAction.handleTagCreate(ctx));
   app.post('/api/tag/all',            (HttpContext ctx) => CartAction.handleTagAll(ctx));
