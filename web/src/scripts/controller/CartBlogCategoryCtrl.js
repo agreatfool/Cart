@@ -83,7 +83,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             if (!$window.confirm('Are you really sure to delete the ' + $scope.pageType.toLowerCase() + ': ' + title + '?')) {
                 return; // rejected
             }
-            console.log('here');
+            // FIXME delete category
         }
     };
 
