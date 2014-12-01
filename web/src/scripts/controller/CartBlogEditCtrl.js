@@ -168,7 +168,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
             category = {};
         } else {
             category = category.pop(); // [searchedCategory].pop()
-            category = $dataService.categoryUpdateTime(category);
+            category = $dataService.categoryUpdateTimeLocal(category);
         }
 
         var tags = {};
@@ -184,7 +184,7 @@ module.exports = function($scope, $location, $anchorScroll, $routeParams, $dataS
                 var tag = $dataService.tagSearchLocal(tagName);
                 if (!_.isEmpty(tag)) {
                     tag = tag.pop(); // [searchedTag].pop()
-                    tag = $dataService.tagUpdateTime(tag);
+                    tag = $dataService.tagUpdateTimeLocal(tag);
                     tags[tag.uuid] = tag;
                 }
             });

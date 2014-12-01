@@ -520,10 +520,10 @@ module.exports = function($http, $q) {
 
         return deferred.promise;
     };
-    var categoryUpdateTime = function(category) {
+    var categoryUpdateTimeLocal = function(category) {
         var target = categorySearchLocalById(category.uuid);
         if (_.isNull(target)) {
-            CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdateTime');
+            CartUtility.log('Target local category data not found with input category: ' + JSON.stringify(category), 'DataService::categoryUpdateTimeLocal');
             return false;
         }
 
@@ -663,10 +663,10 @@ module.exports = function($http, $q) {
 
         return deferred.promise;
     };
-    var tagUpdateTime = function(tag) {
+    var tagUpdateTimeLocal = function(tag) {
         var target = tagSearchLocalById(tag.uuid);
         if (_.isNull(target)) {
-            CartUtility.log('Target local tag data not found with input tag: ' + JSON.stringify(tag), 'DataService::tagUpdateTime');
+            CartUtility.log('Target local tag data not found with input tag: ' + JSON.stringify(tag), 'DataService::tagUpdateTimeLocal');
             return false;
         }
 
@@ -773,7 +773,7 @@ module.exports = function($http, $q) {
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
         "categoryUpdateName": categoryUpdateName,
-        'categoryUpdateTime': categoryUpdateTime,
+        'categoryUpdateTimeLocal': categoryUpdateTimeLocal,
         'categorySearchLocalById': categorySearchLocalById,
         'categorySearchLocal': categorySearchLocal,
         'categorySearch': categorySearch,
@@ -781,7 +781,7 @@ module.exports = function($http, $q) {
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
         "tagUpdateName": tagUpdateName,
-        'tagUpdateTime': tagUpdateTime,
+        'tagUpdateTimeLocal': tagUpdateTimeLocal,
         'tagSearchLocalById': tagSearchLocalById,
         'tagSearchLocal': tagSearchLocal,
         'tagSearch': tagSearch
