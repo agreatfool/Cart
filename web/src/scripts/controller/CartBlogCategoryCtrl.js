@@ -58,6 +58,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             items.push(data);
             $scope.itemsOnPage.push(data);
             sortItemsOnPage();
+            CartUtility.notify('Done!', 'Category "' + inputName + '" created!');
         });
 
         $scope.createContent = '';

@@ -392,15 +392,15 @@ class CartModel {
   }
 
   Future removeTag(String uuid) {
-    // validate uuid
-    if (!PinUtility.isUuid(uuid)) {
       try {
-        throw new Exception('[CartModel] addCategory: uuid format invalid: ${uuid}}');
+        // validate uuid
+        if (!PinUtility.isUuid(uuid)) {
+          throw new Exception('[CartModel] addCategory: uuid format invalid: ${uuid}}');
+        }
       } catch (e, trace) {
         PinUtility.handleError(e, trace);
         return new Future.error(e, trace);
       }
-    }
 
     final completer = new Completer();
 

@@ -448,6 +448,9 @@ class CartAction {
       return;
     }
 
+    bool isPrivateTagException = false;
+    String privateTagExceptionMsg = 'PRIVATE MARK TAG cannot be renamed!';
+
     _parseHttpReqBody(ctx)
     .then((HttpRequestBody body) {
       String uuid = body.body['uuid'];
@@ -457,6 +460,10 @@ class CartAction {
       } else if (name == null || name == '') {
         throw new Exception('[CartAction] handleTagUpdate: Invalid tag name!');
       } else {
+        if (uuid == CartSystem.instance.tagPrivate['uuid']) {
+          isPrivateTagException = true;
+          throw new Exception('[CartAction] handleTagUpdate: ${privateTagExceptionMsg}');
+        }
         return CartModel.instance.updateTagName(uuid, name);
       }
     })
@@ -465,7 +472,48 @@ class CartAction {
     })
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
-      ctx.sendJson(buildResponse('handleTagUpdate', { "error": "Error in updating tag!" }, valid: false));
+      if (isPrivateTagException) {
+        ctx.sendJson(buildResponse('handleTagUpdate', { "error": privateTagExceptionMsg }, valid: false));
+      } else {
+        ctx.sendJson(buildResponse('handleTagUpdate', { "error": "Error in updating tag!" }, valid: false));
+      }
+    });
+  }
+
+  static handleTagDelete(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    bool isPrivateTagException = false;
+    String privateTagExceptionMsg = 'PRIVATE MARK TAG cannot be deleted!';
+
+    _parseHttpReqBody(ctx)
+    .then((HttpRequestBody body) {
+      String uuid = body.body['uuid'];
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartAction] handleTagDelete: Invalid category uuid: ${uuid}');
+      } else {
+        if (uuid == CartSystem.instance.tagPrivate['uuid']) {
+          isPrivateTagException = true;
+          throw new Exception('[CartAction] handleTagDelete: ${privateTagExceptionMsg}');
+        }
+        return CartModel.instance.removeTag(uuid);
+      }
+    })
+    .then((_) {
+      ctx.sendJson(buildResponse('handleTagDelete', {}));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      if (isPrivateTagException) {
+        ctx.sendJson(buildResponse('handleTagDelete', { "error": privateTagExceptionMsg }, valid: false));
+      } else {
+        ctx.sendJson(buildResponse('handleTagDelete', { "error": "Error in deleteing tag!" }, valid: false));
+      }
     });
   }
 

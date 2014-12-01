@@ -65,6 +65,7 @@ main() {
   app.post('/api/tag/all',            (HttpContext ctx) => CartAction.handleTagAll(ctx));
   app.post('/api/tag/search',         (HttpContext ctx) => CartAction.handleTagSearch(ctx));
   app.post('/api/tag/update',         (HttpContext ctx) => CartAction.handleTagUpdate(ctx));
+  app.post('/api/tag/delete',         (HttpContext ctx) => CartAction.handleTagDelete(ctx));
   // SYSTEM
   app.post('/api/login',              (HttpContext ctx) => CartAction.handleLogin(ctx));
   app.post('/api/logout',             (HttpContext ctx) => CartAction.handleLogout(ctx));

@@ -648,7 +648,9 @@ module.exports = function($http, $q) {
                 "uuid": uuid.v4(),
                 "name": tagName
             }, function(data) {
-                return data.message.tag;
+                var tag = data.message.tag;
+                tags[tag.uuid] = tag;
+                return tag;
             }
         );
     };
@@ -682,6 +684,31 @@ module.exports = function($http, $q) {
             }
         ).then(function(tag) {
             deferred.resolve(tag);
+        }, function() {
+            deferred.reject();
+        });
+
+        return deferred.promise;
+    };
+    var tagDelete = function(uuid) {
+        var deferred = $q.defer();
+
+        var target = tagSearchLocalById(uuid);
+        if (_.isNull(target)) {
+            CartUtility.log('Target local tag data not found with input tag uuid: ' + uuid, 'DataService::tagDelete');
+            deferred.reject();
+            return deferred.promise;
+        }
+
+        CartUtility.request(
+            'POST', $http, $q, '/api/tag/delete', {
+                "uuid": uuid
+            }, function() {
+                delete tags[uuid];
+                return null;
+            }
+        ).then(function() {
+            deferred.resolve();
         }, function() {
             deferred.reject();
         });
@@ -807,6 +834,7 @@ module.exports = function($http, $q) {
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
         'tagUpdateName': tagUpdateName,
+        'tagDelete': tagDelete,
         'tagUpdateTimeLocal': tagUpdateTimeLocal,
         'tagSearchLocalById': tagSearchLocalById,
         'tagSearchLocal': tagSearchLocal,

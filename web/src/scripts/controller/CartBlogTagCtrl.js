@@ -11,7 +11,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
 
     $scope.createContent = '';
     $scope.searchContent = '';
-    $scope.items = [];
+    var items = [];
     $scope.itemsOnPage = [];
 
     var sortItemsOnPage = function() {
@@ -25,7 +25,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
     };
 
     var searchItem = _.throttle(function() {
-        var result = _.filter($scope.items, function(item) {
+        var result = _.filter(items, function(item) {
             return item.title.indexOf($scope.searchContent) === 0;
         });
         if (result.length > 0) {
@@ -50,14 +50,15 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
 
         var tag = $dataService.tagSearchLocal(inputName);
         if (!_.isEmpty(tag)) {
-            return; // category already exists
+            return; // tag already exists
         }
 
         // tag not found, create it
         $dataService.tagCreate(inputName).then(function(data) { // data is tag json
-            $scope.items.push(data);
+            items.push(data);
             $scope.itemsOnPage.push(data);
             sortItemsOnPage();
+            CartUtility.notify('Done!', 'Tag "' + inputName + '" created!');
         });
 
         $scope.createContent = '';
@@ -80,11 +81,29 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             // open tag detailed page
             $window.open(tagUrl);
         } else {
-            if (!$window.confirm('Are you really sure to delete the ' + $scope.pageType.toLowerCase() + ': ' + title + '?')) {
+            if (!$window.confirm('Are you really sure to delete the tag "' + $scope.pageType.toLowerCase() + '": ' + title + '?')) {
                 return; // rejected
             }
-            // FIXME delete tag
-            console.log('here');
+            var tag = $dataService.tagSearchLocal(title);
+            if (tag.length === 0) {
+                CartUtility.notify('Error!', 'Target tag to be deleted not found, name: ' + title, 'error');
+                return;
+            }
+            tag = tag.pop();
+            $dataService.tagDelete(tag.uuid).then(function() {
+                _.forEach(items, function(item, index) {
+                    if (item.uuid === tag.uuid) {
+                        items.splice(index, 1);
+                    }
+                });
+                _.forEach($scope.itemsOnPage, function(item, index) {
+                    if (item.uuid === tag.uuid) {
+                        $scope.itemsOnPage.splice(index, 1);
+                    }
+                });
+                sortItemsOnPage();
+                CartUtility.notify('Done!', 'Tag "' + title + '" deleted!');
+            });
         }
     };
 
@@ -99,13 +118,13 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
         });
         modal.result.then(function(name) {
             $dataService.tagUpdateName(uuid, name).then(function(tag) {
-                _.forEach($scope.items, function(item, index) {
+                _.forEach(items, function(item, index) {
                     // FIXME 页面上会短暂存在改名前和改名后的两个item，然后改名前的才消失，应该同时出现和消失
                     if (item.uuid === tag.uuid) {
-                        $scope.items[index] = tag;
+                        items[index] = tag;
                     }
                 });
-                $scope.itemsOnPage = $scope.items;
+                $scope.itemsOnPage = items;
                 sortItemsOnPage();
                 CartUtility.notify('Done!', $scope.pageType + ' renamed to ' + name);
             });
@@ -126,7 +145,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             if (!_.isArray(tags) || tags.length === 0) {
                 return; // empty list
             }
-            $scope.items = $scope.itemsOnPage = tags;
+            items = $scope.itemsOnPage = tags;
             sortItemsOnPage();
         }
     });
