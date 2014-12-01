@@ -213,9 +213,11 @@ class CartPostList extends Object with PinSerializable {
     if (list.length <= 0) {
       return;
     }
-    list.forEach((String postUuid, CartPost post) {
+    List<String> postUuids = list.keys.toList();
+    postUuids.forEach((String postUuid) {
+      CartPost post = find(postUuid);
       if (post.category == categoryUuid) {
-        remove(postUuid);
+        list.remove(postUuid);
       }
     });
   }

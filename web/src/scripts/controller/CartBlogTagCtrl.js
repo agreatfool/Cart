@@ -1,7 +1,7 @@
 'use strict';
 
 /* global _, CartUtility */
-module.exports = function ($scope, $location, $window, $accessService, $dataService) {
+module.exports = function($scope, $location, $window, $modal, $accessService, $dataService) {
     CartUtility.log('CartBlogTagCtrl');
 
     $scope.isMaster = $accessService.isMaster();

@@ -11,7 +11,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
 
     $scope.createContent = '';
     $scope.searchContent = '';
-    $scope.items = [];
+    var items = [];
     $scope.itemsOnPage = [];
 
     var sortItemsOnPage = function() {
@@ -25,7 +25,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
     };
 
     var searchItem = _.throttle(function() {
-        var result = _.filter($scope.items, function(item) {
+        var result = _.filter(items, function(item) {
             return item.title.indexOf($scope.searchContent) === 0;
         });
         if (result.length > 0) {
@@ -55,7 +55,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
 
         // category not found, create it
         $dataService.categoryCreate(inputName).then(function(data) { // data is category json
-            $scope.items.push(data);
+            items.push(data);
             $scope.itemsOnPage.push(data);
             sortItemsOnPage();
         });
@@ -80,10 +80,30 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             // open category detailed page
             $window.open(categoryUrl);
         } else {
-            if (!$window.confirm('Are you really sure to delete the ' + $scope.pageType.toLowerCase() + ': ' + title + '?')) {
+            if (!$window.confirm('Are you really sure to delete the category "' + $scope.pageType.toLowerCase() + '": ' + title + '?\n' +
+                'All the posts under this category would also be deleted!')) {
                 return; // rejected
             }
-            // FIXME delete category
+            var category = $dataService.categorySearchLocal(title);
+            if (category.length === 0) {
+                CartUtility.notify('Error!', 'Target category to be deleted not found, name: ' + title, 'error');
+                return;
+            }
+            category = category.pop();
+            $dataService.categoryDelete(category.uuid).then(function() {
+                _.forEach(items, function(item, index) {
+                    if (item.uuid === category.uuid) {
+                        items.splice(index, 1);
+                    }
+                });
+                _.forEach($scope.itemsOnPage, function(item, index) {
+                    if (item.uuid === category.uuid) {
+                        $scope.itemsOnPage.splice(index, 1);
+                    }
+                });
+                sortItemsOnPage();
+                CartUtility.notify('Done!', 'Category "' + title + '" deleted!');
+            });
         }
     };
 
@@ -98,13 +118,13 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
         });
         modal.result.then(function(name) {
             $dataService.categoryUpdateName(uuid, name).then(function(category) {
-                _.forEach($scope.items, function(item, index) {
+                _.forEach(items, function(item, index) {
                     // FIXME 页面上会短暂存在改名前和改名后的两个item，然后改名前的才消失，应该同时出现和消失
                     if (item.uuid === category.uuid) {
-                        $scope.items[index] = category;
+                        items[index] = category;
                     }
                 });
-                $scope.itemsOnPage = $scope.items;
+                $scope.itemsOnPage = items;
                 sortItemsOnPage();
                 CartUtility.notify('Done!', $scope.pageType + ' renamed to ' + name);
             });
@@ -125,7 +145,7 @@ module.exports = function($scope, $location, $window, $modal, $accessService, $d
             if (!_.isArray(categories) || categories.length === 0) {
                 return; // empty list
             }
-            $scope.items = $scope.itemsOnPage = categories;
+            items = $scope.itemsOnPage = categories;
             sortItemsOnPage();
         }
     });

@@ -350,6 +350,32 @@ class CartAction {
     });
   }
 
+  static handleCategoryDelete(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+    if (!_filterIsMaster(ctx)) {
+      return;
+    }
+
+    _parseHttpReqBody(ctx)
+    .then((HttpRequestBody body) {
+      String uuid = body.body['uuid'];
+      if (!PinUtility.isUuid(uuid)) {
+        throw new Exception('[CartAction] handleCategoryDelete: Invalid category uuid: ${uuid}');
+      } else {
+        return CartModel.instance.removeCategory(uuid);
+      }
+    })
+    .then((_) {
+      ctx.sendJson(buildResponse('handleCategoryDelete', {}));
+    })
+    .catchError((e, trace) {
+      PinUtility.handleError(e, trace);
+      ctx.sendJson(buildResponse('handleCategoryDelete', { "error": "Error in deleteing category!" }, valid: false));
+    });
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* TAGS
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

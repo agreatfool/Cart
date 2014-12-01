@@ -520,6 +520,31 @@ module.exports = function($http, $q) {
 
         return deferred.promise;
     };
+    var categoryDelete = function(uuid) {
+        var deferred = $q.defer();
+
+        var target = categorySearchLocalById(uuid);
+        if (_.isNull(target)) {
+            CartUtility.log('Target local category data not found with input category uuid: ' + uuid, 'DataService::categoryDelete');
+            deferred.reject();
+            return deferred.promise;
+        }
+
+        CartUtility.request(
+            'POST', $http, $q, '/api/category/delete', {
+                "uuid": uuid
+            }, function() {
+                delete categories[uuid];
+                return null;
+            }
+        ).then(function() {
+            deferred.resolve();
+        }, function() {
+            deferred.reject();
+        });
+
+        return deferred.promise;
+    };
     var categoryUpdateTimeLocal = function(category) {
         var target = categorySearchLocalById(category.uuid);
         if (_.isNull(target)) {
@@ -772,7 +797,8 @@ module.exports = function($http, $q) {
         // category APIs
         'categoryGetAll': categoryGetAll,
         'categoryCreate': categoryCreate,
-        "categoryUpdateName": categoryUpdateName,
+        'categoryUpdateName': categoryUpdateName,
+        'categoryDelete': categoryDelete,
         'categoryUpdateTimeLocal': categoryUpdateTimeLocal,
         'categorySearchLocalById': categorySearchLocalById,
         'categorySearchLocal': categorySearchLocal,
@@ -780,7 +806,7 @@ module.exports = function($http, $q) {
         // tag APIs
         'tagGetAll': tagGetAll,
         'tagCreate': tagCreate,
-        "tagUpdateName": tagUpdateName,
+        'tagUpdateName': tagUpdateName,
         'tagUpdateTimeLocal': tagUpdateTimeLocal,
         'tagSearchLocalById': tagSearchLocalById,
         'tagSearchLocal': tagSearchLocal,
