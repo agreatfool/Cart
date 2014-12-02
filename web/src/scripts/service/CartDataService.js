@@ -406,7 +406,6 @@ module.exports = function($http, $q) {
             options.end = end;
         }
 
-
         // tags: since it's a 'GET' request, tags need to be encoded to a JSON string and attached in url, and decoded by server
         if (options.hasOwnProperty('tags')) {
             options.tags = JSON.stringify(options.tags);
