@@ -117,7 +117,7 @@ module.exports = function ($scope, $compile, $location, $window, $dataService) {
             dateTitle.html(titleReformat);
             $compile(dateTitle)($scope); // recompile the ng-click tag
         },
-        events: function(start, end) {
+        events: function(start, end) { // display blogs on calendar
             start = moment(start).format('YYYY-MM-DD');
             end = moment(end).add(-1, 'day').format('YYYY-MM-DD');
             $dataService.postSearch({
