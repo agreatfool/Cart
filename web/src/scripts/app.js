@@ -74,7 +74,7 @@ controllers.controller('CartBlogViewCtrl', ['$scope', '$location', '$window', '$
 controllers.controller('CartBlogCategoryCtrl', ['$scope', '$location', '$window', '$modal', 'CartAccessCtrlService', 'CartDataService', ctrlSources.CartBlogCategoryCtrl]);
 controllers.controller('CartBlogTagCtrl', ['$scope', '$location', '$window', '$modal', 'CartAccessCtrlService', 'CartDataService', ctrlSources.CartBlogTagCtrl]);
 controllers.controller('CartBlogLabelModalCtrl', ['$scope', '$modalInstance', ctrlSources.CartBlogLabelModalCtrl]);
-controllers.controller('CartSearchCtrl', ['$scope', '$compile', '$location', 'CartDataService', ctrlSources.CartSearchCtrl]);
+controllers.controller('CartSearchCtrl', ['$scope', '$compile', '$location', '$window', 'CartDataService', ctrlSources.CartSearchCtrl]);
 controllers.controller('CartOauthCtrl', ['$scope', '$location', '$window', 'CartAccessCtrlService', ctrlSources.CartOauthCtrl]);
 controllers.controller('CartLoginCtrl', ['$scope', '$window', 'CartAccessCtrlService', ctrlSources.CartLoginCtrl]);
 controllers.controller('CartProfileCtrl', ['$scope', ctrlSources.CartProfileCtrl]);

@@ -1,7 +1,7 @@
 'use strict';
 
 /* global $, _, moment, CartUtility */
-module.exports = function ($scope, $compile, $location, $dataService) {
+module.exports = function ($scope, $compile, $location, $window, $dataService) {
     CartUtility.log('CartSearchCtrl');
 
     // DISPLAY CONTROL
@@ -36,6 +36,22 @@ module.exports = function ($scope, $compile, $location, $dataService) {
         if (_.keys($scope.selectedTags).length === 0) {
             $scope.selectedTags = null;
         }
+    };
+
+    $scope.startSearch = function() {
+        var options = {};
+        if (!_.isNull($scope.selectedDate)) {
+            options[$scope.selectedDate.type] = $scope.selectedDate.value;
+        }
+        if (!_.isNull($scope.selectedCategory)) {
+            options.category = $scope.selectedCategory.uuid;
+            options.isUuidSearch = true;
+        }
+        if (!_.isNull($scope.selectedTags)) {
+            options.tags = JSON.stringify(_.keys($scope.selectedTags)); // format to string
+            options.isUuidSearch = true;
+        }
+        $window.open(CartUtility.getPureRootUrlFromLocation($location) + '?' + $.param(options));
     };
 
     // DATA SOURCE

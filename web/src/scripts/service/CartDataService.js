@@ -367,11 +367,9 @@ module.exports = function($http, $q) {
         var end = [];
 
         if (options.hasOwnProperty('start') && options.hasOwnProperty('end')) {
-            start = CartUtility.parseTimeStringToUnix(options.start);
-            end = CartUtility.parseTimeStringToUnix(options.end);
+            options.start = CartUtility.parseTimeStringToUnix(options.start);
+            options.end = CartUtility.parseTimeStringToUnix(options.end);
         } else {
-            start = [];
-            end = [];
             if (options.hasOwnProperty('year')) {
                 var yearTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.year + '-01-01 00:00:00'));
                 start.push(CartUtility.parseUnixYearStartTimestamp(yearTimestamp));
@@ -404,10 +402,10 @@ module.exports = function($http, $q) {
                 end = 2147483647;
             }
             delete options.year; delete options.month; delete options.day;
+            options.start = start;
+            options.end = end;
         }
 
-        options.start = start;
-        options.end = end;
 
         // tags: since it's a 'GET' request, tags need to be encoded to a JSON string and attached in url, and decoded by server
         if (options.hasOwnProperty('tags')) {

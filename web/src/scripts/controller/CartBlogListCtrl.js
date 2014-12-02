@@ -90,27 +90,35 @@ module.exports = function ($scope, $location, $window, $routeParams, $modal, $da
             $scope.subTitle1 = 'Category';
             $scope.subTitle2 = $routeParams.category;
         }
-        if ($routeParams.hasOwnProperty('tag')) {
+        if ($routeParams.hasOwnProperty('tag')) { // single tag page
             options.tags = [$routeParams.tag];
             $scope.subTitle1 = 'Tag';
             $scope.subTitle2 = $routeParams.tag;
+        } else if ($routeParams.hasOwnProperty('tags')) { // multi tags search
+            options.tags = JSON.parse($routeParams.tags);
+            $scope.subTitle1 = 'Tag';
+            $scope.subTitle2 = $routeParams.tags;
         }
         if ($location.url().indexOf('year') !== -1) {
-            options.year = $routeParams.datetime; // 2014
+            options.year = $routeParams.hasOwnProperty('datetime') ? $routeParams.datetime : $routeParams.year; // 2014
             $scope.subTitle1 = 'Year';
-            $scope.subTitle2 = $routeParams.datetime;
+            $scope.subTitle2 = options.year;
         }
         if ($location.url().indexOf('month') !== -1) {
-            options.month = $routeParams.datetime; // 2014-11
+            options.month = $routeParams.hasOwnProperty('datetime') ? $routeParams.datetime : $routeParams.month; // 2014-11
             $scope.subTitle1 = 'Month';
-            $scope.subTitle2 = $routeParams.datetime;
+            $scope.subTitle2 = options.month;
         }
         if ($location.url().indexOf('day') !== -1) {
-            options.day = $routeParams.datetime; // 2014-11-21
+            options.day = $routeParams.hasOwnProperty('datetime') ? $routeParams.datetime : $routeParams.day; // 2014-11-21
             $scope.subTitle1 = 'Day';
-            $scope.subTitle2 = $routeParams.datetime;
+            $scope.subTitle2 = options.day;
         }
-        options.isUuidSearch = false;
+        if ($location.url().indexOf('isUuidSearch') !== -1) {
+            options.isUuidSearch = $routeParams.isUuidSearch;
+        } else {
+            options.isUuidSearch = false;
+        }
         options.pageNumber = $scope.paginationCurrentPage;
         $dataService.postSearch(options).then(function(data) {
             // FIXME 如果查找posts结果为空，需要在页面上展示一个友好的空白页效果
