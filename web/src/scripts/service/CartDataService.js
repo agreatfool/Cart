@@ -343,8 +343,10 @@ module.exports = function($http, $q) {
          *     "year": "2014",
          *     "month": "2014-11",
          *     "day": "2014-11-21",
-         *     "isUuidSearch": boolean,
-         *     "pageNumber": int
+         *     "isUuidSearch": boolean, // default false
+         *     "pageNumber": int, // default 1, -1 means get all posts
+         *     "start": timestamp,
+         *     "end": timestamp
          * }
          */
         // default values
@@ -364,38 +366,46 @@ module.exports = function($http, $q) {
         var start = [];
         var end = [];
 
-        if (options.hasOwnProperty('year')) {
-            var yearTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.year + '-01-01 00:00:00'));
-            start.push(CartUtility.parseUnixYearStartTimestamp(yearTimestamp));
-            end.push(CartUtility.parseUnixYearEndTimestamp(yearTimestamp));
-        }
-        if (options.hasOwnProperty('month')) {
-            var monthTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.month + '-01 00:00:00'));
-            start.push(CartUtility.parseUnixDateStartTimestamp(monthTimestamp));
-            end.push(CartUtility.parseUnixDateEndTimestamp(monthTimestamp));
-        }
-        if (options.hasOwnProperty('day')) {
-            var dayTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.day + ' 00:00:00'));
-            start.push(CartUtility.parseUnixDayStartTimestamp(dayTimestamp));
-            end.push(CartUtility.parseUnixDayEndTimestamp(dayTimestamp));
-        }
-        if (start.length > 0) {
-            start = _.max(start, function(item) { return item; });
-            if (!_.isNumber(start)) {
-                CartUtility.notify('Error!', 'Start time parsed is invalid: ' + start, 'error');
-            }
+        if (options.hasOwnProperty('start') && options.hasOwnProperty('end')) {
+            start = CartUtility.parseTimeStringToUnix(options.start);
+            end = CartUtility.parseTimeStringToUnix(options.end);
         } else {
-            start = 0;
-        }
-        if (end.length > 0) {
-            end = _.min(end, function(item) { return item; });
-            if (!_.isNumber(end)) {
-                CartUtility.notify('Error!', 'End time parsed is invalid: ' + end, 'error');
+            start = [];
+            end = [];
+            if (options.hasOwnProperty('year')) {
+                var yearTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.year + '-01-01 00:00:00'));
+                start.push(CartUtility.parseUnixYearStartTimestamp(yearTimestamp));
+                end.push(CartUtility.parseUnixYearEndTimestamp(yearTimestamp));
             }
-        } else {
-            end = 2147483647;
+            if (options.hasOwnProperty('month')) {
+                var monthTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.month + '-01 00:00:00'));
+                start.push(CartUtility.parseUnixDateStartTimestamp(monthTimestamp));
+                end.push(CartUtility.parseUnixDateEndTimestamp(monthTimestamp));
+            }
+            if (options.hasOwnProperty('day')) {
+                var dayTimestamp = CartUtility.parseTimeStringToUnix(new Date(options.day + ' 00:00:00'));
+                start.push(CartUtility.parseUnixDayStartTimestamp(dayTimestamp));
+                end.push(CartUtility.parseUnixDayEndTimestamp(dayTimestamp));
+            }
+            if (start.length > 0) {
+                start = _.max(start, function(item) { return item; });
+                if (!_.isNumber(start)) {
+                    CartUtility.notify('Error!', 'Start time parsed is invalid: ' + start, 'error');
+                }
+            } else {
+                start = 0;
+            }
+            if (end.length > 0) {
+                end = _.min(end, function(item) { return item; });
+                if (!_.isNumber(end)) {
+                    CartUtility.notify('Error!', 'End time parsed is invalid: ' + end, 'error');
+                }
+            } else {
+                end = 2147483647;
+            }
+            delete options.year; delete options.month; delete options.day;
         }
-        delete options.year; delete options.month; delete options.day;
+
         options.start = start;
         options.end = end;
 
