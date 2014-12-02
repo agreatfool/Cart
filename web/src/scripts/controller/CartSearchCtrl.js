@@ -1,7 +1,7 @@
 'use strict';
 
 /* global $, _, moment, CartUtility */
-module.exports = function ($scope, $compile, $dataService) {
+module.exports = function ($scope, $compile, $location, $dataService) {
     CartUtility.log('CartSearchCtrl');
 
     // DISPLAY CONTROL
@@ -11,7 +11,7 @@ module.exports = function ($scope, $compile, $dataService) {
         $scope.displayCondName = cond;
     };
 
-    $scope.selectedDate = ''; // 2014-08-12
+    $scope.selectedDate = null; // { "type": "day", "value": "2014-12-02" }
     $scope.selectedCategory = null; // category object: { ... }
     $scope.selectedTags = null; // Map of tag object: { uuid: object, ... }
 
@@ -56,29 +56,7 @@ module.exports = function ($scope, $compile, $dataService) {
     var month = date.getMonth();
     var year = date.getFullYear();
 
-    $scope.events = [{
-        title: 'Blog Post 1',
-        start: new Date(year, month, day, 9, 56, 43),
-        allDay: false,
-        url: "http://www.google.com",
-        className: ["calEvent"]
-    }, {
-        title: 'This is a very very long long long Blog Post title',
-        start: new Date(year, month, day - 1, 18, 56, 43),
-        allDay: false,
-        url: "http://www.google.com",
-        className: ["calEvent"]
-    }];
-
-    $scope.addEvent = function(title, date, url) {
-        $scope.events.push({
-            title: title,
-            start: date,
-            allDay: false,
-            url: url,
-            className: ["calEvent"]
-        });
-    };
+    $scope.events = [];
 
     $scope.addSearchCondDate = function(cond) {
         /**
@@ -88,7 +66,10 @@ module.exports = function ($scope, $compile, $dataService) {
          *     day: 2014-08-01
          * }
          */
-        CartUtility.log(cond);
+        $scope.selectedDate = {
+            "type": _.keys(cond).pop(),
+            "value": _.values(cond).pop()
+        };
     };
 
     /* config object */
@@ -107,7 +88,6 @@ module.exports = function ($scope, $compile, $dataService) {
              * view.start 日历上本月最早的一天
              * view.end 日历上本月最后一天再之后一天的凌晨0点0分0秒
              * calendarJqElement 日历本体（不含日历头）的jquery对象
-             * 之后应该需要做一个单独的worker，去查找日历上每个格子（天）上的博客记录，进行展示
              */
             // reformat calendar date title, make it clickable
             var dateTitle = $('.search-calendar .fc-header-title h2');
@@ -121,8 +101,30 @@ module.exports = function ($scope, $compile, $dataService) {
             dateTitle.html(titleReformat);
             $compile(dateTitle)($scope); // recompile the ng-click tag
         },
+        events: function(start, end) {
+            start = moment(start).format('YYYY-MM-DD');
+            end = moment(end).add(-1, 'day').format('YYYY-MM-DD');
+            $dataService.postSearch({
+                "pageNumber": -1,
+                "start": start,
+                "end": end
+            }).then(function(data) {
+                _.forEach(data.posts, function(post) {
+                    $scope.events.push({
+                        title: post.title,
+                        start: CartUtility.parseUnixTime(post.created).toDate(),
+                        allDay: false,
+                        url: CartUtility.getPureRootUrlFromLocation($location) + 'view/' + post.uuid,
+                        className: ['calEvent']
+                    });
+                });
+            });
+        },
         dayClick: function(date) {
             $scope.addSearchCondDate({'day': moment(date).format('YYYY-MM-DD')});
+        },
+        eventRender: function(event, element) {
+            element.attr('target', '_blank'); // open link on a new page
         }
     };
 
