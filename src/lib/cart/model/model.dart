@@ -246,16 +246,19 @@ class CartModel {
       }
     });
 
-    int startPos = (pageNumber - 1) * postsPerPage;
-    int endPos = startPos + postsPerPage;
-    if (startPos >= posts.length) {
-      return []; // target page not exists
-    }
-    if (endPos > posts.length) {
-      endPos = posts.length; // endPos is exclusive in method "getRange"
+    if (pageNumber > 0) { // normal search with pages, otherwise, get all posts
+      int startPos = (pageNumber - 1) * postsPerPage;
+      int endPos = startPos + postsPerPage;
+      if (startPos >= posts.length) {
+        return []; // target page not exists
+      }
+      if (endPos > posts.length) {
+        endPos = posts.length; // endPos is exclusive in method "getRange"
+      }
+      posts = posts.getRange(startPos, endPos).toList();
     }
 
-    return posts.getRange(startPos, endPos).toList();
+    return posts;
   }
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

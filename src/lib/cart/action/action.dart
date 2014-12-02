@@ -19,7 +19,7 @@ class CartAction {
        *     "isUuidSearch": bool,
        *     "start": timestamp,
        *     "end": timestamp,
-       *     "pageNumber": int
+       *     "pageNumber": int // -1 means get all
        * }
        */
       HashMap options = ctx.params;
