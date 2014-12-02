@@ -13,7 +13,7 @@
                         Show Search <span class="caret"></span>
                     </button>
                     <ul role="menu" class="dropdown-menu">
-                        <li ng-class="{active: displayCondName == condName}" ng-repeat="condName in displayCondNames">
+                        <li ng-repeat="condName in displayCondNames" ng-class="{active: displayCondName == condName}">
                             <a ng-click="displayCond(condName)">{{ condName }}</a>
                         </li>
                     </ul>
@@ -25,9 +25,9 @@
                     <div class="row">
                         <div class="col-md-12" ng-show="selectedDate || selectedCategory">
                             <span class="label label-default pull-left" ng-show="selectedDate">Selected Date: </span>
-                            <span class="search-selected-span pull-left">{{ selectedDate }}</span>
+                            <span class="search-selected-span pull-left" ng-show="selectedDate">{{ selectedDate }}</span>
                             <span class="label label-default pull-left" ng-show="selectedCategory">Selected Category: </span>
-                            <span class="search-selected-span pull-left">{{ selectedCategory }}</span>
+                            <span class="search-selected-span pull-left" ng-show="selectedCategory">{{ selectedCategory.title }}</span>
                         </div>
                     </div>
                     <div class="row" ng-show="selectedTags">
@@ -39,8 +39,8 @@
                             </div>
                             <div class="row tagsinput-primary">
                                 <div class="col-md-12 bootstrap-tagsinput">
-                                    <span class="tag label label-info">
-                                        This is a very long long tag name, longer than you can imagine
+                                    <span class="tag label label-info" ng-repeat="tag in selectedTags" ng-click="removeSelectedTag(tag.uuid)">
+                                        {{ tag.title }}
                                         <span class="tagsinput-remove-link" data-role="remove"></span>
                                     </span>
                                 </div>
@@ -57,13 +57,10 @@
                             <span class="label label-default">Categories: </span>
                         </div>
                     </div>
-                    <div class="row tagsrow tagsinput">
-                        <div class="col-md-12">
-                            <span class="tag">
-                                <span>
-                                    <span class="tag-name">This is a very long long tag name, longer than you can imagine</span>
-                                </span>
-                                <a class="tagsinput-remove-link"></a>
+                    <div class="row tagsinput-primary">
+                        <div class="col-md-12 bootstrap-tagsinput">
+                            <span class="tag label label-info" ng-repeat="category in categories" ng-click="selectCategory(category.uuid)">
+                                {{ category.title }}
                             </span>
                         </div>
                     </div>
@@ -77,13 +74,10 @@
                             <span class="label label-default">Tags: </span>
                         </div>
                     </div>
-                    <div class="row tagsrow tagsinput">
-                        <div class="col-md-12">
-                            <span class="tag">
-                                <span>
-                                    <span class="tag-name">This is a very long long tag name, longer than you can imagine</span>
-                                </span>
-                                <a class="tagsinput-remove-link"></a>
+                    <div class="row tagsinput-primary">
+                        <div class="col-md-12 bootstrap-tagsinput">
+                            <span class="tag label label-info" ng-repeat="tag in tags" ng-click="selectTag(tag.uuid)">
+                                {{ tag.title }}
                             </span>
                         </div>
                     </div>

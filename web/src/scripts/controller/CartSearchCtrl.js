@@ -1,7 +1,7 @@
 'use strict';
 
-/* global $, moment, CartUtility */
-module.exports = function ($scope, $compile) {
+/* global $, _, moment, CartUtility */
+module.exports = function ($scope, $compile, $dataService) {
     CartUtility.log('CartSearchCtrl');
 
     // DISPLAY CONTROL
@@ -11,25 +11,60 @@ module.exports = function ($scope, $compile) {
         $scope.displayCondName = cond;
     };
 
-    $scope.selectedDate = '2014-08-12';//null;
-    $scope.selectedCategory = 'category';//null;
-    $scope.selectedTags = [1,2,3]; //[];
+    $scope.selectedDate = ''; // 2014-08-12
+    $scope.selectedCategory = null; // category object: { ... }
+    $scope.selectedTags = null; // Map of tag object: { uuid: object, ... }
+
+    $scope.categories = null; // Map of tag object: { uuid: object, ... }
+    $scope.tags = null; // Map of category object: { uuid: object, ... }
+
+    $scope.selectCategory = function(uuid) {
+        $scope.selectedCategory = $scope.categories[uuid];
+    };
+
+    $scope.selectTag = function(uuid) {
+        if (_.isNull($scope.selectedTags)) {
+            $scope.selectedTags = {};
+        }
+        $scope.selectedTags[uuid] = $scope.tags[uuid];
+        delete $scope.tags[uuid];
+    };
+
+    $scope.removeSelectedTag = function(uuid) {
+        $scope.tags[uuid] = $scope.selectedTags[uuid];
+        delete $scope.selectedTags[uuid];
+        if (_.keys($scope.selectedTags).length === 0) {
+            $scope.selectedTags = null;
+        }
+    };
+
+    // DATA SOURCE
+    $dataService.categoryGetAll().then(function(data) {
+        if (!_.isEmpty(data)) {
+            $scope.categories = data;
+        }
+        return $dataService.tagGetAll();
+    }).then(function(data) {
+        if (!_.isEmpty(data)) {
+            $scope.tags = data;
+        }
+    });
 
     // CALENDAR
     var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+    var day = date.getDate();
+    var month = date.getMonth();
+    var year = date.getFullYear();
 
     $scope.events = [{
         title: 'Blog Post 1',
-        start: new Date(y, m, d, 9, 56, 43),
+        start: new Date(year, month, day, 9, 56, 43),
         allDay: false,
         url: "http://www.google.com",
         className: ["calEvent"]
     }, {
         title: 'This is a very very long long long Blog Post title',
-        start: new Date(y, m, d - 1, 18, 56, 43),
+        start: new Date(year, month, day - 1, 18, 56, 43),
         allDay: false,
         url: "http://www.google.com",
         className: ["calEvent"]
