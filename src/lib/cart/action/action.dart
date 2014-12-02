@@ -27,7 +27,7 @@ class CartAction {
       options['start'] = options.containsKey('start') ? int.parse(options['start']) : 0;
       options['end'] = options.containsKey('end') ? int.parse(options['end']) : PinTime.TIMESTAMP_MAX;
 
-      if (!options.containsKey('isUuidSearch') || !(options['isUuidSearch'] != 'false' && options['isUuidSearch'] != 'true')) {
+      if (!options.containsKey('isUuidSearch') && !(options['isUuidSearch'] != 'false' && options['isUuidSearch'] != 'true')) {
         options['isUuidSearch'] = false;
       } else {
         if (options['isUuidSearch'] == 'true') {

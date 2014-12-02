@@ -353,7 +353,7 @@ module.exports = function($http, $q) {
         if (!_.isObject(options)) {
             options = {};
         }
-        if (!_.isBoolean(options.isUuidSearch)) {
+        if (!_.isBoolean(options.isUuidSearch) && options.isUuidSearch !== 'true' && options.isUuidSearch !== 'false') {
             options.isUuidSearch = false;
         }
         if (!_.isNumber(options.pageNumber)) {
