@@ -72,8 +72,6 @@ module.exports = function ($scope, $compile, $location, $window, $dataService) {
     var month = date.getMonth();
     var year = date.getFullYear();
 
-    $scope.events = [];
-
     $scope.addSearchCondDate = function(cond) {
         /**
          * {
@@ -88,6 +86,9 @@ module.exports = function ($scope, $compile, $location, $window, $dataService) {
         };
     };
 
+    var eventsLoaded = {}; // store loaded posts event data, for future calendar reload
+    var renderingStep = 0; // calendar rendering step index
+
     /* config object */
     $scope.calendarOptions = {
         height: 450,
@@ -98,6 +99,7 @@ module.exports = function ($scope, $compile, $location, $window, $dataService) {
             right: 'today prevYear,prev,next,nextYear'
         },
         viewRender: function(view) {
+            renderingStep = 0; // reset step to 0 for each time calendar reload
             /**
              * view.visStart 日历上最早的一天
              * view.visEnd 日历上最晚的一天再之后一天的凌晨0点0分0秒
@@ -117,24 +119,45 @@ module.exports = function ($scope, $compile, $location, $window, $dataService) {
             dateTitle.html(titleReformat);
             $compile(dateTitle)($scope); // recompile the ng-click tag
         },
-        events: function(start, end) { // display blogs on calendar
+        events: function(start, end, callback) { // display blogs on calendar
+            /**
+             * Since calendar using $compile(dateTitle)($scope); to reload title links,
+             * calendar would be loaded twice for each page view, and we shall not load events twice,
+             * step number 2 is the right step to load event data
+             */
+            renderingStep++; // step forward
+            if (renderingStep !== 2) {
+                callback([]);
+                return;
+            }
+
             start = moment(start).format('YYYY-MM-DD');
             end = moment(end).add(-1, 'day').format('YYYY-MM-DD');
-            $dataService.postSearch({
-                "pageNumber": -1,
-                "start": start,
-                "end": end
-            }).then(function(data) {
-                _.forEach(data.posts, function(post) {
-                    $scope.events.push({
-                        title: post.title,
-                        start: CartUtility.parseUnixTime(post.created).toDate(),
-                        allDay: false,
-                        url: CartUtility.getPureRootUrlFromLocation($location) + 'view/' + post.uuid,
-                        className: ['calEvent']
+
+            var eventKey = start + '|' + end;
+
+            if (eventsLoaded.hasOwnProperty(eventKey)) {
+                callback(eventsLoaded[eventKey]);
+            } else {
+                $dataService.postSearch({
+                    "pageNumber": -1,
+                    "start": start,
+                    "end": end
+                }).then(function(data) {
+                    _.forEach(data.posts, function(post) {
+                        var events = [];
+                        events.push({
+                            title: post.title,
+                            start: CartUtility.parseUnixTime(post.created).toDate(),
+                            allDay: false,
+                            url: CartUtility.getPureRootUrlFromLocation($location) + 'view/' + post.uuid,
+                            className: ['calEvent']
+                        });
+                        eventsLoaded[eventKey] = events;
                     });
+                    callback(eventsLoaded[eventKey]);
                 });
-            });
+            }
         },
         dayClick: function(date) {
             $scope.addSearchCondDate({'day': moment(date).format('YYYY-MM-DD')});
@@ -144,6 +167,7 @@ module.exports = function ($scope, $compile, $location, $window, $dataService) {
         }
     };
 
-    /* event sources array*/
+    /* event sources array, not used, just dummy for plugin angular-ui-calendar */
+    $scope.events = [];
     $scope.eventSources = [$scope.events];
 };
