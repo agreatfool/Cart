@@ -48,15 +48,16 @@ class CartSystem {
           "updated": timestamp
       });
       model.tagList.add(private);
-      HashMap tagInfo = {
-          "uuid": private.uuid,
-          "title": private.title
-      };
-      tagPrivate = tagInfo;
-      credentials['tagPrivate'] = tagInfo;
     } else {
       PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: Private tag found: ${private.toJson()}');
     }
+
+    HashMap privateTagInfo = {
+        "uuid": private.uuid,
+        "title": private.title
+    };
+    tagPrivate = privateTagInfo;
+    credentials['tagPrivate'] = privateTagInfo;
 
     PinUtility.writeJsonFile(oauth['web']['credentialsFilePath'], credentials, withIndent: true)
     .then((_) => model.saveDatabase())
