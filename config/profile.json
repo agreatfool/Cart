@@ -1,7 +1,9 @@
 {
     "name": "Jonathan Dai",
-    "mail": "nightghost5078@gmail.com",
+    "email": "nightghost5078@gmail.com",
     "twitter": "https://twitter.com/agreatfool",
     "facebook": "https://www.facebook.com/jonathan.dai.35",
-    "blog": "http://xenojoshua.com"
+    "blog": "http://xenojoshua.com",
+    "intro": "self introduction here",
+    "words": "some words here"
 }

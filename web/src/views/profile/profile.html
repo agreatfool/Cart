@@ -3,12 +3,12 @@
         <div class="container">
             <div class="row top">
                 <div class="col-md-12 title">
-                    <img class="avatar" src="http://www.gravatar.com/avatar/5e7d84c6d982224e4fd60c099e918c46?s=160">
+                    <img class="avatar" src="{{ avatar }}">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 title-sub">
-                    Jonathan Dai
+                    {{ profile.name }}
                 </div>
             </div>
         </div>
@@ -19,15 +19,20 @@
             <div class="row">
                 <div class="col-md-3 grid grid-left well">
                     <h4>Intro</h4>
-                    <p>self introduction here</p>
+                    <p>{{ profile.intro }}</p>
                 </div>
                 <div class="col-md-3 grid well">
                     <h4>Words</h4>
-                    <p>some words here</p>
+                    <p>{{ profile.words }}</p>
                 </div>
                 <div class="col-md-3 grid well">
-                    <h4>Social</h4>
-                    <p>social media or mail info here</p>
+                    <h4>Social Media</h4>
+                    <ul>
+                        <li ng-show="profile.email"><a href="mailto:{{ profile.email }}">Email</a></li>
+                        <li ng-show="profile.twitter"><a target="_blank" href="{{ profile.twitter }}">Twitter</a></li>
+                        <li ng-show="profile.facebook"><a target="_blank" href="{{ profile.facebook }}">Facebook</a></li>
+                        <li ng-show="profile.blog"><a target="_blank" href="{{ profile.blog }}">Blog</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

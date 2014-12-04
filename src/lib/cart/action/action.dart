@@ -699,6 +699,18 @@ class CartAction {
     ctx.end();
   }
 
+  static handleProfile(HttpContext ctx) {
+    if (!CartSystem.instance.actionPreProcess(ctx)) {
+      return;
+    }
+
+    ctx.sendJson(buildResponse('handleEmail', {
+        "email": CartSystem.instance.credentials['email'], // oauth email
+        "profile": CartSystem.instance.profile
+    }));
+    ctx.end();
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* UTILITIES
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

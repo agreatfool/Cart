@@ -20,13 +20,13 @@ main() {
   HashMap setting = PinUtility.readJsonFileSync(CartConst.CONFIG_SETTING_PATH);
   HashMap oauth = PinUtility.readJsonFileSync(CartConst.CONFIG_OAUTH_PATH);
   HashMap credentials = PinUtility.readJsonFileSync(oauth['web']['credentialsFilePath']);
-  HashMap session = PinUtility.readJsonFileSync(CartConst.CONFIG_SESSION_PATH);
 
   CartSystem.instance.setting = setting;
   CartSystem.instance.oauth = oauth;
   CartSystem.instance.credentials = credentials;
   CartSystem.instance.googleDriveRootFolder = credentials['googleDriveRootFolder']; // google drive id string
-  CartSystem.instance.session = session;
+  CartSystem.instance.session = PinUtility.readJsonFileSync(CartConst.CONFIG_SESSION_PATH);
+  CartSystem.instance.profile = PinUtility.readJsonFileSync(CartConst.CONFIG_PROFILE_PATH);
   if (credentials.containsKey('tagPrivate') && credentials['tagPrivate'].length > 0) {
     // site already initialized && restored from google drive
     CartSystem.instance.tagPrivate = credentials['tagPrivate'];
@@ -74,6 +74,7 @@ main() {
   app.post('/api/oauth2',             (HttpContext ctx) => CartAction.handleOauth2(ctx));
   app.get('/api/oauth2next',          (HttpContext ctx) => CartAction.handleOauth2Next(ctx));
   app.post('/api/isauthed',           (HttpContext ctx) => CartAction.handleIsAuthed(ctx));
+  app.post('/api/profile',            (HttpContext ctx) => CartAction.handleProfile(ctx));
 
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* SERVER

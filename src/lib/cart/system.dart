@@ -15,6 +15,7 @@ class CartSystem {
   HashMap oauth = {};
   HashMap credentials = {};
   HashMap session = {};
+  HashMap profile = {};
 
   String googleDriveRootFolder; // google drive id string
   HashMap tagPrivate = { "uuid": null, "title": null }; // { "uuid": "...", "title": "..." }

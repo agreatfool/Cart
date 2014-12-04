@@ -81,6 +81,42 @@ module.exports = function($http, $q) {
      * }
      */
 
+    /**
+     * {
+     *     "email": "mail address", // oauth mail address, not the contact email in profile field
+     *     "profile": {
+     *         "name": "owner name",
+     *         "mail": "mail address",
+     *         "twitter": "url",
+     *         "facebook": "url",
+     *         "blog": "url",
+     *         "intro": "self introduction here",
+     *         "words": "some words here"
+     *     }
+     * }
+     */
+    var profile = {};
+    var profileGet = function() {
+        var deferred = $q.defer();
+
+        if (!_.isEmpty(profile)) {
+            deferred.resolve(profile);
+        } else {
+            CartUtility.request(
+                'POST', $http, $q, '/api/profile', {}, function(data) {
+                    profile = data.message;
+                    return profile;
+                }
+            ).then(function(profile) {
+                deferred.resolve(profile);
+            }, function() {
+                deferred.reject();
+            });
+        }
+
+        return deferred.promise;
+    };
+
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     //-* LOCAL POST RELATED
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -810,6 +846,7 @@ module.exports = function($http, $q) {
 
     // FIXME reformat later
     var apis = {
+        'profileGet': profileGet,
         // local post APIs
         'postSaveTmp': postSaveTmp,
         'postGetTmp': postGetTmp,
