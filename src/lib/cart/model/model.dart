@@ -46,7 +46,6 @@ class CartModel {
     int timestamp = PinTime.getTime();
 
     CartPostHeader header = null;
-    String html = '';
     bool isAddAction;
 
     try {
@@ -64,8 +63,6 @@ class CartModel {
       }
       // remove header info from markdown string
       markdown = CartPost.parseMarkdownContent(markdown);
-      // parse markdown to html & escape html
-      html = markdownToHtml(markdown);
 
     } catch (e, trace) {
       PinUtility.handleError(e, trace);
@@ -111,7 +108,7 @@ class CartModel {
     }
 
     // create html file & sync with google drive & save db files
-    _preparePostUpload(post, html)
+    _preparePostUpload(post)
     .then((CartPost _) {
       post = _;
       return _postUpload(post, markdown);
@@ -501,7 +498,7 @@ class CartModel {
     return completer.future;
   }
 
-  Future<CartPost> _preparePostUpload(CartPost post, String html) {
+  Future<CartPost> _preparePostUpload(CartPost post) {
     final completer = new Completer();
 
     String postBasePubDir = LibPath.join(CartConst.WWW_POST_PUB_PATH, post.uuid);
@@ -528,9 +525,7 @@ class CartModel {
       PinLogger.instance.fine('[CartPost] _preparePostUpload: directory "${postBaseDataDir}" checked');
       return new Future.value(true);
     })
-    .then((_) => new File(LibPath.join(postBaseDataDir, post.uuid + '.html'))..writeAsString(html)) // update or create local html file
     .then((_) {
-      PinLogger.instance.fine('[CartPost] _preparePostUpload: html file "${LibPath.join(postBaseDataDir, post.uuid + '.html')}" wrote');
       // upload attachments
       post.attachments.forEach((String attachmentUuid, CartPostAttachment attachment) {
         if (attachment.driveId == null) {

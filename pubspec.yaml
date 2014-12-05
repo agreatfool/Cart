@@ -7,7 +7,6 @@ dependencies:
   logging: any
   path: any
   stack_trace: any
-  markdown: any
   uuid: any
   http_server: any
   html5lib: any
