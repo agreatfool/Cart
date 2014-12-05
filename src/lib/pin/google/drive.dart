@@ -4,6 +4,9 @@ class PinGoogleDrive {
 
   static const String qIsRootFiles = "'root' in parents";
   static const String qIsFolder = "mimeType = 'application/vnd.google-apps.folder'";
+  static const String qIsChild = "'%s' in parents";
+  static const String qTitle = "title = '%s'";
+  static const String qType = "mimeType = '%s'";
 
   static const String mimeFolder = 'application/vnd.google-apps.folder';
 
@@ -132,6 +135,32 @@ class PinGoogleDrive {
     return completer.future;
   }
 
+  Future<GoogleDriveClient.File> exists(String title, {bool isDir: false, List<String> parents: null}) {
+    final completer = new Completer();
+
+    List<String> queries = [
+        sprintf(qTitle, [title])
+    ];
+    if (isDir) {
+      queries.add(qIsFolder);
+    }
+    if (parents != null) {
+      parents.forEach((String parent) {
+        queries.add(sprintf(qIsChild, [parent]));
+      });
+    }
+
+    drive_list(queries: queries).then((GoogleDriveClient.FileList files) {
+      if (files.items.length == 0) {
+        completer.complete(null);
+      } else {
+        completer.complete(files.items[0]);
+      }
+    });
+
+    return completer.future;
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* DRIVE ORIGINAL APIs
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -172,9 +201,16 @@ class PinGoogleDrive {
       metadata['parents'] = metaParents;
     }
 
-    GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
-    _drive.files.insert(file)
-    .then((GoogleDriveClient.File newFile) => completer.complete(newFile))
+    exists(name, isDir: true, parents: parents)
+    .then((GoogleDriveClient.File found) {
+      if (found == null) {
+        GoogleDriveClient.File file = new GoogleDriveClient.File.fromJson(metadata);
+        return _drive.files.insert(file);
+      } else {
+        return new Future.value(found);
+      }
+    })
+    .then((GoogleDriveClient.File file) => completer.complete(file))
     .catchError((e, trace) {
       PinUtility.handleError(e, trace);
       completer.completeError(e, trace);
