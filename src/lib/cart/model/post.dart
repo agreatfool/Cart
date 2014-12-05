@@ -226,6 +226,10 @@ class CartPostList extends Object with PinSerializable {
     return PinUtility.writeJsonFile(CartConst.DB_POSTS_PATH, toJson()['list'], withIndent: true);
   }
 
+  void flush() {
+    list = {};
+  }
+
 }
 
 class CartPostAttachment extends Object with PinSerializable {

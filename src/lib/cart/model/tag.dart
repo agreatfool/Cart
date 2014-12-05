@@ -148,4 +148,8 @@ class CartTagList extends Object with PinSerializable {
     return PinUtility.writeJsonFile(CartConst.DB_TAGS_PATH, toJson()['list'], withIndent: true);
   }
 
+  void flush() {
+    list = {};
+  }
+
 }

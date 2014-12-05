@@ -6,6 +6,7 @@ class PinGoogleDrive {
   static const String qIsFolder = "mimeType = 'application/vnd.google-apps.folder'";
   static const String qIsChild = "'%s' in parents";
   static const String qTitle = "title = '%s'";
+  static const String qTitleContains = "title contains '%s'";
   static const String qType = "mimeType = '%s'";
 
   static const String mimeFolder = 'application/vnd.google-apps.folder';

@@ -32,6 +32,32 @@ class CartSystem {
     int timestamp = PinTime.getTime();
 
     CartModel model = CartModel.instance;
+    model.flush(); // remove all old data
+
+    List<Future<List<GoogleDriveClient.File>>> categoriesMds = [];
+
+    drive.listAll(queries: [
+        PinGoogleDrive.qIsFolder,
+        sprintf(PinGoogleDrive.qIsChild, [googleDriveRootFolder])
+    ])
+    .then((List<GoogleDriveClient.File> categories) {
+      // retrieve all categories dir info
+      categories.forEach((GoogleDriveClient.File category) {
+        categoriesMds.add(drive.listAll(queries: [
+            sprintf(PinGoogleDrive.qIsChild, [category.id]),
+            sprintf(PinGoogleDrive.qTitleContains, ['.md'])
+        ]));
+      });
+      if (categoriesMds.length == 0) {
+        return new Future.value([]);
+      } else {
+        return Future.wait(categoriesMds);
+      }
+    })
+    .then((List<GoogleDriveClient.File> markdowns) {
+      // retrieve all markdown files info
+
+    });
 
     // FIXME 在这里读取google drive里的文件，在web服务器上下载图片、html和markdown，重构整个数据库
     // 如果整个系统里没有任何一篇博客，或者没有任何一篇博客里带有setting.json里配置的private tag

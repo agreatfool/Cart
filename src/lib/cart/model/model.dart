@@ -31,6 +31,13 @@ class CartModel {
     _drive = CartSystem.instance.drive;
   }
 
+  void flush() {
+    // clear all data in model classes
+    postList.flush();
+    categoryList.flush();
+    tagList.flush();
+  }
+
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
   //-* API: POST
   //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

@@ -122,4 +122,8 @@ class CartCategoryList extends Object with PinSerializable {
     return PinUtility.writeJsonFile(CartConst.DB_CATEGORIES_PATH, toJson()['list'], withIndent: true);
   }
 
+  void flush() {
+    list = {};
+  }
+
 }

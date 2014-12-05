@@ -12,6 +12,7 @@ import 'package:html5lib/parser.dart' as LibHtml5;
 import 'package:http_server/http_server.dart';
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as LibPath;
+import 'package:sprintf/sprintf.dart';
 
 import '../pin/pin.dart';
 
