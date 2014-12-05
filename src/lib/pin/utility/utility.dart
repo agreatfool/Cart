@@ -52,8 +52,7 @@ class PinUtility {
       if (!withIndent) {
         jsonStr = JSON.encode(json);
       } else {
-        final decoder = new JsonEncoder.withIndent('    ');
-        jsonStr = decoder.convert(json);
+        jsonStr = formatJson(json);
       }
     } catch (e, trace) {
       handleError(e, trace, message: '[PinUtility] writeJsonFile: Error in encoding JSON obj: ${json}');
@@ -68,6 +67,11 @@ class PinUtility {
     });
 
     return completer.future;
+  }
+
+  static String formatJson(Map json) {
+    final decoder = new JsonEncoder.withIndent('    ');
+    return decoder.convert(json);
   }
 
   static Future deleteFileIfExists(String path, {bool recursive: false}) {
