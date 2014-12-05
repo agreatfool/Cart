@@ -39,23 +39,23 @@ class CartSystem {
     // 格式见当前class的tagPrivate字段，当然这个字段也需要更新
 
     // at the end of restore process, system need to check whether private tag exists or not, create it if no
-    CartTag private = model.tagList.findByTitle(setting['tagPrivate']);
-    if (private == null) {
+    CartTag privateTag = model.tagList.findByTitle(setting['tagPrivate']);
+    if (privateTag == null) {
       PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: Private tag not found, create it ...');
-      private = new CartTag.fromJson({
+      privateTag = new CartTag.fromJson({
           "uuid": PinUtility.uuid(),
           "title": setting['tagPrivate'],
           "created": timestamp,
           "updated": timestamp
       });
-      model.tagList.add(private);
+      model.tagList.add(privateTag);
     } else {
-      PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: Private tag found: ${private.toJson()}');
+      PinLogger.instance.fine('[CartSystem] restoreBlogFromDrive: Private tag found: ${privateTag.toJson()}');
     }
 
     HashMap privateTagInfo = {
-        "uuid": private.uuid,
-        "title": private.title
+        "uuid": privateTag.uuid,
+        "title": privateTag.title
     };
     tagPrivate = privateTagInfo;
     credentials['tagPrivate'] = privateTagInfo;
@@ -65,6 +65,7 @@ class CartSystem {
     .then((_) => _isRestoring = false) // reset status to normal only when site restored normally, otherwise need Administrator to fix first
     .catchError((e, trace) => PinUtility.handleError(e, trace));
   }
+
   bool actionPreProcess(HttpContext ctx, {bool responseDirectly: true}) {
     PinUtility.clearPrevErrorMsg();
 
