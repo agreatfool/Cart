@@ -48,6 +48,22 @@ class CartModel {
     CartPostHeader header = null;
     bool isAddAction;
 
+    // FIXME
+    /**
+     * 现有的附件逻辑是每次上传附件的时候，将附件上传到web服务器，并将附件资料写入post的头部
+     * 在save post的时候，进行drive上传
+     * 则该附件附着于post
+     * 到这步的逻辑和wordpress的附件处理逻辑是一致的
+     * 但是
+     * 之后由于没有附件管理界面，所以无法删除
+     * 之后需要添加相关的逻辑进行处理
+     */
+    /**
+     * save post的逻辑需要额外处理category变更的情况（仅限于更新情况，新建post不存在这种情况）：
+     * 当category变更的时候，post的markdown文件，和一系列已经有driveId（曾经上传过）的附件
+     * 都需要将其parent从原来的category，变更为新的category
+     */
+
     try {
 
       // validate uuid
