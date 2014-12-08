@@ -22,7 +22,7 @@ module.exports = function($scope, $location, $modalInstance, $dataService) {
         $scope.dataOnPage = dataRows.slice(startPos, endPos);
     };
 
-    $scope.uploadTmpPost = function(uuid) { // FIXME 需要在上传结束后通知主界面刷新post列表
+    $scope.uploadTmpPost = function(uuid) {
         $('.modal-content').css('visibility', 'hidden');
         $dataService.postGetTmp(uuid).then(function(tmpPostData) {
             $dataService.postUpload(tmpPostData).then(function() {
