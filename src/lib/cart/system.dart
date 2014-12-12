@@ -35,7 +35,7 @@ class CartSystem {
     // 如果整个系统里没有任何一篇博客，或者没有任何一篇博客里带有setting.json里配置的private tag
     // 则这里需要对这个tag进行创建，并写入到credentials.json对应字段内
     // 格式见当前class的tagPrivate字段，当然这个字段也需要更新
-    // FIXME  测试restore功能
+    // FIXME 测试restore功能
 
     _restorePosts()
     .then((_) => _restorePrivateTag())
