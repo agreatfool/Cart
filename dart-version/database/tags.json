@@ -1,0 +1,30 @@
+{
+    "84c874fd-568e-4df3-b9d5-8474223e3065": {
+        "uuid": "84c874fd-568e-4df3-b9d5-8474223e3065",
+        "driveId": null,
+        "title": "PRIVATE",
+        "created": 1417770885,
+        "updated": 1417784574
+    },
+    "861b1ce7-2d47-41f5-b2db-161bcc77d417": {
+        "uuid": "861b1ce7-2d47-41f5-b2db-161bcc77d417",
+        "driveId": null,
+        "title": "Tag1",
+        "created": 1417771039,
+        "updated": 1417771054
+    },
+    "07eb42d9-e4b0-4e1a-ac1d-4b3735455bdb": {
+        "uuid": "07eb42d9-e4b0-4e1a-ac1d-4b3735455bdb",
+        "driveId": null,
+        "title": "Tag2",
+        "created": 1417771041,
+        "updated": 1417772016
+    },
+    "d1d4ed35-bca9-4999-8449-56a4cb0674c0": {
+        "uuid": "d1d4ed35-bca9-4999-8449-56a4cb0674c0",
+        "driveId": null,
+        "title": "Tag3",
+        "created": 1417771986,
+        "updated": 1417772016
+    }
+}

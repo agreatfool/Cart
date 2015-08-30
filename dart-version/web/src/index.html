@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang=en>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <base href="/">
+        <title>Cart</title>
+        <link href="css/bootstrap/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+        <link href="css/flat-ui/dist/css/flat-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="css/css-social-buttons/css/zocial.css" type="text/css" rel="stylesheet">
+        <link href="css/animate.css/animate.min.css" type="text/css" rel="stylesheet">
+        <link href="css/main.min.css" type="text/css" rel="stylesheet">
+        <link href="css/fullcalendar/fullcalendar.css" type="text/css" rel="stylesheet">
+        <link href="css/pnotify/pnotify.core.css" type="text/css" rel="stylesheet">
+        <link href="css/pnotify/pnotify.buttons.css" type="text/css" rel="stylesheet">
+        <link href="css/highlightjs/styles/dark.css" type="text/css" rel="stylesheet">
+        <script src="js/ace-builds/src-min-noconflict/ace.js" type="text/javascript"></script>
+        <script src="js/highlightjs/highlight.pack.js" type="text/javascript"></script>
+    </head>
+
+    <body ng-controller="CartMainCtrl">
+        <div class="nav-trigger" ng-click="navToggle()">
+            <span class="glyphicon glyphicon-th nav-icon"></span>
+        </div>
+
+        <div class="nav-fixed">
+            <div class="nav-list">
+                <div class="nav-line" ng-click="pageGoTo('')" ng-class="{active: indexPaths.indexOf(rootPath) !== -1 || segment.startsWith('blog_view')}">
+                    <span class="glyphicon glyphicon-align-justify nav-icon"></span>
+                    <span class="nav-icon-font">Blog</span>
+                </div>
+                <div class="nav-line" ng-click="pageGoTo('category')" ng-class="{active: rootPath == 'category'}">
+                    <span class="glyphicon glyphicon-th-list nav-icon"></span>
+                    <span class="nav-icon-font">Category</span>
+                </div>
+                <div class="nav-line" ng-click="pageGoTo('tag')" ng-class="{active: rootPath == 'tag'}">
+                    <span class="glyphicon glyphicon-tag nav-icon"></span>
+                    <span class="nav-icon-font">Tag</span>
+                </div>
+                <div class="nav-line" ng-click="pageGoTo('search')" ng-class="{active: segment.startsWith('search')}">
+                    <span class="glyphicon glyphicon-search nav-icon"></span>
+                    <span class="nav-icon-font">Search</span>
+                </div>
+                <div class="nav-line" ng-click="pageGoTo('profile')" ng-class="{active: segment.startsWith('profile')}">
+                    <span class="glyphicon glyphicon-user nav-icon"></span>
+                    <span class="nav-icon-font">Profile</span>
+                </div>
+                <div class="nav-line" ng-click="pageGoTo('master')" ng-class="{active: segment.startsWith('master')}" ng-show="isMaster">
+                    <span class="glyphicon glyphicon-wrench nav-icon"></span>
+                    <span class="nav-icon-font">Master</span>
+                </div>
+                <div class="nav-line" ng-click="loginToggle()">
+                    <span class="glyphicon glyphicon-play-circle nav-icon"></span>
+                    <span class="nav-icon-font" ng-show="isMaster">Logout</span>
+                    <span class="nav-icon-font" ng-show="!isMaster">Login</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="page-content-top" app-view-segment="0"></div>
+
+            <div class="page-footer">
+                <div class="row footer-line1">
+                    <div class="col-md-12">
+                        Copyright &nbsp;&nbsp; &copy; 2014 Jonathan Dai &nbsp;&nbsp; All rights reserved.
+                    </div>
+                </div>
+                <div class="row footer-line2">
+                    <div class="col-md-12">
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('')" ng-class="{active: indexPaths.indexOf(rootPath) !== -1 || segment.startsWith('blog_view')}">
+                            Blog
+                        </div>
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('category')" ng-class="{active: rootPath == 'category'}">
+                            Category
+                        </div>
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('tag')" ng-class="{active: rootPath == 'tag'}">
+                            Tag
+                        </div>
+                        <div class="footer-nav-btn pull-left" ng-click="pageGoTo('search')" ng-class="{active: segment.startsWith('search')}">
+                            Search
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-to-top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+            <span class="page-to-top-font">Top</span>
+        </div>
+
+        <div class="spinner-mask" style="display: none;">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </div>
+
+        <script src="js/bundle.min.js"></script>
+    </body>
+
+</html>

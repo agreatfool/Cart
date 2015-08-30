@@ -1,0 +1,38 @@
+{
+  "name": "saffron",
+  "version": "0.2.2",
+  "homepage": "https://github.com/corporadobob/saffron",
+  "authors": [
+    "JC <j@colindres.me>"
+  ],
+  "description": "A simple sass mixin library for animations and transitions.",
+  "main": "saffron/saffron.scss",
+  "keywords": [
+    "sass",
+    "animations"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app",
+    "bin",
+    "features",
+    "lib",
+    "tasks",
+    "Gemfile",
+    "Gemfile.lock",
+    "Rakefile",
+    "saffron.gemspec"
+  ],
+  "_release": "0.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.2",
+    "commit": "3e3b211301bb40d76a59a740bff7ce974cac2ccd"
+  },
+  "_source": "git://github.com/corporadobob/saffron.git",
+  "_target": "~0.2.2",
+  "_originalSource": "saffron"
+}

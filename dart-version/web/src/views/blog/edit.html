@@ -1,0 +1,61 @@
+<div class="container-fluid page-content-container page-edit">
+    <div class="row">
+        <div class="col-md-12 page-top blog-edit-top">
+            <div class="row">
+                <div class="col-md-1">
+                    <h3>Edit</h3>
+                </div>
+                <div class="col-md-11">
+                    <div class="top-info">
+                        <div class="btn btn-xs btn-default">Title</div>
+                        <div id="markdown-post-title" class="btn btn-xs btn-primary top-input" contenteditable="true"></div>
+                        <div class="btn btn-xs btn-default">Category</div>
+                        <div id="markdown-post-category" class="btn btn-xs btn-primary top-input">{{ categoryInput }}</div>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-primary dropdown-toggle" type="button">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu scrollable-menu">
+                                <li ng-repeat="category in postCategories">
+                                    <a tabindex="-1" ng-click="selectPostCategory(category.uuid)">{{ category.title }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="btn btn-xs btn-default">Tags</div>
+                        <div class="tagsinput-primary">
+                            <div id="markdown-post-tags" class="bootstrap-tagsinput">
+                                <span class="tag label label-info" ng-repeat="tag in postTags">
+                                    {{ tag.title }}
+                                    <span class="tagsinput-remove-link" data-role="remove" ng-click="removePostTag(tag.uuid)"></span>
+                                </span>
+                                <input type="text" title=""
+                                    ng-keyup="$event.keyCode == 13 && addPostTag($event)"
+                                    ng-model="tagInput">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row page-body">
+        <div class="col-md-6">
+            <div id="markdown-edit"></div>
+            <div id="markdown-loading" style="display: none;">
+                <div class="spinner-markdown-name pull-left"></div>
+                <div class="spinner-markdown pull-left">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="markdown-preview"></div>
+            <div id="markdown-toc">
+                <div class="markdown-toc-icon glyphicon glyphicon-plus" ng-click="toggleToc()"></div>
+                <div class="markdown-toc-content"></div>
+            </div>
+        </div>
+    </div>
+</div>

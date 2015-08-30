@@ -1,0 +1,97 @@
+<div class="container-fluid page-content-container page-search">
+    <div class="row">
+        <div class="col-md-12 page-top">
+            <h3>Search</h3>
+        </div>
+    </div>
+    <div class="row page-body">
+        <!-- search conditions display -->
+        <div class="col-md-12">
+            <div class="row search-line">
+                <div class="col-md-2 btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">
+                        Show Search <span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                        <li ng-repeat="condName in displayCondNames" ng-class="{active: displayCondName == condName}">
+                            <a ng-click="displayCond(condName)">{{ condName }}</a>
+                        </li>
+                    </ul>
+                    <button class="btn btn-default" type="button" ng-click="startSearch()">
+                        Start Search
+                    </button>
+                </div>
+            </div>
+            <!-- search conditions -->
+            <div class="row search-line">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12" ng-show="selectedDate || selectedCategory">
+                            <span class="label label-default pull-left" ng-show="selectedDate">Selected Date: </span>
+                            <span class="search-selected-span pull-left" ng-show="selectedDate">{{ selectedDate.value }}</span>
+                            <span class="label label-default pull-left" ng-show="selectedCategory">Selected Category: </span>
+                            <span class="search-selected-span pull-left" ng-show="selectedCategory">{{ selectedCategory.title }}</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="selectedTags">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="label label-default">Selected Tags: </span>
+                                </div>
+                            </div>
+                            <div class="row tagsinput-primary">
+                                <div class="col-md-12 bootstrap-tagsinput">
+                                    <span class="tag label label-info" ng-repeat="tag in selectedTags" ng-click="removeSelectedTag(tag.uuid)">
+                                        {{ tag.title }}
+                                        <span class="tagsinput-remove-link" data-role="remove"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- categories -->
+            <div class="row search-line ng-animate-css" ng-show="displayCondName == 'Categories'">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="label label-default">Categories: </span>
+                        </div>
+                    </div>
+                    <div class="row tagsinput-primary">
+                        <div class="col-md-12 bootstrap-tagsinput">
+                            <span class="tag label label-info" ng-repeat="category in categories" ng-click="selectCategory(category.uuid)">
+                                {{ category.title }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- tags -->
+            <div class="row search-line ng-animate-css" ng-show="displayCondName == 'Tags'">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="label label-default">Tags: </span>
+                        </div>
+                    </div>
+                    <div class="row tagsinput-primary">
+                        <div class="col-md-12 bootstrap-tagsinput">
+                            <span class="tag label label-info" ng-repeat="tag in tags" ng-click="selectTag(tag.uuid)">
+                                {{ tag.title }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- calendar -->
+            <div class="row search-line ng-animate-css" ng-show="displayCondName == 'Calendar'">
+                <div class="col-md-12">
+                    <div ui-calendar="calendarOptions" class="calendar search-calendar" ng-model="eventSources"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

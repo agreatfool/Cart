@@ -1,0 +1,40 @@
+<div class="page-content-container">
+    <div class="landing-top">
+        <div class="container">
+            <div class="row top">
+                <div class="col-md-12 title">
+                    <img class="avatar" src="{{ avatar }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 title-sub">
+                    {{ profile.name }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="landing-bottom">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 grid grid-left well">
+                    <h4>Intro</h4>
+                    <p>{{ profile.intro }}</p>
+                </div>
+                <div class="col-md-3 grid well">
+                    <h4>Words</h4>
+                    <p>{{ profile.words }}</p>
+                </div>
+                <div class="col-md-3 grid well">
+                    <h4>Social Media</h4>
+                    <ul>
+                        <li ng-show="profile.email"><a href="mailto:{{ profile.email }}">Email</a></li>
+                        <li ng-show="profile.twitter"><a target="_blank" href="{{ profile.twitter }}">Twitter</a></li>
+                        <li ng-show="profile.facebook"><a target="_blank" href="{{ profile.facebook }}">Facebook</a></li>
+                        <li ng-show="profile.blog"><a target="_blank" href="{{ profile.blog }}">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,42 +1,14 @@
-##
-# Dart
-##
-# Don’t commit the following directories created by pub.
-build/
-packages/
-
-# Or the files created by dart2js.
-*.dart.js
-*.dart.precompiled.js
-*.js_
-*.js.deps
-*.js.map
-
-# Include when developing application packages.
-pubspec.lock
-
 # IDE
 .idea
-
-# NPM
-node_modules/
-
-# Bower
-web/src/bower/
-
-# Dart
-config/credentials.json
-config/google_credentials.json
-config/session.json
-database/*.json
-
-# HTML
-web/public
-web/**/*/packages
-web/post
 
 # SASS
 .sass-cache
 
 # LOGS
 logs
+
+# NPM
+node_modules/
+
+# Bower
+web/src/bower/

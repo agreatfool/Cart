@@ -1,0 +1,13 @@
+{
+  "name": "Blur.js",
+  "homepage": "https://github.com/jakiestfu/Blur.js",
+  "_release": "12e2beca25",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "12e2beca255565d2fef9af22cbbd78ca2504467c"
+  },
+  "_source": "git://github.com/jakiestfu/Blur.js.git",
+  "_target": "*",
+  "_originalSource": "Blur.js"
+}

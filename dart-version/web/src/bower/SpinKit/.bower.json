@@ -1,0 +1,13 @@
+{
+  "name": "SpinKit",
+  "homepage": "https://github.com/tobiasahlin/SpinKit",
+  "_release": "150131e9a5",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "150131e9a50c7716711a7eaafd062edfc198cbea"
+  },
+  "_source": "git://github.com/tobiasahlin/SpinKit.git",
+  "_target": "*",
+  "_originalSource": "SpinKit"
+}

@@ -1,0 +1,159 @@
+<div class="container-fluid page-content-container">
+    <div class="row">
+        <div class="col-md-12 page-top blog-list-top">
+            <div class="row">
+                <div ng-class="{'col-md-1': (subTitle1 === '' && subTitle2 === ''), 'col-md-2': (subTitle1 !== '' && subTitle2 !== '')}">
+                    <h3>Blog<span ng-show="subTitle1 !== '' && subTitle2 !== ''">{{ subTitle1 }}: {{ subTitle2 }}</span></h3>
+                </div>
+                <div class="col-md-2" ng-show="isMaster">
+                    <div class="top-button">
+                        <a href="#" class="btn btn-xs btn-primary" ng-click="createNewPost()">New</a>
+                        <a href="#" class="btn btn-xs btn-primary" ng-click="openTmpPostList()">View Tmp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="blog-list">
+                    <li ng-repeat="post in postOnPage">
+                        <div class="post-badge"><div></div></div>
+                        <div class="post-panel">
+                            <div class="post-heading">
+                                <h4><a href="{{ rootUrl }}view/{{ post.uuid }}" target="_blank">{{ post.title }}</a></h4>
+                                <div>
+                                    <small class="text-muted">
+                                        <span class="post-icon glyphicon glyphicon-time"></span>
+                                        <a href="{{ rootUrl }}year/{{ utility.parseUnixYear(post.created) }}" class="post-time">{{ utility.parseUnixYear(post.created) }}</a>-
+                                        <a href="{{ rootUrl }}month/{{ utility.parseUnixDate(post.created) }}" class="post-time">{{ utility.parseUnixMonth(post.created) }}</a>-
+                                        <a href="{{ rootUrl }}day/{{ utility.parseUnixDateDay(post.created) }}" class="post-time">{{ utility.parseUnixDay(post.created) }}</a> {{ utility.parseUnixDetailTime(post.created) }}
+                                        <span class="post-icon glyphicon glyphicon-th-list"></span>
+                                        <a href="{{ rootUrl }}category/{{ encodeURIComponent(fetchCategoryDisplayName(post.category)) }}" class="post-btn btn btn-xs btn-default">{{ fetchCategoryDisplayName(post.category) }}</a>
+                                        <span class="post-icon glyphicon glyphicon-tag"></span>
+                                        <a ng-repeat="tagUuid in post.tags" href="{{ rootUrl }}tag/{{ encodeURIComponent(fetchTagDisplayName(tagUuid)) }}" class="post-btn btn btn-xs btn-default">{{ fetchTagDisplayName(tagUuid) }}</a>
+                                    </small>
+                                </div>
+                                <div class="row">
+                                    <a href="{{ rootUrl }}view/{{ post.uuid }}" target="_blank" class="btn btn-xs btn-primary col-md-1">
+                                        View
+                                    </a>
+                                    <a href="{{ rootUrl }}edit/{{ post.uuid }}" class="btn btn-xs btn-inverse col-md-1" ng-show="isMaster">
+                                        Edit
+                                    </a>
+                                    <a class="btn btn-xs btn-danger col-md-1" ng-show="isMaster" ng-click="deletePost(post.uuid)">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="post-body">
+                                <p></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row blog-list-footer" ng-show="postOnPage">
+            <div class="col-md-10 pull-right">
+                <div class="pagination pull-right">
+                    <pagination
+                            boundary-links="true"
+                            direction-links="true"
+                            total-items="paginationTotalItems"
+                            items-per-page="itemsPerPage"
+                            ng-model="paginationCurrentPage"
+                            class="pagination-sm"
+                            num-pages="paginationNumPages"
+                            ng-change="loadPageData()"
+                            max-size="paginationMaxSize"
+                            rotate="false"
+                            previous-text="&lsaquo;"
+                            next-text="&rsaquo;"
+                            first-text="&laquo;"
+                            last-text="&raquo;">
+                    </pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="CartBlogListModal.html">
+        <div class="blog-list-modal">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <b>Temporarily saved posts:</b>
+                                </div>
+                                <div class="modal-close pull-right">
+                                    <span class="glyphicon glyphicon-remove" ng-click="close()"></span>
+                                </div>
+                                <div class="modal-delete-all pull-right" ng-show="dataOnPage.length > 0">
+                                    <a class="btn btn-xs btn-danger" ng-click="deleteAllTmpPost()">Delete All</a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Created</th>
+                                        <th>Updated&nbsp;<span class="glyphicon glyphicon-chevron-down"></span></th>
+                                        <th>Status</th>
+                                        <th>Edit</th>
+                                        <th>Upload</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="post in dataOnPage">
+                                        <td>
+                                            <a href="{{ rootUrl }}view/{{ post._id }}" ng-click="close()" ng-show="post.published">{{ post.title }}</a>
+                                            <span ng-show="!post.published">{{ post.title }}</span>
+                                        </td>
+                                        <td><a href="{{ rootUrl }}category/{{ encodeURIComponent(post.category.title) }}" ng-click="close()">{{ post.category.title }}</a></td>
+                                        <td>{{ utility.getTimeString(post.created) }}</td>
+                                        <td>{{ utility.getTimeString(post.updated) }}</td>
+                                        <td>
+                                            <span ng-show="post.published">Published</span>
+                                            <span ng-show="!post.published">Draft</span>
+                                        </td>
+                                        <td><a href="{{ rootUrl }}edit/{{ post._id }}" class="btn btn-xs btn-primary" ng-click="close()">Edit</a></td>
+                                        <td><a class="btn btn-xs btn-info" ng-click="uploadTmpPost(post._id)">Upload</a></td>
+                                        <td><a class="btn btn-xs btn-danger" ng-click="deleteTmpPost(post._id)">Delete</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 pull-right">
+                        <div class="pagination pull-right">
+                            <pagination
+                                boundary-links="true"
+                                direction-links="true"
+                                total-items="paginationTotalItems"
+                                items-per-page="itemsPerPage"
+                                ng-model="paginationCurrentPage"
+                                class="pagination-sm"
+                                num-pages="paginationNumPages"
+                                ng-change="loadPageData()"
+                                max-size="paginationMaxSize"
+                                rotate="false"
+                                previous-text="&lsaquo;"
+                                next-text="&rsaquo;"
+                                first-text="&laquo;"
+                                last-text="&raquo;">
+                            </pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+</div>

@@ -1,0 +1,75 @@
+<div class="container-fluid page-content-container page-label">
+    <div class="row">
+        <div class="col-md-12 page-top">
+            <h3>{{ pageType }}</h3>
+        </div>
+    </div>
+    <div class="row page-body">
+        <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon">Search: </span>
+                <input type="text" class="form-control" placeholder="Search Content ..."
+                    ng-change="searchItem()"
+                    ng-model="searchContent">
+            </div>
+        </div>
+        <div class="col-md-3" ng-show="isMaster">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <span class="label-create-btn glyphicon glyphicon-plus"></span>
+                        New {{ pageType }}
+                    </button>
+                </span>
+                <input type="text" class="form-control" placeholder="Input {{ pageType }} Name ..."
+                    ng-keyup="$event.keyCode == 13 && addItem($event)"
+                    ng-model="createContent">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">
+                    Sort By <span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu">
+                    <li ng-class="{active: pageOrder === 'title'}"><a ng-click="changeOrder('title')">{{ pageType }} Name</a></li>
+                    <li ng-class="{active: pageOrder === 'updated'}"><a ng-click="changeOrder('updated')">{{ pageType }} Updated Time</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row tagsinput-primary">
+        <div class="col-md-12 bootstrap-tagsinput" ng-show="isMaster">
+            <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)" data-toggle="context" data-target="#context-menu-{{ item.uuid }}">
+                {{ item.title }}
+                <span class="tagsinput-remove-link" data-role="remove"></span>
+            </span>
+        </div>
+        <div class="col-md-12 bootstrap-tagsinput" ng-show="!isMaster">
+            <span class="tag label label-info" ng-repeat="item in itemsOnPage" ng-click="selectItem(item.title, $event)">
+                {{ item.title }}
+            </span>
+        </div>
+    </div>
+    <div class="row" ng-show="itemsOnPage && isMaster">
+        <div ng-repeat="item in itemsOnPage" id="context-menu-{{ item.uuid }}">
+            <ul class="dropdown-menu" role="menu">
+                <li><a tabindex="-1" ng-click="openModal(item.uuid)">Rename</a></li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/ng-template" id="CartBlogLabelModal.html">
+        <div class="blog-label-modal">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="input-group">
+                        <span class="input-group-addon">Name: </span>
+                        <input type="text" class="form-control" placeholder="Input new name ..."
+                            ng-keyup="$event.keyCode == 13 && enterData($event)"
+                            ng-model="newName">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+</div>
