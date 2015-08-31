@@ -1,17 +1,18 @@
 {
   "name": "Cart",
   "version": "0.0.0",
+  "description": "Personal blog system, write with markdown, sync with Google Drive",
+  "keywords": [
+    "Blog",
+    "EcmaScript 6",
+    "NodeJs",
+    "Google Drive",
+    "Hybrid",
+    "HTML5"
+  ],
   "authors": [
     "Jonathan Dai"
   ],
-  "keywords": [
-    "Blog",
-    "Dart",
-    "NodeJs",
-    "Google Drive",
-    "HTML5"
-  ],
-  "description": "Personal blog system, write with markdown, sync with Google Drive",
   "license": "MIT",
   "homepage": "https://github.com/agreatfool/Cart",
   "private": true,
