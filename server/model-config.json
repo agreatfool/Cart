@@ -14,22 +14,39 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "RedisDB",
+    "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "RedisDB",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "RedisDB",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "RedisDB",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "RedisDB",
     "public": false
+  },
+  "CartPost": {
+    "dataSource": "RedisDB",
+    "public": true
+  },
+  "CartTag": {
+    "dataSource": "RedisDB",
+    "public": true
+  },
+  "CartCategory": {
+    "dataSource": "RedisDB",
+    "public": true
+  },
+  "CartAttachment": {
+    "dataSource": "RedisDB",
+    "public": true
   }
 }

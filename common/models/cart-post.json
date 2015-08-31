@@ -1,0 +1,55 @@
+{
+  "name": "CartPost",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "uuid": {
+      "type": "string",
+      "id": true,
+      "required": true,
+      "defaultFn": "guid"
+    },
+    "driveId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "created": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    },
+    "updated": {
+      "type": "date",
+      "required": true,
+      "defaultFn": "now"
+    },
+    "category": {
+      "type": "string"
+    },
+    "tags": {
+      "type": [
+        "string"
+      ]
+    },
+    "attachments": {
+      "type": [
+        "string"
+      ]
+    },
+    "isPublic": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "strict": true,
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
