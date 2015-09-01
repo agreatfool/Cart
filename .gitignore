@@ -11,7 +11,7 @@ logs
 node_modules/
 
 # Bower
-src/client/bower/
+bower_components/
 
 # StrongLoop
 /client/

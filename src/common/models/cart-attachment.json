@@ -10,7 +10,7 @@
       "type": "string",
       "id": true,
       "required": true,
-      "defaultFn": "guid"
+      "defaultFn": "uuid"
     },
     "driveId": {
       "type": "string"
