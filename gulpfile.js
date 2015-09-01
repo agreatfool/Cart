@@ -96,7 +96,7 @@ gulp.task('src:babel:server', function() { // 源代码 babel 转码
     .pipe(gulp.dest(libPath.join(PWD, 'server')));
 });
 
-gulp.task('default', ['clean', 'src:eslint'], function() {
+gulp.task('default', ['clean', 'src:eslint'], function() { // 默认任务
   gulp.start(
     'src:babel:client',
     'src:babel:common',
