@@ -1,7 +1,3 @@
-# client:
-# ignore bower resources
-src/client/bower
-
 # common:
 # ignore models
 src/common/models
