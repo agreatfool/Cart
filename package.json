@@ -38,6 +38,9 @@
     "loopback-explorer": "^1.1.0"
   },
   "devDependencies": {
+    "babel-eslint": "^4.1.1",
+    "eslint-config-airbnb": "0.0.8",
+    "eslint-plugin-react": "^3.3.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-babel": "^5.2.1",

@@ -1,3 +1,4 @@
+"use strict";
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* GLOBAL
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -42,15 +43,12 @@ function handleError(err) {
 }
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-//-* WORKS
-//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-
-//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* TASKS
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-gulp.task('clean', function() {
-  gulp.src(
+gulp.task('clean', function() { // 清理任务
+  return gulp.src(
     [
+      // 删除所有最终输出结果
       libPath.join(PWD, 'client', '*'),
       libPath.join('!' + PWD, 'client', '*_placeholder'),
       libPath.join(PWD, 'common', '*'),
@@ -58,11 +56,33 @@ gulp.task('clean', function() {
       libPath.join(PWD, 'server', '*'),
       libPath.join('!' + PWD, 'server', '*_placeholder')
     ], { read: false })
-    //.pipe(ignore('!*_placeholder'))
     .pipe(rimraf())
     .on('error', handleError);
 });
 
+gulp.task('src:eslint', function() { // 源代码 ES6 lint 检查
+  return gulp.src([
+      libPath.join(PWD, 'src', 'client', '*'),
+      libPath.join(PWD, 'src', 'common', '*'),
+      libPath.join(PWD, 'src', 'server', '*')
+    ])
+    .pipe(eslint())
+    .on('error', handleError)
+    .pipe(eslint.format())
+    .pipe(eslint.failOnError());
+});
+
+gulp.task('src:babel:client', function() { // 源代码 babel 转码
+  return gulp.src([
+      libPath.join(PWD, 'src', 'client', '*'),
+      libPath.join('!' + PWD, 'src', 'client', 'bower', '*')
+    ])
+    .pipe(babel())
+    .pipe(gulp.dest('dist'));
+});
+
 gulp.task('default', ['clean'], function() {
-  //gulp.start('lint-scripts', 'scripts', 'scripts_self_move', 'scripts_bower_move', 'styles_move', 'styles', 'htmls', 'images');
+  gulp.start(
+    'src:eslint'
+  );
 });
