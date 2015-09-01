@@ -49,22 +49,22 @@ gulp.task('clean', function() { // 清理任务
   return gulp.src(
     [
       // 删除所有最终输出结果
-      libPath.join(PWD, 'client', '*'),
+      libPath.join(PWD, 'client', '**', '*'),
       libPath.join('!' + PWD, 'client', '*_placeholder'),
-      libPath.join(PWD, 'common', '*'),
+      libPath.join(PWD, 'common', '**', '*'),
       libPath.join('!' + PWD, 'common', '*_placeholder'),
-      libPath.join(PWD, 'server', '*'),
+      libPath.join(PWD, 'server', '**', '*'),
       libPath.join('!' + PWD, 'server', '*_placeholder')
     ], { read: false })
     .pipe(rimraf())
     .on('error', handleError);
 });
 
-gulp.task('src:eslint', function() { // 源代码 ES6 lint 检查
+gulp.task('src:eslint', ['clean'], function() { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
   return gulp.src([
-      libPath.join(PWD, 'src', 'client', '*'),
-      libPath.join(PWD, 'src', 'common', '*'),
-      libPath.join(PWD, 'src', 'server', '*')
+      libPath.join(PWD, 'src', 'client', '**', '*.js'),
+      libPath.join(PWD, 'src', 'common', '**', '*.js'),
+      libPath.join(PWD, 'src', 'server', '**', '*.js')
     ])
     .pipe(eslint())
     .on('error', handleError)
@@ -74,15 +74,32 @@ gulp.task('src:eslint', function() { // 源代码 ES6 lint 检查
 
 gulp.task('src:babel:client', function() { // 源代码 babel 转码
   return gulp.src([
-      libPath.join(PWD, 'src', 'client', '*'),
-      libPath.join('!' + PWD, 'src', 'client', 'bower', '*')
+      libPath.join(PWD, 'src', 'client', 'es6', '**', '*.js')
     ])
     .pipe(babel())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(libPath.join(PWD, 'client', 'public', 'js')));
 });
 
-gulp.task('default', ['clean'], function() {
+gulp.task('src:babel:common', function() { // 源代码 babel 转码
+  return gulp.src([
+    libPath.join(PWD, 'src', 'common', 'es6', '**', '*.js')
+  ])
+    .pipe(babel())
+    .pipe(gulp.dest(libPath.join(PWD, 'common')));
+});
+
+gulp.task('src:babel:server', function() { // 源代码 babel 转码
+  return gulp.src([
+    libPath.join(PWD, 'src', 'server', 'es6', '**', '*.js')
+  ])
+    .pipe(babel())
+    .pipe(gulp.dest(libPath.join(PWD, 'server')));
+});
+
+gulp.task('default', ['clean', 'src:eslint'], function() {
   gulp.start(
-    'src:eslint'
+    'src:babel:client',
+    'src:babel:common',
+    'src:babel:server'
   );
 });

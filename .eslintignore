@@ -1,0 +1,13 @@
+# client:
+# ignore bower resources
+src/client/bower
+
+# common:
+# ignore models
+src/common/models
+
+# server:
+# ignore boot codes
+src/server/boot
+# ignore server.js
+src/server/server.js
