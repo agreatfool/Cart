@@ -4,6 +4,8 @@ var libPath = require('path');
 var webpack = require('webpack');
 
 module.exports = {
+  devtool: 'sourcemap',
+  debug: true,
   cache: true,
   entry: [
     'webpack/hot/dev-server',
@@ -20,8 +22,5 @@ module.exports = {
       { test: /\.css$/, loader: 'style-loader!css-loader' },
       { test: /\.scss$/, loader: 'style!css!sass' }
     ]
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ]
+  }
 };

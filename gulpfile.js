@@ -15,17 +15,14 @@ var libPath = require('path');
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
-var autoprefixer = require('gulp-autoprefixer');
 var eslint = require('gulp-eslint');
-var uglify = require('gulp-uglify');
-var mincss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var ignore = require('gulp-ignore');
 var rimraf = require('gulp-rimraf');
-var sass = require('gulp-ruby-sass');
 var minhtml = require('gulp-minify-html');
 var gutil = require('gulp-util');
 var babel = require('gulp-babel');
+var livereload = require('gulp-livereload');
 var runSequence = require('run-sequence');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -33,7 +30,6 @@ var runSequence = require('run-sequence');
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var webpack = require('webpack');
 var webpackConf = require(libPath.join(PWD, 'webpack.config.js'));
-var WebpackDevServer = require('webpack-dev-server');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* UTILITIES
@@ -135,7 +131,7 @@ gulp.task('resource:html', function() { // 拷贝 HTML 到输出路径
   return gulp.src([
       libPath.join(PATH.src.client.path, '**', '*.html')
     ])
-    .pipe(minhtml())
+    .pipe(gulpif(IS_PRODUCTION, minhtml()))
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
 
@@ -168,30 +164,34 @@ gulp.task('webpack:build', function(done) {
 });
 
 gulp.task('watch', function() {
-  var conf = Object.create(webpackConf);
-  conf.devtool = 'sourcemap';
-  conf.debug = true;
+  // 前端样式和代码改动
+  gulp.watch([
+    libPath.join(PATH.src.client.es6, '**', '*.js'),
+    libPath.join(PATH.src.client.styles, '**', '*.scss')
+  ], ['webpack:build']);
 
-  new WebpackDevServer(webpack(conf), {
-    // webpack-dev-server options
-    contentBase: libPath.join(PATH.dest.client.path, 'public'),
-    hot: true,
-    inline: true,
-    // webpack-dev-middleware options
-    quiet: false,
-    noInfo: false,
-    watchOptions: {
-      aggregateTimeout: 300
-    },
-    publicPath: '/',
-    stats: { colors: true },
-    historyApiFallback: true,
-    proxy: {
-      '*': 'http://localhost:3000'
-    }
-  }).listen(9091, 'localhost', function(err) {
-    if (err) {
-      throw new gutil.PluginError('webpack-dev-server', err);
-    }
-  });
+  // 前端视图改动
+  gulp.watch(libPath.join(PATH.src.client.path, '**', '*.html'), ['resource:html']);
+
+  // common 源代码 babel 转码
+  gulp.watch(libPath.join(PATH.src.common.es6, '**', '*.js'), ['src:babel:common']);
+
+  // server 源代码 babel 转码
+  gulp.watch(libPath.join(PATH.src.server.es6, '**', '*.js'), ['src:babel:server']);
+
+  // common 部分无需转码代码改动
+  gulp.watch([
+    libPath.join(PATH.src.common.path, '**', '*'),
+    libPath.join('!' + PATH.src.common.es6, '**', '*')
+  ], ['resource:common']);
+
+  // server 部分无需转码代码改动
+  gulp.watch([
+    libPath.join(PATH.src.server.path, '**', '*'),
+    libPath.join('!' + PATH.src.server.es6, '**', '*')
+  ], ['resource:server']);
+
+  // 前端资源改动，则重新加载
+  livereload.listen();
+  gulp.watch([libPath.join(PATH.dest.client.path, 'public', '**', '*')]).on('change', livereload.changed);
 });
