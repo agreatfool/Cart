@@ -33,7 +33,7 @@ var runSequence = require('run-sequence');
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var webpack = require('webpack');
 var webpackConf = require(libPath.join(PWD, 'webpack.config.js'));
-var webpackDevServer = require('webpack-dev-server');
+var WebpackDevServer = require('webpack-dev-server');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* UTILITIES
@@ -164,5 +164,34 @@ gulp.task('webpack:build', function(done) {
       colors: true
     }));
     done();
+  });
+});
+
+gulp.task('watch', function() {
+  var conf = Object.create(webpackConf);
+  conf.devtool = 'sourcemap';
+  conf.debug = true;
+
+  new WebpackDevServer(webpack(conf), {
+    // webpack-dev-server options
+    contentBase: libPath.join(PATH.dest.client.path, 'public'),
+    hot: true,
+    inline: true,
+    // webpack-dev-middleware options
+    quiet: false,
+    noInfo: false,
+    watchOptions: {
+      aggregateTimeout: 300
+    },
+    publicPath: '/',
+    stats: { colors: true },
+    historyApiFallback: true,
+    proxy: {
+      '*': 'http://localhost:3000'
+    }
+  }).listen(9091, 'localhost', function(err) {
+    if (err) {
+      throw new gutil.PluginError('webpack-dev-server', err);
+    }
   });
 });

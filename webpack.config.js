@@ -4,7 +4,11 @@ var libPath = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: libPath.join(PWD, 'src', 'client', 'es6', 'app.js'),
+  cache: true,
+  entry: [
+    'webpack/hot/dev-server',
+    libPath.join(PWD, 'src', 'client', 'es6', 'app.js')
+  ],
   output: {
     path: libPath.join(PWD, 'client', 'public', 'js'),
     filename: 'bundle.js'
@@ -16,5 +20,8 @@ module.exports = {
       { test: /\.css$/, loader: 'style-loader!css-loader' },
       { test: /\.scss$/, loader: 'style!css!sass' }
     ]
-  }
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
 };
