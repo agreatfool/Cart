@@ -22,6 +22,7 @@ var rimraf = require('gulp-rimraf');
 var minhtml = require('gulp-minify-html');
 var gutil = require('gulp-util');
 var babel = require('gulp-babel');
+var template = require('gulp-template');
 var livereload = require('gulp-livereload');
 var runSequence = require('run-sequence');
 var lodash = require('lodash');
