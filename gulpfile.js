@@ -26,6 +26,7 @@ var sass = require('gulp-ruby-sass');
 var minhtml = require('gulp-minify-html');
 var gutil = require('gulp-util');
 var babel = require('gulp-babel');
+var runSequence = require('run-sequence');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* WEBPACK
@@ -86,7 +87,7 @@ gulp.task('pre:clean', function() { // 清理任务，删除所有最终输出�
     .on('error', handleError);
 });
 
-gulp.task('src:eslint', ['pre:clean'], function() { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
+gulp.task('src:eslint', function() { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
   return gulp.src([
       libPath.join(PATH.src.client.path, '**', '*.js'),
       libPath.join(PATH.src.common.path, '**', '*.js'),
@@ -98,7 +99,7 @@ gulp.task('src:eslint', ['pre:clean'], function() { // 源代码 ES6 lint 检查
     .pipe(eslint.failOnError());
 });
 
-gulp.task('src:babel:common', ['src:eslint'], function() { // 源代码 babel 转码
+gulp.task('src:babel:common', function() { // 源代码 babel 转码
   return gulp.src([
       libPath.join(PATH.src.common.es6, '**', '*.js')
     ])
@@ -106,7 +107,7 @@ gulp.task('src:babel:common', ['src:eslint'], function() { // 源代码 babel �
     .pipe(gulp.dest(libPath.join(PATH.dest.common.path, 'es6')));
 });
 
-gulp.task('src:babel:server', ['src:eslint'], function() { // 源代码 babel 转码
+gulp.task('src:babel:server', function() { // 源代码 babel 转码
   return gulp.src([
       libPath.join(PATH.src.server.es6, '**', '*.js')
     ])
@@ -114,7 +115,7 @@ gulp.task('src:babel:server', ['src:eslint'], function() { // 源代码 babel �
     .pipe(gulp.dest(libPath.join(PATH.dest.server.path, 'es6')));
 });
 
-gulp.task('resource:common', ['src:babel:common'], function() {
+gulp.task('resource:common', function() { // 拷贝 common 部分无需转码代码到输出路径
   return gulp.src([
     libPath.join(PATH.src.common.path, '**', '*'),
     libPath.join('!' + PATH.src.common.es6, '**', '*')
@@ -122,7 +123,7 @@ gulp.task('resource:common', ['src:babel:common'], function() {
     .pipe(gulp.dest(PATH.dest.common.path));
 });
 
-gulp.task('resource:server', ['src:babel:server'], function() {
+gulp.task('resource:server', function() { // 拷贝 server 部分无需转码代码到输出路径
   return gulp.src([
       libPath.join(PATH.src.server.path, '**', '*'),
       libPath.join('!' + PATH.src.server.es6, '**', '*')
@@ -130,7 +131,7 @@ gulp.task('resource:server', ['src:babel:server'], function() {
     .pipe(gulp.dest(PATH.dest.server.path));
 });
 
-gulp.task('resource:html', ['pre:clean'], function() { // 拷贝 HTML 到输出路径
+gulp.task('resource:html', function() { // 拷贝 HTML 到输出路径
   return gulp.src([
       libPath.join(PATH.src.client.path, '**', '*.html')
     ])
@@ -138,21 +139,17 @@ gulp.task('resource:html', ['pre:clean'], function() { // 拷贝 HTML 到输出�
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
 
-gulp.task('default', [
-    'pre:clean',
-    'src:eslint'
-  ], function() { // 默认任务
-  gulp.start(
-    'src:babel:common',
-    'src:babel:server',
+gulp.task('default', ['pre:clean'], function(done) { // 默认任务
+  runSequence(
+    'src:eslint',
+    ['src:babel:common', 'src:babel:server'],
     'webpack:build',
-    'resource:common',
-    'resource:server',
-    'resource:html'
+    ['resource:common', 'resource:server', 'resource:html'],
+    done
   );
 });
 
-gulp.task('webpack:build', ['src:babel:common', 'src:babel:server'], function(done) {
+gulp.task('webpack:build', function(done) {
   var conf = Object.create(webpackConf);
   conf.devtool = 'sourcemap';
   conf.debug = true;
