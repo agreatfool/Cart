@@ -11,7 +11,7 @@ var IS_PRODUCTION = process.env.NODE_ENV === 'production';
 var libPath = require('path');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-//-* GULP
+//-* GULP & Others
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
@@ -24,11 +24,12 @@ var gutil = require('gulp-util');
 var babel = require('gulp-babel');
 var livereload = require('gulp-livereload');
 var runSequence = require('run-sequence');
+var lodash = require('lodash');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* WEBPACK
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-var webpack = require('webpack');
+var webpack = require('webpack-stream');
 var webpackConf = require(libPath.join(PWD, 'webpack.config.js'));
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -145,31 +146,20 @@ gulp.task('default', ['pre:clean'], function(done) { // 默认任务
   );
 });
 
-gulp.task('webpack:build', function(done) {
-  var conf = Object.create(webpackConf);
-  conf.devtool = 'sourcemap';
-  conf.debug = true;
-
-  var compiler = webpack(conf);
-
-  compiler.run(function(err, stats) {
-    if (err) {
-      throw new gutil.PluginError('webpack:build', err);
-    }
-    gutil.log('[webpack:build]', stats.toString({
-      colors: true
-    }));
-    done();
-  });
+gulp.task('webpack:build', function() { // webpack构建
+  return gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
+    .pipe(webpack(webpackConf, null, function(err, stats) {
+      if (err) {
+        throw new gutil.PluginError('webpack:build', err);
+      }
+      gutil.log('[webpack:build]', stats.toString({
+        colors: true
+      }));
+    }))
+    .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'js')));
 });
 
 gulp.task('watch', function() {
-  // 前端样式和代码改动
-  gulp.watch([
-    libPath.join(PATH.src.client.es6, '**', '*.js'),
-    libPath.join(PATH.src.client.styles, '**', '*.scss')
-  ], ['webpack:build']);
-
   // 前端视图改动
   gulp.watch(libPath.join(PATH.src.client.path, '**', '*.html'), ['resource:html']);
 
@@ -191,7 +181,20 @@ gulp.task('watch', function() {
     libPath.join('!' + PATH.src.server.es6, '**', '*')
   ], ['resource:server']);
 
-  // 前端资源改动，则重新加载
+  // 前端资源改动，则让浏览器重新加载
   livereload.listen();
   gulp.watch([libPath.join(PATH.dest.client.path, 'public', '**', '*')]).on('change', livereload.changed);
+
+  // 前端样式和代码改动
+  var conf = lodash.extend(webpackConf, { watch: true });
+  gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
+    .pipe(webpack(conf, null, function(err, stats) {
+      if (err) {
+        throw new gutil.PluginError('webpack:build', err);
+      }
+      gutil.log('[webpack:build]', stats.toString({
+        colors: true
+      }));
+    }))
+    .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'js')));
 });

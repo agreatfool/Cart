@@ -8,7 +8,6 @@ module.exports = {
   debug: true,
   cache: true,
   entry: [
-    'webpack/hot/dev-server',
     libPath.join(PWD, 'src', 'client', 'es6', 'app.js')
   ],
   output: {
