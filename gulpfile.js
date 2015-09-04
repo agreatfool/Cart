@@ -126,6 +126,7 @@ gulp.task('resource:server', function() { // 拷贝 server 部分无需转码代
       libPath.join(PATH.src.server.path, '**', '*'),
       libPath.join('!' + PATH.src.server.es6, '**', '*')
     ])
+    .pipe(gulpif(IS_PRODUCTION, ignore.exclude(libPath.join(PATH.src.server.boot, 'explorer.js')))) // 在生产环境不使用 explorer.js
     .pipe(gulp.dest(PATH.dest.server.path));
 });
 
@@ -135,16 +136,6 @@ gulp.task('resource:html', function() { // 拷贝 HTML 到输出路径
     ])
     .pipe(gulpif(IS_PRODUCTION, minhtml()))
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
-});
-
-gulp.task('default', ['pre:clean'], function(done) { // 默认任务
-  runSequence(
-    'src:eslint',
-    ['src:babel:common', 'src:babel:server'],
-    'webpack:build',
-    ['resource:common', 'resource:server', 'resource:html'],
-    done
-  );
 });
 
 gulp.task('webpack:build', function() { // webpack构建
@@ -158,6 +149,16 @@ gulp.task('webpack:build', function() { // webpack构建
       }));
     }))
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'js')));
+});
+
+gulp.task('default', ['pre:clean'], function(done) { // 默认任务
+  runSequence(
+    'src:eslint',
+    ['src:babel:common', 'src:babel:server'],
+    'webpack:build',
+    ['resource:common', 'resource:server', 'resource:html'],
+    done
+  );
 });
 
 gulp.task('watch', function() {
