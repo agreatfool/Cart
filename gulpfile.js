@@ -131,9 +131,9 @@ gulp.task('resource:server', function() { // 拷贝 server 部分无需转码代
     .pipe(gulp.dest(PATH.dest.server.path));
 });
 
-gulp.task('src:angular:gen', shell.task(['lb-ng ' + libPath.join(PATH.dest.server.path, 'server.js') + ' ' + libPath.join(PATH.src.client.es6, 'lb-services.js')]));
+gulp.task('src:angular:gen', shell.task(['lb-ng ' + libPath.join(PATH.dest.server.path, 'server.js') + ' ' + libPath.join(PATH.src.client.es6, 'lb-services.js')])); // 生成 StrongLoop 对应的 angular 代码
 
-gulp.task('src:angular:build', function(done) {
+gulp.task('src:angular:build', function(done) { // 生成 StrongLoop 对应的 angular 代码，完整任务，含代码文件准备等工序
   runSequence(
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
