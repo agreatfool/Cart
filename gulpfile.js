@@ -24,6 +24,7 @@ var gutil = require('gulp-util');
 var babel = require('gulp-babel');
 var template = require('gulp-template');
 var livereload = require('gulp-livereload');
+var shell = require('gulp-shell');
 var runSequence = require('run-sequence');
 var lodash = require('lodash');
 
@@ -128,6 +129,18 @@ gulp.task('resource:server', function() { // 拷贝 server 部分无需转码代
     ])
     .pipe(gulpif(IS_PRODUCTION, ignore.exclude(libPath.join(PATH.src.server.boot, 'explorer.js')))) // 在生产环境不使用 explorer.js
     .pipe(gulp.dest(PATH.dest.server.path));
+});
+
+gulp.task('src:angular:gen', shell.task(['lb-ng ' + libPath.join(PATH.dest.server.path, 'server.js') + ' ' + libPath.join(PATH.src.client.es6, 'lb-services.js')]));
+
+gulp.task('src:angular:build', function(done) {
+  runSequence(
+    'src:eslint',
+    ['src:babel:common', 'src:babel:server'],
+    ['resource:common', 'resource:server'],
+    'src:angular:gen',
+    done
+  );
 });
 
 gulp.task('resource:html', function() { // 拷贝 HTML 到输出路径
