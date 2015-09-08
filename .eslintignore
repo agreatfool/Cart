@@ -1,3 +1,7 @@
+# client:
+# ignore generated codes
+src/client/es6/lb-services.js
+
 # common:
 # ignore models
 src/common/models
