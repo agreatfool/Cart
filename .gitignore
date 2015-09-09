@@ -20,3 +20,6 @@ bower_components/
 
 # Others
 dart-version
+
+# StrongLoop
+arc-manager.json
