@@ -164,8 +164,9 @@ gulp.task('webpack:build', function() { // webpack构建
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'js')));
 });
 
-gulp.task('default', ['pre:clean'], function(done) { // 默认任务
+gulp.task('default', function(done) { // 默认任务
   runSequence(
+    'pre:clean',
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
     'webpack:build',
