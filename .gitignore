@@ -22,4 +22,5 @@ bower_components/
 dart-version
 
 # StrongLoop
+.strong-pm
 arc-manager.json
