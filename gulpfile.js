@@ -86,8 +86,9 @@ gulp.task('pre:clean', function() { // 清理任务，删除所有最终输出�
     .on('error', handleError);
 });
 
-gulp.task('src:eslint', function() { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
-  return gulp.src([
+gulp.task('src:eslint', function(done) { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
+  if (IS_PRODUCTION) {
+    return gulp.src([
       libPath.join(PATH.src.client.path, '**', '*.js'),
       libPath.join(PATH.src.common.path, '**', '*.js'),
       libPath.join(PATH.src.server.path, '**', '*.js')
@@ -96,6 +97,9 @@ gulp.task('src:eslint', function() { // 源代码 ES6 lint 检查，相关配置
     .on('error', handleError)
     .pipe(eslint.format())
     .pipe(eslint.failOnError());
+  } else {
+    done();
+  }
 });
 
 gulp.task('src:babel:common', function() { // 源代码 babel 转码
