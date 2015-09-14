@@ -1,5 +1,6 @@
-function CartRouters($stateProvider, $urlRouterProvider) {
+function CartRouters($stateProvider, $urlRouterProvider, $locationProvider) {
   $urlRouterProvider.otherwise('/list');
+  $locationProvider.html5Mode(true);
 
   $stateProvider
     .state('list', {
@@ -38,6 +39,6 @@ function CartRouters($stateProvider, $urlRouterProvider) {
   //  })
 }
 
-CartRouters.$inject = ['$stateProvider', '$urlRouterProvider'];
+CartRouters.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
 export default CartRouters;
