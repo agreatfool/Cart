@@ -6,7 +6,7 @@ function CartRouters($stateProvider, $urlRouterProvider, $locationProvider) {
     .state('list', {
       url: '/list',
       templateUrl: 'views/list.html',
-      controller: 'CartBlogList'
+      controller: 'CartBlogListCtrl'
     })
     .state('config', {
       url: '/config',
