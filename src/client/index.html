@@ -9,19 +9,9 @@
 </head>
 
 <body ng-app="app" ng-cloak>
-  <md-toolbar></md-toolbar>
-  <md-content id="main">
 
-    <div layout="row" layout-sm="column">
-      <div flex>
-        I'm above on mobile, and to the left on larger devices.
-      </div>
-      <div flex>
-        I'm below on mobile, and to the right on larger devices.
-      </div>
-    </div>
+  <div ui-view></div>
 
-  </md-content>
   <script src="js/bundle.js"></script>
 </body>
 
