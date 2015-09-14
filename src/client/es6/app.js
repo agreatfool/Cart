@@ -22,10 +22,10 @@ let app = angular.module('app', [
 ]);
 
 // Angular UI router config
-app.config(CartRouters);
+app.config(CartRouters.factory);
 
 // Angular Material Theme config
-app.config(CartTheming);
+app.config(CartTheming.factory);
 
 // Define self controllers
 app.controller('CartBlogListCtrl', CartBlogListCtrl);
