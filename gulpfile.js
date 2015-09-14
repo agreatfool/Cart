@@ -182,6 +182,7 @@ gulp.task('default', function(done) { // 默认任务
 gulp.task('watch', function() {
   // 前端视图改动
   gulp.watch(libPath.join(PATH.src.client.path, '**', '*.html'), ['resource:html']);
+  gulp.watch(libPath.join(PATH.src.client.views, '**', '*.html'), ['resource:html']);
 
   // common 源代码 babel 转码
   gulp.watch(libPath.join(PATH.src.common.es6, '**', '*.js'), ['src:babel:common']);
