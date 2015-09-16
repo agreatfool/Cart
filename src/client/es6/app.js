@@ -14,6 +14,7 @@ import CartTheming from './theme.js';
 
 import CartBlogCreateCtrl from './controller/cart-blog-create.js';
 import CartBlogEditCtrl from './controller/cart-blog-edit.js';
+import CartBlogFooterCtrl from './controller/cart-blog-footer.js';
 import CartBlogListCtrl from './controller/cart-blog-list.js';
 import CartBlogSearchCtrl from './controller/cart-blog-search.js';
 import CartBlogSettingCtrl from './controller/cart-blog-settings.js';
@@ -34,6 +35,7 @@ app.config(CartTheming.factory);
 // Define self controllers
 app.controller('CartBlogCreateCtrl',  CartBlogCreateCtrl);
 app.controller('CartBlogEditCtrl',    CartBlogEditCtrl);
+app.controller('CartBlogFooterCtrl',  CartBlogFooterCtrl);
 app.controller('CartBlogListCtrl',    CartBlogListCtrl);
 app.controller('CartBlogSearchCtrl',  CartBlogSearchCtrl);
 app.controller('CartBlogSettingCtrl', CartBlogSettingCtrl);

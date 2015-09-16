@@ -1,15 +1,17 @@
 class CartBase {
-  constructor(CartApiService, $location, $window) {
+  constructor(CartApiService, $location, $window, $mdBottomSheet) {
     this.apiService = CartApiService;
     this.$location = $location;
     this.$window = $window;
+    this.$mdBottomSheet = $mdBottomSheet;
+  }
 
-    this.bottomButtons = [
-      { name: 'Create',   icon: 'create',   path: '/create' },
-      { name: 'Category', icon: 'layers',   path: '/category' },
-      { name: 'Tag',      icon: 'bookmark', path: '/tag' },
-      { name: 'Search',   icon: 'search',   path: '/search' },
-    ];
+  showFooter($event) {
+    this.$mdBottomSheet.show({
+      templateUrl: 'footer.html',
+      controller: 'CartBlogFooterCtrl as ctrl',
+      targetEvent: $event
+    });
   }
 
   goPath(path = '/') {
@@ -32,6 +34,10 @@ class CartBase {
   }
 }
 
-CartBase.$inject = ['CartApiService', '$location', '$window'];
+CartBase.$inject = [
+  'CartApiService',
+  '$location', '$window',
+  '$mdBottomSheet'
+];
 
 export default CartBase;

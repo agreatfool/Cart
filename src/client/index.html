@@ -12,11 +12,38 @@
 
   <div ui-view></div>
 
+  <script type="text/ng-template" id="icon-back.html">
+    <md-button class="md-icon-button md-button" ng-click="ctrl.goBack()">
+      <md-icon md-font-set="material-icons">arrow_back</md-icon>
+      <md-tooltip>
+        Back
+      </md-tooltip>
+    </md-button>
+  </script>
+
+  <script type="text/ng-template" id="icon-reload.html">
+    <md-button class="md-icon-button md-button" ng-click="ctrl.reloadPage()">
+      <md-icon md-font-set="material-icons">refresh</md-icon>
+      <md-tooltip>
+        Refresh
+      </md-tooltip>
+    </md-button>
+  </script>
+
+  <script type="text/ng-template" id="icon-footer.html">
+    <md-button class="md-icon-button md-button" ng-click="ctrl.showFooter()">
+      <md-icon md-font-set="material-icons">more_vert</md-icon>
+      <md-tooltip>
+        More
+      </md-tooltip>
+    </md-button>
+  </script>
+
   <script type="text/ng-template" id="footer.html">
     <md-bottom-sheet class="md-grid" layout="row">
       <md-list flex layout="row" layout-align="center center">
         <md-list-item class="cart-footer-item" ng-repeat="button in ctrl.bottomButtons">
-          <md-button class="md-grid-item-content" ng-click="goPath(button.path)">
+          <md-button class="md-grid-item-content" ui-sref="{{ button.state }}" ng-click="ctrl.footerClick()">
             <md-icon md-font-set="material-icons md-36">{{ button.icon }}</md-icon>
             <div class="md-grid-text"> {{ button.name }} </div>
           </md-button>
