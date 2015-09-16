@@ -1,17 +1,22 @@
 class CartRouters {
   constructor($stateProvider, $urlRouterProvider, $locationProvider) {
-    $urlRouterProvider.otherwise('/list');
+    $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
 
     $stateProvider
+      .state('home', {
+        url: '/',
+        templateUrl: 'views/list.html',
+        controller: 'CartBlogListCtrl'
+      })
       .state('list', {
         url: '/list',
         templateUrl: 'views/list.html',
         controller: 'CartBlogListCtrl'
       })
-      .state('config', {
-        url: '/config',
-        templateUrl: 'views/config.html'
+      .state('settings', {
+        url: '/settings',
+        templateUrl: 'views/settings.html'
       });
 
     //$stateProvider
