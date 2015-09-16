@@ -3,6 +3,7 @@ class CartBlogFooterCtrl {
     this.$mdBottomSheet = $mdBottomSheet;
 
     this.bottomButtons = [
+      { name: 'Home',     icon: 'home',     state: 'home' },
       { name: 'Create',   icon: 'create',   state: 'create' },
       { name: 'Category', icon: 'layers',   state: 'category' },
       { name: 'Tag',      icon: 'bookmark', state: 'tag' },
