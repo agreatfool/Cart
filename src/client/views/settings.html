@@ -1,41 +1,40 @@
 <md-toolbar class="cart-toolbar">
   <div class="md-toolbar-tools">
 
-    <md-button class="md-icon-button md-button">
+    <md-button class="md-icon-button md-button" ng-click="ctrl.goBack()">
       <md-icon md-font-set="material-icons">arrow_back</md-icon>
       <md-tooltip>
         Back
       </md-tooltip>
     </md-button>
-    <h3 class="ng-binding">Settings</h3>
+    <h3>Settings</h3>
     <span flex class="flex"></span>
 
   </div>
 </md-toolbar>
 
-<md-content id="main" class="md-padding">
+<md-content class="md-padding">
 
   <md-list>
+
     <md-subheader class="md-no-sticky">Site setting</md-subheader>
-    <md-list-item class="md-3-line">
-      <md-icon md-font-set="material-icons md-36 md-avatar">cloud</md-icon>
+    <md-list-item class="md-1-line">
+      <md-icon md-font-set="material-icons md-36">cloud</md-icon>
       <md-input-container flex>
         <label>Blog server host</label>
         <input>
       </md-input-container>
-  </md-list-item>
+    </md-list-item>
 
-  <md-divider ></md-divider>
+    <md-divider ></md-divider>
 
-  <md-subheader class="md-no-sticky">Edit setting</md-subheader>
-  <md-list-item class="md-3-line">
-    <md-icon md-font-set="material-icons md-36 md-avatar">lock_open</md-icon>
-    <div class="md-list-item-text" layout="column">
-      <h3>Mark Private</h3>
-      <p>Mark all new created blog "Private" automatically</p>
-    </div>
-    <md-switch class="md-avatar"></md-switch>
-  </md-list-item>
+    <md-subheader class="md-no-sticky">Edit setting</md-subheader>
+    <md-list-item class="md-with-secondary md-clickable">
+      <md-icon md-font-set="material-icons md-36">lock_open</md-icon>
+      <p>Mark all new created blog default "Private"</p>
+      <md-switch class="md-secondary"></md-switch>
+    </md-list-item>
+
   </md-list>
 
 </md-content>

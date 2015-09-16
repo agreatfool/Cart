@@ -12,7 +12,11 @@ import lbServices from './lb-services.js';
 import CartRouters from './routers.js';
 import CartTheming from './theme.js';
 
+import CartBlogCreateCtrl from './controller/cart-blog-create.js';
+import CartBlogEditCtrl from './controller/cart-blog-edit.js';
 import CartBlogListCtrl from './controller/cart-blog-list.js';
+import CartBlogSearchCtrl from './controller/cart-blog-search.js';
+import CartBlogSettingCtrl from './controller/cart-blog-settings.js';
 
 import CartApiService from './service/cart-api.js';
 
@@ -28,7 +32,11 @@ app.config(CartRouters.factory);
 app.config(CartTheming.factory);
 
 // Define self controllers
-app.controller('CartBlogListCtrl', CartBlogListCtrl);
+app.controller('CartBlogCreateCtrl',  CartBlogCreateCtrl);
+app.controller('CartBlogEditCtrl',    CartBlogEditCtrl);
+app.controller('CartBlogListCtrl',    CartBlogListCtrl);
+app.controller('CartBlogSearchCtrl',  CartBlogSearchCtrl);
+app.controller('CartBlogSettingCtrl', CartBlogSettingCtrl);
 
 // Define self services
 app.factory('CartApiService', CartApiService.factory);

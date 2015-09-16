@@ -1,12 +1,12 @@
 import CartBase from './cart-base.js';
 
-class CartBlogListCtrl extends CartBase {
+class CartBlogSearchCtrl extends CartBase {
   constructor(...args) {
     super(...args);
     this.logInit('CartBlogListCtrl');
   }
 }
 
-CartBlogListCtrl.$inject = [...CartBase.$inject];
+CartBlogSearchCtrl.$inject = [...CartBase.$inject];
 
-export default CartBlogListCtrl;
+export default CartBlogSearchCtrl;

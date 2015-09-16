@@ -12,6 +12,19 @@
 
   <div ui-view></div>
 
+  <script type="text/ng-template" id="footer.html">
+    <md-bottom-sheet class="md-grid" layout="row">
+      <md-list flex layout="row" layout-align="center center">
+        <md-list-item class="cart-footer-item" ng-repeat="button in ctrl.bottomButtons">
+          <md-button class="md-grid-item-content" ng-click="goPath(button.path)">
+            <md-icon md-font-set="material-icons md-36">{{ button.icon }}</md-icon>
+            <div class="md-grid-text"> {{ button.name }} </div>
+          </md-button>
+        </md-list-item>
+      </md-list>
+    </md-bottom-sheet>
+  </script>
+
   <script src="js/bundle.js"></script>
 </body>
 

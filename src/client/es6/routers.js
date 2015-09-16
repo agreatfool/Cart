@@ -7,16 +7,38 @@ class CartRouters {
       .state('home', {
         url: '/',
         templateUrl: 'views/list.html',
-        controller: 'CartBlogListCtrl'
+        controller: 'CartBlogListCtrl',
+        controllerAs: 'ctrl'
+      })
+      .state('create', {
+        url: '/create',
+        templateUrl: 'views/edit.html',
+        controller: 'CartBlogCreateCtrl',
+        controllerAs: 'ctrl'
+      })
+      .state('edit', {
+        url: '/edit',
+        templateUrl: 'views/edit.html',
+        controller: 'CartBlogEditCtrl',
+        controllerAs: 'ctrl'
       })
       .state('list', {
         url: '/list',
         templateUrl: 'views/list.html',
-        controller: 'CartBlogListCtrl'
+        controller: 'CartBlogListCtrl',
+        controllerAs: 'ctrl'
+      })
+      .state('search', {
+        url: '/search',
+        templateUrl: 'views/search.html',
+        controller: 'CartBlogSearchCtrl',
+        controllerAs: 'ctrl'
       })
       .state('settings', {
         url: '/settings',
-        templateUrl: 'views/settings.html'
+        templateUrl: 'views/settings.html',
+        controller: 'CartBlogSettingCtrl',
+        controllerAs: 'ctrl'
       });
 
     //$stateProvider
