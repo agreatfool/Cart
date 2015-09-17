@@ -1,4 +1,4 @@
-import CartBase from './cart-base.js';
+import CartBase from './base/cart-base.js';
 
 class CartPostTmpSaveService extends CartBase {
   constructor(...args) {
