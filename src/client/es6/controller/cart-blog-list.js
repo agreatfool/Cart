@@ -1,4 +1,4 @@
-import CartBase from './cart-base.js';
+import CartBase from './base/cart-base.js';
 
 class CartBlogListCtrl extends CartBase {
   constructor(...args) {

@@ -1,4 +1,4 @@
-import CartBlogEditorCtrl from './cart-blog-editor.js';
+import CartBlogEditorCtrl from './base/cart-blog-editor.js';
 
 class CartBlogEditCtrl extends CartBlogEditorCtrl {
   constructor(...args) {
