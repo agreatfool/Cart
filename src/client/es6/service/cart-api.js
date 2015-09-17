@@ -8,20 +8,33 @@ class CartApiService extends CartBase {
     this.logInit('CartApiService');
   }
 
-  postCreate(title, category = null, tags = [], attachments = [], isPublic = false) {
-    let promise = this.modelPost.create({
-      uuid: libUuid.v4(),
-      title: title,
-      driveId: null,
-      category: libUuid.v4(),
-      tags: tags,
-      attachments: attachments,
-      isPublic: isPublic
-    });
-    promise.$promise.then(
-      (obj) => console.log('$promise success', obj),
-      (obj) => console.log('$promise error', obj)
-    );
+  //noinspection ES6Validation
+  async postCreate(title, category = null, tags = [], attachments = [], isPublic = false) {
+    let modelPost = this.modelPost;
+    function subCreate() {
+      let promise = modelPost.create({
+        uuid: libUuid.v4(),
+        title: title,
+        driveId: null,
+        //category: libUuid.v4(),
+        category: null,
+        tags: tags,
+        attachments: attachments,
+        isPublic: isPublic
+      });
+      return promise.$promise
+        //.then(
+        //  (obj) => console.log('$promise success', obj),
+        //  (obj) => console.log('$promise error', obj)
+        //);
+    }
+    try {
+      //noinspection ES6Validation
+      let post = await subCreate();
+      console.log('Post created: ', post);
+    } catch (e) {
+      console.log('Error when creating post: ', e);
+    }
   }
 
   static factory(CartPost) {

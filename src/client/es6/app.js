@@ -2,6 +2,8 @@ import 'angular-material/angular-material.min.css';
 
 import '../styles/main.scss';
 
+import babelPolyfill from 'babel-core/lib/polyfill.js';
+
 import angular from 'angular';
 
 import uiRouter from 'angular-ui-router';
