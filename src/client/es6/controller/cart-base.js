@@ -6,7 +6,7 @@ class CartBase {
     this.$mdBottomSheet = $mdBottomSheet;
   }
 
-  showFooter($event) {
+  showShortcuts($event) {
     this.$mdBottomSheet.show({
       templateUrl: 'shortcut.html',
       controller: 'CartBlogShortcutCtrl as ctrl',
