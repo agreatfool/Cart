@@ -8,8 +8,8 @@ class CartBase {
 
   showFooter($event) {
     this.$mdBottomSheet.show({
-      templateUrl: 'footer.html',
-      controller: 'CartBlogFooterCtrl as ctrl',
+      templateUrl: 'shortcut.html',
+      controller: 'CartBlogShortcutCtrl as ctrl',
       targetEvent: $event
     });
   }

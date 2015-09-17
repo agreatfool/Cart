@@ -15,10 +15,10 @@ import CartTheming from './theme.js';
 import CartBlogCategoryCtrl from './controller/cart-blog-category.js';
 import CartBlogCreateCtrl from './controller/cart-blog-create.js';
 import CartBlogEditCtrl from './controller/cart-blog-edit.js';
-import CartBlogFooterCtrl from './controller/cart-blog-footer.js';
 import CartBlogListCtrl from './controller/cart-blog-list.js';
 import CartBlogSearchCtrl from './controller/cart-blog-search.js';
 import CartBlogSettingCtrl from './controller/cart-blog-settings.js';
+import CartBlogShortcutCtrl from './controller/cart-blog-shortcut.js';
 import CartBlogTagCtrl from './controller/cart-blog-tag.js';
 
 import CartApiService from './service/cart-api.js';
@@ -38,10 +38,10 @@ app.config(CartTheming.factory);
 app.controller('CartBlogCategoryCtrl',  CartBlogCategoryCtrl);
 app.controller('CartBlogCreateCtrl',    CartBlogCreateCtrl);
 app.controller('CartBlogEditCtrl',      CartBlogEditCtrl);
-app.controller('CartBlogFooterCtrl',    CartBlogFooterCtrl);
 app.controller('CartBlogListCtrl',      CartBlogListCtrl);
 app.controller('CartBlogSearchCtrl',    CartBlogSearchCtrl);
 app.controller('CartBlogSettingCtrl',   CartBlogSettingCtrl);
+app.controller('CartBlogShortcutCtrl',  CartBlogShortcutCtrl);
 app.controller('CartBlogTagCtrl',       CartBlogTagCtrl);
 
 // Define self services

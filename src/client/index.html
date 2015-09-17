@@ -32,20 +32,20 @@
 
   <script type="text/ng-template" id="icon-footer.html">
     <md-button class="md-icon-button md-button" ng-click="ctrl.showFooter()">
-      <md-icon md-font-set="material-icons">more_vert</md-icon>
+      <md-icon md-font-set="material-icons">menu</md-icon>
       <md-tooltip>
         Shortcut
       </md-tooltip>
     </md-button>
   </script>
 
-  <script type="text/ng-template" id="footer.html">
+  <script type="text/ng-template" id="shortcut.html">
     <md-bottom-sheet class="md-grid" layout="row">
       <md-list flex layout="row" layout-align="center center">
-        <md-list-item class="cart-footer-item" ng-repeat="button in ctrl.bottomButtons">
-          <md-button class="md-grid-item-content" ui-sref="{{ button.state }}" ng-click="ctrl.footerClick()">
+        <md-list-item ng-repeat="button in ctrl.bottomButtons">
+          <md-button ui-sref="{{ button.state }}" ng-click="ctrl.hideSheet()">
             <md-icon md-font-set="material-icons md-36">{{ button.icon }}</md-icon>
-            <div class="md-grid-text"> {{ button.name }} </div>
+            <div>{{ button.name }}</div>
           </md-button>
         </md-list-item>
       </md-list>

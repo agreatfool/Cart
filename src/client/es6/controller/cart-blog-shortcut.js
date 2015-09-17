@@ -1,4 +1,4 @@
-class CartBlogFooterCtrl {
+class CartBlogShortcutCtrl {
   constructor($mdBottomSheet) {
     this.$mdBottomSheet = $mdBottomSheet;
 
@@ -6,17 +6,17 @@ class CartBlogFooterCtrl {
       { name: 'Home',     icon: 'home',     state: 'home' },
       { name: 'Create',   icon: 'create',   state: 'create' },
       { name: 'Category', icon: 'layers',   state: 'category' },
-      { name: 'Tag',      icon: 'bookmark', state: 'tag' },
+      { name: 'Tag',      icon: 'label',    state: 'tag' },
       { name: 'Search',   icon: 'search',   state: 'search' },
       { name: 'Settings', icon: 'settings', state: 'settings' },
     ];
   }
 
-  footerClick() {
+  hideSheet() {
     this.$mdBottomSheet.hide();
   }
 }
 
-CartBlogFooterCtrl.$inject = ['$mdBottomSheet'];
+CartBlogShortcutCtrl.$inject = ['$mdBottomSheet'];
 
-export default CartBlogFooterCtrl;
+export default CartBlogShortcutCtrl;
