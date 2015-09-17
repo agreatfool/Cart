@@ -1,6 +1,7 @@
 {
   "name": "CartPost",
   "base": "PersistedModel",
+  "strict": true,
   "idInjection": false,
   "options": {
     "validateUpsert": true
@@ -47,9 +48,21 @@
       "default": false
     }
   },
-  "strict": true,
   "validations": [],
-  "relations": {},
+  "relations": {
+    "cartAttachments": {
+      "type": "hasMany",
+      "model": "CartAttachment"
+    },
+    "cartTags": {
+      "type": "hasMany",
+      "model": "CartTag"
+    },
+    "cartCategory": {
+      "type": "belongsTo",
+      "model": "CartCategory"
+    }
+  },
   "acls": [],
   "methods": {}
 }

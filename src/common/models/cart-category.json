@@ -1,6 +1,7 @@
 {
   "name": "CartCategory",
   "base": "PersistedModel",
+  "strict": true,
   "idInjection": true,
   "options": {
     "validateUpsert": true
@@ -30,9 +31,14 @@
       "defaultFn": "now"
     }
   },
-  "strict": true,
   "validations": [],
-  "relations": {},
+  "relations": {
+    "cartPosts": {
+      "type": "hasMany",
+      "model": "CartPost",
+      "foreignKey": "category"
+    }
+  },
   "acls": [],
   "methods": {}
 }
