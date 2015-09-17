@@ -1,9 +1,9 @@
 import CartBase from './cart-base.js';
 
-class CartPostService extends CartBase {
+class CartPostTmpSaveService extends CartBase {
   constructor(...args) {
     super(...args);
-    this.logInit('CartPostService');
+    this.logInit('CartPostTmpSaveService');
   }
 
   savePost(post) {
@@ -17,10 +17,10 @@ class CartPostService extends CartBase {
   }
 
   static factory(CartPost) {
-    return new CartPostService(CartPost);
+    return new CartPostTmpSaveService(CartPost);
   }
 }
 
-CartPostService.factory.$inject = [...CartBase.$inject];
+CartPostTmpSaveService.factory.$inject = [...CartBase.$inject];
 
-export default CartPostService;
+export default CartPostTmpSaveService;
