@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "angular": "^1.4.5",
-    "angular-material": "^0.10.1",
+    "angular-material": "^0.11.0",
     "angular-resource": "^1.4.5",
     "angular-ui-router": "^0.2.15",
     "babel-core": "^5.8.23",
