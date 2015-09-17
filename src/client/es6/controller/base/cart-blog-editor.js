@@ -18,7 +18,7 @@ class CartBlogEditorCtrl extends CartBase {
   }
 
   save() {
-    console.log('CartBlogEditorCtrl::save');
+    this.apiService.postCreate('new post');
   }
 
   showMetaInfo($event) {

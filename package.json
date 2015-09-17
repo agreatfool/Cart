@@ -69,6 +69,7 @@
     "material-design-icons": "^2.0.0",
     "ng-cordova": "^0.1.20-alpha",
     "node-sass": "^3.3.2",
+    "node-uuid": "^1.4.3",
     "object-assign": "^4.0.1",
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.2",
