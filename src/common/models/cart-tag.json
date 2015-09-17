@@ -10,11 +10,12 @@
     "uuid": {
       "type": "string",
       "id": true,
-      "required": true,
-      "defaultFn": "uuid"
+      "defaultFn": "uuid",
+      "required": true
     },
     "driveId": {
-      "type": "string"
+      "type": "string",
+      "default": null
     },
     "title": {
       "type": "string",
@@ -22,13 +23,13 @@
     },
     "created": {
       "type": "date",
-      "required": true,
-      "defaultFn": "now"
+      "defaultFn": "now",
+      "required": true
     },
     "updated": {
       "type": "date",
-      "required": true,
-      "defaultFn": "now"
+      "defaultFn": "now",
+      "required": true
     }
   },
   "validations": [],
