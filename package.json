@@ -30,8 +30,8 @@
     "errorhandler": "^1.1.1",
     "loopback": "^2.14.0",
     "loopback-boot": "^2.6.5",
-    "loopback-connector-redis": "0.0.3",
-    "loopback-datasource-juggler": "^2.19.0",
+    "loopback-connector-mongodb": "^1.13.0",
+    "loopback-datasource-juggler": "^2.40.1",
     "serve-favicon": "^2.0.1"
   },
   "optionalDependencies": {

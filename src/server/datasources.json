@@ -1,8 +1,15 @@
 {
-  "RedisDB": {
+  "MongoDB": {
     "host": "127.0.0.1",
-    "port": 6379,
-    "name": "RedisDB",
-    "connector": "redis"
+    "port": 27017,
+    "debug": false,
+    "name": "MongoDB",
+    "database": "CartBlog",
+    "server": {
+      "auto_reconnect": true,
+      "reconnectTries": 30,
+      "reconnectInterval": 1000
+    },
+    "connector": "mongodb"
   }
 }
