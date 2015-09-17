@@ -31,7 +31,8 @@
       "defaultFn": "now"
     },
     "category": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "tags": {
       "type": [
