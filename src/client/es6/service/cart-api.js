@@ -1,6 +1,9 @@
-class CartApiService {
-  constructor(CartPost) {
-    console.log(CartPost);
+import CartBase from './cart-base.js';
+
+class CartApiService extends CartBase {
+  constructor(...args) {
+    super(...args);
+    this.logInit('CartApiService');
   }
 
   static factory(CartPost) {
@@ -8,6 +11,6 @@ class CartApiService {
   }
 }
 
-CartApiService.factory.$inject = ['CartPost'];
+CartApiService.factory.$inject = [...CartBase.$inject];
 
 export default CartApiService;
