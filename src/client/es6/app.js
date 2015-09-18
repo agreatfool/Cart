@@ -25,7 +25,7 @@ import CartBlogShortcutCtrl from './controller/modal/cart-blog-shortcut.js';
 import CartBlogTagCtrl from './controller/cart-blog-tag.js';
 
 import CartApiService from './service/cart-api.js';
-import CartPostTmpSaveService from './service/cart-post-tmp.js';
+import CartTmpSaveService from './service/cart-tmp-save.js';
 
 // Angular application initialization
 let app = angular.module('app', [
@@ -51,4 +51,4 @@ app.controller('CartBlogTagCtrl',       CartBlogTagCtrl);
 
 // Define self services
 app.factory('CartApiService',           CartApiService.factory);
-app.factory('CartPostTmpSaveService',   CartPostTmpSaveService.factory); // used to save temporarily post info between parent window & child modal window
+app.factory('CartTmpSaveService',       CartTmpSaveService.factory); // used to save temporarily data info between parent window & child modal window

@@ -1,10 +1,10 @@
 import CartBase from './cart-base.js';
 
 class CartBlogEditorCtrl extends CartBase {
-  constructor(CartPostTmpSaveService, ...args) {
+  constructor(CartTmpSaveService, ...args) {
     super(...args);
 
-    this.postTmpSaveService = CartPostTmpSaveService;
+    this.tmpSaveService = CartTmpSaveService;
 
     this.post = {
       title: 'defaultTitle',
@@ -22,7 +22,7 @@ class CartBlogEditorCtrl extends CartBase {
   }
 
   showMetaInfo($event) {
-    this.postTmpSaveService.savePost(this.post);
+    this.tmpSaveService.save(this.post);
     this.$mdBottomSheet.show({
       templateUrl: 'meta-info.html',
       controller: 'CartBlogMetaInfoCtrl as ctrl',
@@ -34,6 +34,6 @@ class CartBlogEditorCtrl extends CartBase {
   }
 }
 
-CartBlogEditorCtrl.$inject = ['CartPostTmpSaveService', ...CartBase.$inject];
+CartBlogEditorCtrl.$inject = ['CartTmpSaveService', ...CartBase.$inject];
 
 export default CartBlogEditorCtrl;
