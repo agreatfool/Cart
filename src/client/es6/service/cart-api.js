@@ -2,10 +2,19 @@ import CartBase from './base/cart-base.js';
 
 import libUuid from 'node-uuid';
 
+import conf from '../../../common/config.json';
+
 class CartApiService extends CartBase {
   constructor(...args) {
     super(...args);
     this.logInit('CartApiService');
+
+    this.postMap        = new Map(); // uuid => post
+    this.categoryMap    = new Map(); // uuid => category
+    this.tagMap         = new Map(); // uuid => tag
+    this.attachmentMap  = new Map(); // uuid => attachment
+  }
+
   static factory(...args) {
     return new CartApiService(...args);
   }
