@@ -4,6 +4,12 @@ class CartBlogCreateCtrl extends CartBlogEditorCtrl {
   constructor(...args) {
     super(...args);
     this.logInit('CartBlogCreateCtrl');
+
+    this.init();
+  }
+
+  init() {
+  }
   }
 }
 

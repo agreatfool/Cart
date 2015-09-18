@@ -6,11 +6,10 @@ class CartBlogEditorCtrl extends CartBase {
 
     this.tmpSaveService = CartTmpSaveService;
 
-    this.post = {
-      title: 'defaultTitle',
-      category: 'defaultCategory',
-      tags: 'defaultTags'
-    };
+    this.category = {}; // category object this post belongs to, shall be overwrote in child class
+    this.tags = []; // tag objects this post has, shall be overwrote in child class
+    this.attachments = []; // attachment objects this post has, shall be overwrote in child class
+    this.post = {}; // post object defined in editor parent class, shall be overwrote in child class
   }
 
   preview() {
@@ -18,7 +17,7 @@ class CartBlogEditorCtrl extends CartBase {
   }
 
   save() {
-    this.apiService.postCreate('new post');
+    console.log('CartBlogEditorCtrl::save');
   }
 
   showMetaInfo($event) {
