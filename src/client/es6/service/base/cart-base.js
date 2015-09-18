@@ -1,6 +1,9 @@
 class CartBase {
-  constructor(CartPost) {
+  constructor(CartPost, CartCategory, CartTag, CartAttachment) {
     this.modelPost = CartPost;
+    this.modelCategory = CartCategory;
+    this.modelTag = CartTag;
+    this.modelAttachment = CartAttachment;
   }
 
   logInit(name) {
@@ -11,6 +14,6 @@ class CartBase {
   }
 }
 
-CartBase.$inject = ['CartPost'];
+CartBase.$inject = ['CartPost', 'CartCategory', 'CartTag', 'CartAttachment'];
 
 export default CartBase;
