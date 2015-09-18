@@ -8,6 +8,10 @@ class CartTmpSaveService extends CartBase {
     this.data = null; // tmp saved data object
   }
 
+  static factory(...args) {
+    return new CartTmpSaveService(...args);
+  }
+
   save(data) {
     this.data = data;
   }
@@ -16,10 +20,6 @@ class CartTmpSaveService extends CartBase {
     let data = this.data;
     this.data = null;
     return data;
-  }
-
-  static factory(CartPost) {
-    return new CartTmpSaveService(CartPost);
   }
 }
 

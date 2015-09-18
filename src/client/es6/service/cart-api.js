@@ -6,6 +6,8 @@ class CartApiService extends CartBase {
   constructor(...args) {
     super(...args);
     this.logInit('CartApiService');
+  static factory(...args) {
+    return new CartApiService(...args);
   }
 
   //noinspection ES6Validation
@@ -37,8 +39,6 @@ class CartApiService extends CartBase {
     }
   }
 
-  static factory(CartPost) {
-    return new CartApiService(CartPost);
   }
 }
 
