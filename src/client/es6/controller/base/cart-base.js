@@ -9,7 +9,7 @@ class CartBase {
   showShortcuts($event) {
     this.$mdBottomSheet.show({
       templateUrl: 'shortcut.html',
-      controller: 'CartBlogShortcutCtrl as ctrl',
+      controller: 'CartModalShortcutCtrl as ctrl',
       targetEvent: $event
     });
   }

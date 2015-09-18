@@ -18,10 +18,10 @@ import CartBlogCategoryCtrl from './controller/cart-blog-category.js';
 import CartBlogCreateCtrl from './controller/cart-blog-create.js';
 import CartBlogEditCtrl from './controller/cart-blog-edit.js';
 import CartBlogListCtrl from './controller/cart-blog-list.js';
-import CartModalMetaInfoCtrl from './controller/modal/cart-blog-meta.js';
+import CartModalMetaInfoCtrl from './controller/modal/cart-modal-meta.js';
 import CartBlogSearchCtrl from './controller/cart-blog-search.js';
 import CartBlogSettingCtrl from './controller/cart-blog-settings.js';
-import CartBlogShortcutCtrl from './controller/modal/cart-blog-shortcut.js';
+import CartModalShortcutCtrl from './controller/modal/cart-modal-shortcut.js';
 import CartBlogTagCtrl from './controller/cart-blog-tag.js';
 
 import CartApiService from './service/cart-api.js';
@@ -46,7 +46,7 @@ app.controller('CartBlogListCtrl',      CartBlogListCtrl);
 app.controller('CartModalMetaInfoCtrl', CartModalMetaInfoCtrl);
 app.controller('CartBlogSearchCtrl',    CartBlogSearchCtrl);
 app.controller('CartBlogSettingCtrl',   CartBlogSettingCtrl);
-app.controller('CartBlogShortcutCtrl',  CartBlogShortcutCtrl);
+app.controller('CartModalShortcutCtrl', CartModalShortcutCtrl);
 app.controller('CartBlogTagCtrl',       CartBlogTagCtrl);
 
 // Define self services

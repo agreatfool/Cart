@@ -1,4 +1,4 @@
-class CartBlogShortcutCtrl {
+class CartModalShortcutCtrl {
   constructor($mdBottomSheet) {
     this.$mdBottomSheet = $mdBottomSheet;
 
@@ -17,6 +17,6 @@ class CartBlogShortcutCtrl {
   }
 }
 
-CartBlogShortcutCtrl.$inject = ['$mdBottomSheet'];
+CartModalShortcutCtrl.$inject = ['$mdBottomSheet'];
 
-export default CartBlogShortcutCtrl;
+export default CartModalShortcutCtrl;
