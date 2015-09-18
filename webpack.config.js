@@ -22,6 +22,7 @@ module.exports = {
       // file type loaders
       { test: /\.html$/, loader: 'raw' },
       { test: /\.js$/, loader: 'babel?optional[]=es7.asyncFunctions', exclude: /(node_modules|bower_components|lb-services\.js)/ },
+      { test: /\.json$/, loader: 'json-loader' },
       { test: /\.css$/, loader: 'style-loader!css-loader' },
       { test: /\.scss$/, loader: 'style!css!sass' },
       { test: /\.(woff|woff2|ttf|eot)$/, loader: 'url-loader?limit=100000' },
