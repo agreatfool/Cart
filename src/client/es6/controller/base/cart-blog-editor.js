@@ -25,7 +25,7 @@ class CartBlogEditorCtrl extends CartBase {
     this.tmpSaveService.save(this.post);
     this.$mdBottomSheet.show({
       templateUrl: 'meta-info.html',
-      controller: 'CartBlogMetaInfoCtrl as ctrl',
+      controller: 'CartModalMetaInfoCtrl as ctrl',
       targetEvent: $event
     }).then(
       () => console.log('solved', this.postTmpSaveService.fetchPost()),
