@@ -116,14 +116,9 @@ class CartApiService extends CartBase {
                 uuid: uuid,
                 title: conf['defaultCategory']['name']
               }).$promise.then(
-                (result) => {
-                  if (result.length > 0) {
-                    let category = result.shift();
-                    this.categoryMap.set(uuid, category);
-                    resolve(category);
-                  } else {
-                    reject(new Error('No category created'));
-                  }
+                (category) => {
+                  this.categoryMap.set(uuid, category);
+                  resolve(category);
                 },
                 (error) => reject(error)
               );
