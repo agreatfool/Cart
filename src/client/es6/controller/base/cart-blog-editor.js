@@ -16,8 +16,15 @@ class CartBlogEditorCtrl extends CartBase {
     this.msgService.debug('CartBlogEditorCtrl::preview');
   }
 
-  save() {
-    this.msgService.debug('CartBlogEditorCtrl::save');
+  //noinspection ES6Validation
+  async save() {
+    try {
+      //noinspection ES6Validation
+      let post = await this.apiService.postUpsert(this.post);
+      this.msgService.info('Post saved: ', post);
+    } catch (e) {
+      this.msgService.error('Error when creating post: ', e.data.error.message);
+    }
   }
 
   showMetaInfo($event) {
