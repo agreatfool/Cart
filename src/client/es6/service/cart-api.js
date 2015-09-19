@@ -15,10 +15,52 @@ class CartApiService extends CartBase {
     this.categoryMap    = new Map(); // uuid => category
     this.tagMap         = new Map(); // uuid => tag
     this.attachmentMap  = new Map(); // uuid => attachment
+
+    this.dataInitialized = false;
   }
 
   static factory(...args) {
     return new CartApiService(...args);
+  }
+
+  dataInit() {
+    return new Promise((resolve, reject) => {
+      Promise.all([
+        this.modelPost.find().$promise,
+        this.modelCategory.find().$promise,
+        this.modelTag.find().$promise,
+        this.modelAttachment.find().$promise
+      ]).then(
+        (resultArr) => {
+          let postResult        = resultArr[0];
+          let categoryResult    = resultArr[1];
+          let tagResult         = resultArr[2];
+          let attachmentResult  = resultArr[3];
+
+          for (let elem of postResult.values()) {
+            this.postMap.set(elem.uuid, elem);
+          }
+          for (let elem of categoryResult.values()) {
+            this.categoryMap.set(elem.uuid, elem);
+          }
+          for (let elem of tagResult.values()) {
+            this.tagMap.set(elem.uuid, elem);
+          }
+          for (let elem of attachmentResult.values()) {
+            this.attachmentMap.set(elem.uuid, elem);
+          }
+
+          this.dataInitialized = true;
+
+          resolve(this.dataInitialized);
+        },
+        (error) => reject(error)
+      );
+    });
+  }
+
+  isDataInitialized() {
+    return this.dataInitialized;
   }
 
   postFetchViaUuid(uuid) {
@@ -70,12 +112,10 @@ class CartApiService extends CartBase {
               resolve(category);
             } else {
               // search not found, create it
-              new Promise(() => {
-                this.modelCategory.create({
-                  uuid: uuid,
-                  title: conf['defaultCategory']['name']
-                });
-              }).then(
+              this.modelCategory.create({
+                uuid: uuid,
+                title: conf['defaultCategory']['name']
+              }).$promise.then(
                 (result) => {
                   if (result.length > 0) {
                     let category = result.shift();

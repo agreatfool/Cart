@@ -10,5 +10,23 @@
 </md-toolbar>
 
 <md-content class="md-padding">
-  list page
+
+  <md-list>
+
+    <md-subheader class="md-no-sticky">Posts</md-subheader>
+
+    <md-list-item class="md-2-line md-clickable" ng-repeat="postInfo in ctrl.postList">
+      <md-button class="md-no-style">
+        <div class="md-list-item-text">
+          <h3>{{ postInfo.title }}</h3>
+          <p>
+            <md-icon md-font-set="material-icons md-16" style="margin-right: 4px;">layers</md-icon>
+            {{ ctrl.categoryGetTitleViaUuid(postInfo.category) }}
+          </p>
+        </div>
+      </md-button>
+    </md-list-item>
+
+  </md-list>
+
 </md-content>
