@@ -1,5 +1,9 @@
-class CartModalShortcutCtrl {
-  constructor($mdBottomSheet) {
+import CartModalBase from '../base/cart-modal.js';
+
+class CartModalShortcutCtrl extends CartModalBase {
+  constructor($mdBottomSheet, ...args) {
+    super(...args);
+
     this.$mdBottomSheet = $mdBottomSheet;
 
     this.bottomButtons = [
@@ -17,6 +21,6 @@ class CartModalShortcutCtrl {
   }
 }
 
-CartModalShortcutCtrl.$inject = ['$mdBottomSheet'];
+CartModalShortcutCtrl.$inject = ['$mdBottomSheet', ...CartModalBase.$inject];
 
 export default CartModalShortcutCtrl;
