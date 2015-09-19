@@ -10,8 +10,7 @@
     "uuid": {
       "type": "string",
       "id": true,
-      "defaultFn": "uuidv4",
-      "required": true
+      "defaultFn": "uuidv4"
     },
     "driveId": {
       "type": "string",
