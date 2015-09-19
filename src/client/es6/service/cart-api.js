@@ -21,35 +21,84 @@ class CartApiService extends CartBase {
     return new CartApiService(...args);
   }
 
-  //noinspection ES6Validation
-  async postCreate(title, category = null, tags = [], attachments = [], isPublic = false) {
-    let modelPost = this.modelPost;
-    function subCreate() {
-      let promise = modelPost.create({
-        uuid: libUuid.v4(),
-        title: title,
-        driveId: null,
-        //category: libUuid.v4(),
-        category: null,
-        tags: tags,
-        attachments: attachments,
-        isPublic: isPublic
+  postFetchViaUuid(uuid) {
+    let promise = null;
+
+    if (this.postMap.has(uuid)) {
+      promise = new Promise((resolve) => resolve(this.postMap.get(uuid)));
+    } else {
+      promise = new Promise((resolve, reject) => {
+        this.modelPost.find({ filter: { where: { uuid: uuid } } }).$promise.then(
+          (result) => {
+            if (result.length > 0) {
+              let post = result.shift();
+              this.postMap.set(uuid, post);
+              resolve(post);
+            } else {
+              resolve(null);
+            }
+          },
+          (error) => reject(error)
+        );
       });
-      return promise.$promise
-        //.then(
-        //  (obj) => console.log('$promise success', obj),
-        //  (obj) => console.log('$promise error', obj)
-        //);
     }
-    try {
-      //noinspection ES6Validation
-      let post = await subCreate();
-      console.log('Post created: ', post);
-    } catch (e) {
-      console.log('Error when creating post: ', e);
-    }
+
+    return promise;
   }
 
+  postUpsert(post) {
+    return this.modelPost.upsert(post).$promise;
+  }
+
+  postDefaultCategory() {
+    let uuid = conf['defaultCategory']['uuid'];
+
+    let promise = null;
+
+    if (this.categoryMap.has(uuid)) {
+      // found in cache
+      promise = new Promise((resolve) => resolve(this.categoryMap.get(uuid)));
+    } else {
+      // not found, search
+      promise = new Promise((resolve, reject) => {
+        this.modelCategory.find({ filter: { where: { uuid: uuid } } }).$promise.then(
+          (result) => {
+            if (result.length > 0) {
+              // search found
+              let category = result.shift();
+              this.categoryMap.set(uuid, category);
+              resolve(category);
+            } else {
+              // search not found, create it
+              new Promise(() => {
+                this.modelCategory.create({
+                  uuid: uuid,
+                  title: conf['defaultCategory']['name']
+                });
+              }).then(
+                (result) => {
+                  if (result.length > 0) {
+                    let category = result.shift();
+                    this.categoryMap.set(uuid, category);
+                    resolve(category);
+                  } else {
+                    reject(new Error('No category created'));
+                  }
+                },
+                (error) => reject(error)
+              );
+            }
+          },
+          (error) => reject(error)
+        );
+      });
+    }
+
+    return promise;
+  }
+
+  postDefaultPrivacy() {
+    return false;
   }
 }
 

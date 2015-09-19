@@ -13,11 +13,11 @@ class CartBlogEditorCtrl extends CartBase {
   }
 
   preview() {
-    console.log('CartBlogEditorCtrl::preview');
+    this.msgService.debug('CartBlogEditorCtrl::preview');
   }
 
   save() {
-    console.log('CartBlogEditorCtrl::save');
+    this.msgService.debug('CartBlogEditorCtrl::save');
   }
 
   showMetaInfo($event) {
