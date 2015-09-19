@@ -21,14 +21,27 @@ class CartBlogEditorCtrl extends CartBase {
   }
 
   showMetaInfo($event) {
-    this.tmpSaveService.save(this.post);
     this.$mdBottomSheet.show({
       templateUrl: 'meta-info.html',
       controller: 'CartModalMetaInfoCtrl as ctrl',
-      targetEvent: $event
+      targetEvent: $event,
+      locals: {
+        post: this.post,
+        category: this.category,
+        tags: this.tags,
+        attachments: this.attachments
+      },
+      bindToController: true
     }).then(
-      () => console.log('solved', this.postTmpSaveService.fetchPost()),
-      () => console.log('rejected', this.postTmpSaveService.fetchPost())
+      // only reject handler shall be implemented, since there is no normal close event in this modal window
+      null,
+      () => {
+        let savedData = this.tmpSaveService.fetch();
+        this.post = savedData['post'];
+        this.category = savedData['category'];
+        this.tags = savedData['tags'];
+        this.attachments = savedData['attachments'];
+      }
     );
   }
 }

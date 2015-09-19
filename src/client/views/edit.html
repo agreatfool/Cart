@@ -48,17 +48,17 @@
         <md-icon md-font-set="material-icons" style="margin-left: 0">subject</md-icon>
         <md-input-container style="width: 70%">
           <label>Title</label>
-          <input>
+          <input ng-model="ctrl.post.title">
         </md-input-container>
-        <md-datepicker ng-model="ctrl.name1" md-placeholder="Created" disabled></md-datepicker>
-        <md-datepicker ng-model="ctrl.name1" md-placeholder="Updated" disabled></md-datepicker>
+        <md-datepicker ng-model="ctrl.post.created" md-placeholder="Created" disabled></md-datepicker>
+        <md-datepicker ng-model="ctrl.post.updated" md-placeholder="Updated" disabled></md-datepicker>
       </md-list-item>
 
       <md-list-item>
         <md-icon md-font-set="material-icons" style="margin-left: 0;">layers</md-icon>
         <md-input-container style="width: 15%">
           <label>Category</label>
-          <input>
+          <input ng-model="ctrl.category.title" ng-change="ctrl.categoryContentChanged()" ng-model-options="{ debounce: 500 }">
         </md-input-container>
         <md-icon md-font-set="material-icons" style="margin: 0 32px;">label</md-icon>
         <md-input-container style="width: 15%">
