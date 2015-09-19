@@ -1,10 +1,8 @@
 import CartBase from './cart-base.js';
 
 class CartBlogEditorCtrl extends CartBase {
-  constructor(CartTmpSaveService, ...args) {
+  constructor(...args) {
     super(...args);
-
-    this.tmpSaveService = CartTmpSaveService;
 
     this.category = {}; // category object this post belongs to, shall be overwrote in child class
     this.tags = []; // tag objects this post has, shall be overwrote in child class
@@ -39,20 +37,10 @@ class CartBlogEditorCtrl extends CartBase {
         attachments: this.attachments
       },
       bindToController: true
-    }).then(
-      // only reject handler shall be implemented, since there is no normal close event in this modal window
-      null,
-      () => {
-        let savedData = this.tmpSaveService.fetch();
-        this.post = savedData['post'];
-        this.category = savedData['category'];
-        this.tags = savedData['tags'];
-        this.attachments = savedData['attachments'];
-      }
-    );
+    });
   }
 }
 
-CartBlogEditorCtrl.$inject = ['CartTmpSaveService', ...CartBase.$inject];
+CartBlogEditorCtrl.$inject = [...CartBase.$inject];
 
 export default CartBlogEditorCtrl;
