@@ -16,6 +16,7 @@ import CartTheming from './theme.js';
 
 import CartModalMetaInfoCtrl from './controller/modal/cart-modal-meta.js';
 import CartModalShortcutCtrl from './controller/modal/cart-modal-shortcut.js';
+import CartModalToastCtrl from './controller/modal/cart-modal-toast.js';
 import CartBlogCategoryCtrl from './controller/cart-blog-category.js';
 import CartBlogCreateCtrl from './controller/cart-blog-create.js';
 import CartBlogEditCtrl from './controller/cart-blog-edit.js';
@@ -42,6 +43,7 @@ app.config(CartTheming.factory);
 // Define self controllers
 app.controller('CartModalMetaInfoCtrl', CartModalMetaInfoCtrl);
 app.controller('CartModalShortcutCtrl', CartModalShortcutCtrl);
+app.controller('CartModalToastCtrl',    CartModalToastCtrl);
 app.controller('CartBlogCategoryCtrl',  CartBlogCategoryCtrl);
 app.controller('CartBlogCreateCtrl',    CartBlogCreateCtrl);
 app.controller('CartBlogEditCtrl',      CartBlogEditCtrl);

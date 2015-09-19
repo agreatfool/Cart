@@ -39,6 +39,15 @@
     </md-button>
   </script>
 
+  <script type="text/ng-template" id="toast.html">
+    <md-toast>
+      <span flex><p style="color: {{ ctrl.color }}">{{ ctrl.message }}</p></span>
+      <md-button ng-click="ctrl.closeToast()" ng-show="ctrl.confirm">
+        Close
+      </md-button>
+    </md-toast>
+  </script>
+
   <script type="text/ng-template" id="shortcut.html">
     <md-bottom-sheet class="md-grid" layout="row">
       <md-list flex layout="row" layout-align="center center">
