@@ -19,7 +19,6 @@ class CartBlogCreateCtrl extends CartBlogEditorCtrl {
     this.tags = [];
     this.attachments = [];
     this.post = {
-      uuid: null,
       driveId: null,
       title: '',
       created: new Date(),
