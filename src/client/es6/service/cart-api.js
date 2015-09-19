@@ -5,9 +5,11 @@ import libUuid from 'node-uuid';
 import conf from '../../../common/config.json';
 
 class CartApiService extends CartBase {
-  constructor(...args) {
+  constructor(CartMessageService, ...args) {
     super(...args);
     this.logInit('CartApiService');
+
+    this.msgService = CartMessageService;
 
     this.postMap        = new Map(); // uuid => post
     this.categoryMap    = new Map(); // uuid => category
@@ -51,6 +53,6 @@ class CartApiService extends CartBase {
   }
 }
 
-CartApiService.factory.$inject = [...CartBase.$inject];
+CartApiService.factory.$inject = ['CartMessageService', ...CartBase.$inject];
 
 export default CartApiService;

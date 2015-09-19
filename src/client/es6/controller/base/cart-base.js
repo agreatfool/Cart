@@ -1,6 +1,8 @@
 class CartBase {
-  constructor(CartApiService, $location, $window, $mdBottomSheet) {
+  constructor(CartMessageService, CartApiService, $location, $window, $mdBottomSheet) {
+    this.msgService = CartMessageService;
     this.apiService = CartApiService;
+
     this.$location = $location;
     this.$window = $window;
     this.$mdBottomSheet = $mdBottomSheet;
@@ -35,7 +37,7 @@ class CartBase {
 }
 
 CartBase.$inject = [
-  'CartApiService',
+  'CartMessageService', 'CartApiService',
   '$location', '$window',
   '$mdBottomSheet'
 ];

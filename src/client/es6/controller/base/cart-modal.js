@@ -1,8 +1,9 @@
 class CartModalBase {
-  constructor() {
+  constructor(CartMessageService) {
+    this.msgService = CartMessageService;
   }
 }
 
-CartModalBase.$inject = [];
+CartModalBase.$inject = ['CartMessageService'];
 
 export default CartModalBase;
