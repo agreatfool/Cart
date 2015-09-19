@@ -19,6 +19,7 @@ class CartBlogCreateCtrl extends CartBlogEditorCtrl {
     this.tags = [];
     this.attachments = [];
     this.post = {
+      uuid: undefined, // have to be "undefined" to make stongloop server recognize this property shall apply defaultFn
       driveId: null,
       title: '',
       created: new Date(),
