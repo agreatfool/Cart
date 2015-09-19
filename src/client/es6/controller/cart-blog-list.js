@@ -1,11 +1,12 @@
 import CartBase from './base/cart-base.js';
 
 class CartBlogListCtrl extends CartBase {
-  constructor($scope, ...args) {
+  constructor($scope, $timeout, ...args) {
     super(...args);
     this.logInit('CartBlogListCtrl');
 
     this.$scope = $scope;
+    this.$timeout = $timeout;
 
     this.postList = [];
 
@@ -44,15 +45,17 @@ class CartBlogListCtrl extends CartBase {
   }
 
   convertPostDataToViewArr(postMap) { // pagination??
-    this.$scope.$apply(() => { // fix the issue: postList updated but data binding not triggered
-      for (let [, post] of postMap) {
-        //noinspection JSUnusedAssignment
-        this.postList.push(post);
-      }
+    this.$timeout(() => { // fix the issue: $digest already in progress
+      this.$scope.$apply(() => { // fix the issue: postList updated but data binding not triggered
+        for (let [, post] of postMap) {
+          //noinspection JSUnusedAssignment
+          this.postList.push(post);
+        }
+      });
     });
   }
 }
 
-CartBlogListCtrl.$inject = ['$scope', ...CartBase.$inject];
+CartBlogListCtrl.$inject = ['$scope', '$timeout', ...CartBase.$inject];
 
 export default CartBlogListCtrl;
