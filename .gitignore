@@ -24,3 +24,6 @@ dart-version
 # StrongLoop
 .strong-pm
 arc-manager.json
+
+# Cordova www soft link
+cordova/www/
