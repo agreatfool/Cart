@@ -29,6 +29,7 @@ module.exports = {
       // AMD exports loaders
       { test: /[\/]angular\.js$/, loader: 'exports?angular' },
       { test: /[\/]angular-resource\.js$/, loader: "exports?angular.module('ngResource').name" },
+      { test: /[\/]angular-touch\.js$/, loader: "exports?angular.module('ngTouch').name" },
       { test: /[\/]lb-services\.js$/, loader: "exports?angular.module('lbServices').name" }
     ]
   },

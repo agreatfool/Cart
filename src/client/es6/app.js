@@ -9,6 +9,7 @@ import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import ngMaterial from 'angular-material';
 import ngResource from 'angular-resource';
+import ngTouch from 'angular-touch';
 import lbServices from './lb-services.js';
 
 import CartRouters from './routers.js';
@@ -30,7 +31,8 @@ import CartMessageService from './service/cart-message.js';
 
 // Angular application initialization
 let app = angular.module('app', [
-  uiRouter, ngMaterial, ngResource, lbServices
+  uiRouter, ngMaterial, ngResource, ngTouch,
+  lbServices
 ]);
 
 // Angular UI router config
