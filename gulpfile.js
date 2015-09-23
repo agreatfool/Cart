@@ -11,6 +11,7 @@ var IS_MOBILE = PLATFORM === 'mobile';
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* NodeJs LIBs
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+var libFs = require('fs');
 var libPath = require('path');
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -27,6 +28,7 @@ var gutil = require('gulp-util');
 var babel = require('gulp-babel');
 var template = require('gulp-template');
 var jeditor = require('gulp-json-editor');
+var replace = require('gulp-replace');
 var livereload = require('gulp-livereload');
 var shell = require('gulp-shell');
 var runSequence = require('run-sequence');
@@ -58,6 +60,7 @@ var PATH = {
 
 PATH.src.client.path    = libPath.join(PATH.src.path,         'client');
 PATH.src.client.es6     = libPath.join(PATH.src.client.path,  'es6');
+PATH.src.client.index   = libPath.join(PATH.src.client.path,  'index.piece');
 PATH.src.client.styles  = libPath.join(PATH.src.client.path,  'styles');
 PATH.src.client.views   = libPath.join(PATH.src.client.path,  'views');
 
@@ -151,15 +154,20 @@ gulp.task('src:angular:build', function(done) { // 生成 StrongLoop 对应的 a
   );
 });
 
-gulp.task('resource:html', function() { // 拷贝 HTML 到输出路径
-  return gulp.src([
-      libPath.join(PATH.src.client.path, '**', '*.html')
-    ])
+gulp.task('resource:html:index', function() { // 拷贝、转换 index HTML 到输出路径
+  return gulp.src(libPath.join(PATH.src.client.path, 'index.html'))
+    .pipe(replace('<!-- inject:head -->', libFs.readFileSync(libPath.join(PATH.src.client.index, PLATFORM, 'head.html'))))
+    .pipe(replace('<!-- inject:body -->', libFs.readFileSync(libPath.join(PATH.src.client.index, PLATFORM, 'body.html'))))
     .pipe(gulpif(IS_PRODUCTION, minhtml()))
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
 
+gulp.task('resource:html:views', function() { // 拷贝 views HTML 到输出路径
   return gulp.src([
+      libPath.join(PATH.src.client.path, 'views', '*.html')
+    ])
+    .pipe(gulpif(IS_PRODUCTION, minhtml()))
+    .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'views')));
 });
 
 gulp.task('src:config:params', function() {
@@ -192,15 +200,21 @@ gulp.task('default', function(done) { // 默认任务
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
     'webpack:build',
-    ['resource:common', 'resource:server', 'resource:html'],
+    [
+      'resource:common', 'resource:server',
+      'resource:html:index', 'resource:html:views'
+    ],
     done
   );
 });
 
 gulp.task('watch', function() {
   // 前端视图改动
-  gulp.watch(libPath.join(PATH.src.client.path, '**', '*.html'), ['resource:html']);
-  gulp.watch(libPath.join(PATH.src.client.views, '**', '*.html'), ['resource:html']);
+  gulp.watch([
+    libPath.join(PATH.src.client.path, 'index.html'),
+    libPath.join(PATH.src.client.index, '**', '*.html')
+  ], ['resource:html:index']);
+  gulp.watch(libPath.join(PATH.src.client.views, '**', '*.html'), ['resource:html:views']);
 
   // common 源代码 babel 转码
   gulp.watch(libPath.join(PATH.src.common.es6, '**', '*.js'), ['src:babel:common']);
