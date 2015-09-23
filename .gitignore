@@ -28,3 +28,6 @@ arc-manager.json
 # Cordova www soft link
 cordova/www/
 cordova/platforms/ios/www
+
+# iOS
+UserInterfaceState.xcuserstate
