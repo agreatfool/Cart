@@ -27,3 +27,4 @@ arc-manager.json
 
 # Cordova www soft link
 cordova/www/
+cordova/platforms/ios/www

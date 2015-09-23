@@ -2,7 +2,7 @@
 <widget id="com.xeonjoshua.cart" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Cart</name>
     <description>
-        Cart Blog system..
+        Cart Blog system.
     </description>
     <author email="nightghost5078@gmail.com" href="https://github.com/agreatfool">
         Jonathan Dai
