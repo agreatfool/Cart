@@ -68,12 +68,13 @@ app.controller('CartBlogTagCtrl',       CartBlogTagCtrl);
 app.factory('CartApiService',           CartApiService.factory);
 app.factory('CartMessageService',       CartMessageService.factory);
 
+// Boot angular
 let angularBoot = function(event) {
   console.log(`Start event received: ${event}, bootstrapping application setup.`);
   angular.bootstrap(document.getElementsByTagName('body')[0], ['app']);
 };
 
-//If cordova is present, wait for it to initialize, otherwise just try to bootstrap the application.
+// If cordova is present, wait for it to initialize, otherwise just try to bootstrap the application.
 if (window.cordova !== undefined) {
   console.log('Cordova found, wating for device.');
   document.addEventListener('deviceready', function() {
