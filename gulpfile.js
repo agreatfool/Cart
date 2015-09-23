@@ -159,10 +159,7 @@ gulp.task('resource:html', function() { // 拷贝 HTML 到输出路径
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
 
-gulp.task('resource:js', function() { // 拷贝 client 根目录 JS 到输出路径
   return gulp.src([
-    libPath.join(PATH.src.client.path, '*.js')
-  ]).pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
 
 gulp.task('src:config:params', function() {
@@ -195,7 +192,7 @@ gulp.task('default', function(done) { // 默认任务
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
     'webpack:build',
-    ['resource:common', 'resource:server', 'resource:html', 'resource:js'],
+    ['resource:common', 'resource:server', 'resource:html'],
     done
   );
 });
@@ -222,11 +219,6 @@ gulp.task('watch', function() {
     libPath.join(PATH.src.server.path, '**', '*'),
     libPath.join('!' + PATH.src.server.es6, '**', '*')
   ], ['resource:server']);
-
-  // 前端 JS 部分无需转码代码改动
-  gulp.watch([
-    libPath.join(PATH.src.client.path, '*.js')
-  ], ['resource:js']);
 
   // 前端资源改动，则让浏览器重新加载
   livereload.listen();
