@@ -1,6 +1,9 @@
 {
   "env": "develop",
   "platform": "desktop",
+  "host": "localhost",
+  "port": 3000,
+  "protocol": "http",
   "defaultCategory": {
     "uuid": "2e1e2e2c-4472-44ae-aa2e-1f536f1e4c61",
     "name": "Others"

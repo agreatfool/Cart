@@ -50,6 +50,41 @@ function handleError(err) {
   this.emit('end');
 }
 
+function getLocalIp() {
+  var os = require('os');
+
+  var interfaces = os.networkInterfaces();
+  var addresses = [];
+  for (var k in interfaces) {
+    if (!interfaces.hasOwnProperty(k)) {
+      continue;
+    }
+    for (var k2 in interfaces[k]) {
+      if (!interfaces[k].hasOwnProperty(k2)) {
+        continue;
+      }
+      var address = interfaces[k][k2];
+      if (address.family === 'IPv4' && !address.internal) {
+        addresses.push(address.address);
+      }
+    }
+  }
+
+  if (addresses.length === 0) {
+    return 'localhost';
+  } else {
+    return addresses.shift();
+  }
+}
+
+gutil.log(
+  gutil.colors.yellow('GLOBAL'),
+  gutil.colors.magenta('ENV'),
+  gutil.colors.cyan(ENV),
+  gutil.colors.magenta('PLATFORM'),
+  gutil.colors.cyan(PLATFORM)
+);
+
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* PATH
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -170,14 +205,26 @@ gulp.task('resource:html:views', function() { // 拷贝 views HTML 到输出路�
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'views')));
 });
 
-gulp.task('src:config:params', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
+gulp.task('src:config:common', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
   return gulp.src(libPath.join(PATH.src.common.path, 'config.json'))
     .pipe(jeditor(function(json) {
       json.env = ENV;
       json.platform = PLATFORM;
+      if (!IS_PRODUCTION) { // 非生产环境才需要自动配置IP地址
+        json.host = getLocalIp();
+      }
       return json;
     }))
     .pipe(gulp.dest(PATH.src.common.path));
+});
+
+gulp.task('src:config:server', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
+  return gulp.src(libPath.join(PATH.src.server.path, 'config.json'))
+    .pipe(gulpif(!IS_PRODUCTION, jeditor(function(json) { // 非生产环境才需要自动配置IP地址
+      json.host = getLocalIp();
+      return json;
+    })))
+    .pipe(gulp.dest(PATH.src.server.path));
 });
 
 gulp.task('webpack:build', function() { // webpack构建
@@ -196,7 +243,8 @@ gulp.task('webpack:build', function() { // webpack构建
 gulp.task('default', function(done) { // 默认任务
   runSequence(
     'pre:clean',
-    'src:config:params',
+    'src:config:common',
+    'src:config:server',
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
     'webpack:build',
