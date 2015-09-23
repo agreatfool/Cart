@@ -3,7 +3,10 @@
 //-* GLOBAL
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var PWD = __dirname;
-var IS_PRODUCTION = process.env.NODE_ENV === 'production';
+var ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'develop';
+var IS_PRODUCTION = ENV === 'production';
+var PLATFORM = process.env.PLATFORM ? process.env.PLATFORM : 'desktop';
+var IS_MOBILE = PLATFORM === 'mobile';
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 //-* NodeJs LIBs
@@ -23,6 +26,7 @@ var minhtml = require('gulp-minify-html');
 var gutil = require('gulp-util');
 var babel = require('gulp-babel');
 var template = require('gulp-template');
+var jeditor = require('gulp-json-editor');
 var livereload = require('gulp-livereload');
 var shell = require('gulp-shell');
 var runSequence = require('run-sequence');
@@ -161,6 +165,16 @@ gulp.task('resource:js', function() { // 拷贝 client 根目录 JS 到输出路
   ]).pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
 
+gulp.task('src:config:params', function() {
+  return gulp.src(libPath.join(PATH.src.common.path, 'config.json'))
+    .pipe(jeditor(function(json) {
+      json.env = ENV;
+      json.platform = PLATFORM;
+      return json;
+    }))
+    .pipe(gulp.dest(PATH.src.common.path));
+});
+
 gulp.task('webpack:build', function() { // webpack构建
   return gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
     .pipe(webpack(webpackConf, null, function(err, stats) {
@@ -177,6 +191,7 @@ gulp.task('webpack:build', function() { // webpack构建
 gulp.task('default', function(done) { // 默认任务
   runSequence(
     'pre:clean',
+    'src:config:params',
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
     'webpack:build',
