@@ -1,3 +1,5 @@
+import conf from '../../common/config.json';
+
 import 'angular-material/angular-material.min.css';
 
 import '../styles/main.scss';
@@ -30,10 +32,15 @@ import CartApiService from './service/cart-api.js';
 import CartMessageService from './service/cart-message.js';
 
 // Angular application initialization
-let app = angular.module('app', [
-  uiRouter, ngMaterial, ngResource, ngTouch,
+let angularDependencies = [
+  uiRouter, ngMaterial, ngResource,
   lbServices
-]);
+];
+if (conf['platform'] === 'mobile') {
+  angularDependencies.push(ngTouch);
+}
+
+let app = angular.module('app', angularDependencies);
 
 // Angular UI router config
 app.config(CartRouters.factory);

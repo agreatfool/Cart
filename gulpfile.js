@@ -170,7 +170,7 @@ gulp.task('resource:html:views', function() { // 拷贝 views HTML 到输出路�
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'views')));
 });
 
-gulp.task('src:config:params', function() {
+gulp.task('src:config:params', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
   return gulp.src(libPath.join(PATH.src.common.path, 'config.json'))
     .pipe(jeditor(function(json) {
       json.env = ENV;

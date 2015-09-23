@@ -1,7 +1,12 @@
+import conf from '../../common/config.json';
+
 class CartRouters {
   constructor($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise('/');
-    $locationProvider.html5Mode(true);
+
+    if (conf['platform'] === 'desktop') {
+      $locationProvider.html5Mode(true); // enable HTML5 mode only on "desktop" platform
+    }
 
     $stateProvider
       .state('home', {
