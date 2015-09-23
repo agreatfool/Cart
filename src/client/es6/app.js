@@ -16,6 +16,7 @@ import lbServices from './lb-services.js';
 
 import CartRouters from './routers.js';
 import CartTheming from './theme.js';
+import CartLoopback from './loopback.js';
 
 import CartModalMetaInfoCtrl from './controller/modal/cart-modal-meta.js';
 import CartModalShortcutCtrl from './controller/modal/cart-modal-shortcut.js';
@@ -47,6 +48,9 @@ app.config(CartRouters.factory);
 
 // Angular Material Theme config
 app.config(CartTheming.factory);
+
+// StrongLoop backend config
+app.config(CartLoopback.factory);
 
 // Define self controllers
 app.controller('CartModalMetaInfoCtrl', CartModalMetaInfoCtrl);
