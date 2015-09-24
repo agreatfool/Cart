@@ -15,12 +15,24 @@ class CartModalShortcutCtrl extends CartModalBase {
 
     if (this.conf.platform === 'desktop') {
       this.$mdBottomSheet = this.$injector.get('$mdBottomSheet');
+    } else {
+      // $ionicPopup didn't provide method to close panel cross controller, do some thing dirty
+      let backdrop = document.getElementsByClassName('backdrop')[0];
+      backdrop.className = backdrop.className.replace(/(visible|active)/g, '');
     }
   }
 
   hideSheet() {
     if (this.conf.platform === 'desktop') {
       this.$mdBottomSheet.hide();
+    } else {
+      // $ionicPopup didn't provide method to close panel cross controller, do some thing dirty
+      let backdrop = document.getElementsByClassName('backdrop')[0];
+      backdrop.className = backdrop.className.replace(/(visible|active)/g, '');
+      let popup = document.getElementsByClassName('popup-container')[0];
+      popup.parentElement.removeChild(popup);
+      let body = document.getElementsByTagName('body')[0];
+      body.className = body.className.replace(/popup-open/, '');
     }
   }
 }

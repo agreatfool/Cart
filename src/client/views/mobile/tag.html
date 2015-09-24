@@ -1,13 +1,9 @@
-<md-toolbar class="cart-toolbar">
-  <div class="md-toolbar-tools">
+<ion-header-bar>
+  <button class="button button-icon icon ion-navicon" ng-click="ctrl.showShortcuts()"></button>
+  <div class="h1 title">Tag</div>
+  <button class="button button-icon icon ion-ios-arrow-back" ng-click="ctrl.goBack()"></button>
+</ion-header-bar>
 
-    <div ng-include="'icon-back.html'"></div>
-    <h3>Tag</h3>
-    <div ng-include="'icon-shortcuts.html'"></div>
-
-  </div>
-</md-toolbar>
-
-<md-content class="md-padding">
+<ion-content>
   tag page
-</md-content>
+</ion-content>

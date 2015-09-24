@@ -1,2 +1,1 @@
-angularDependencies.push(ngTouch);
-angularDependencies.push(ionicAngular);
+angularDependencies = Array.from([ngTouch, ionicAngular,...angularDependencies]);

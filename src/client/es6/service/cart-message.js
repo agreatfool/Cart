@@ -7,6 +7,8 @@ class CartMessageService extends CartBase {
 
     if (this.conf.platform === 'desktop') {
       this.$mdToast = this.$injector.get('$mdToast');
+    } else {
+      this.$ionicLoading = this.$injector.get('$ionicLoading');
     }
   }
 
@@ -73,8 +75,15 @@ class CartMessageService extends CartBase {
       locals: locals,
       bindToController: true
     };
+
     if (this.conf.platform === 'desktop') {
       this.$mdToast.show(options);
+    } else {
+      this.$ionicLoading.show({
+        template: JSON.stringify(locals.message),
+        noBackdrop: true,
+        duration: 3000
+      });
     }
   }
 

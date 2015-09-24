@@ -26,18 +26,20 @@ class CartBlogEditorCtrl extends CartBase {
   }
 
   showMetaInfo($event) {
-    this.$mdBottomSheet.show({
-      templateUrl: 'meta-info.html',
-      controller: 'CartModalMetaInfoCtrl as ctrl',
-      targetEvent: $event,
-      locals: {
-        post: this.post,
-        category: this.category,
-        tags: this.tags,
-        attachments: this.attachments
-      },
-      bindToController: true
-    });
+    if (this.conf.platform === 'desktop') {
+      this.$mdBottomSheet.show({
+        templateUrl: 'meta-info.html',
+        controller: 'CartModalMetaInfoCtrl as ctrl',
+        targetEvent: $event,
+        locals: {
+          post: this.post,
+          category: this.category,
+          tags: this.tags,
+          attachments: this.attachments
+        },
+        bindToController: true
+      });
+    }
   }
 }
 

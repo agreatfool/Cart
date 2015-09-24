@@ -1,27 +1,9 @@
-<md-toolbar class="cart-toolbar">
-  <div class="md-toolbar-tools">
+<ion-header-bar>
+  <button class="button button-icon icon ion-navicon" ng-click="ctrl.showShortcuts()"></button>
+  <div class="h1 title">Search</div>
+  <button class="button button-icon icon ion-ios-arrow-back" ng-click="ctrl.goBack()"></button>
+</ion-header-bar>
 
-    <div ng-include="'icon-back.html'"></div>
-    <h3>Search</h3>
-    <div ng-include="'icon-shortcuts.html'"></div>
-
-  </div>
-</md-toolbar>
-
-<md-content class="md-padding">
-
-  <md-list>
-
-    <md-subheader class="md-no-sticky">Category</md-subheader>
-
-    <md-divider></md-divider>
-
-    <md-subheader class="md-no-sticky">Tag</md-subheader>
-
-    <md-divider></md-divider>
-
-    <md-subheader class="md-no-sticky">Time</md-subheader>
-
-  </md-list>
-
-</md-content>
+<ion-content>
+  search page
+</ion-content>

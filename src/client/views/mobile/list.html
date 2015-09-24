@@ -1,32 +1,21 @@
-<md-toolbar class="cart-toolbar">
-  <div class="md-toolbar-tools">
+<ion-header-bar>
+  <button class="button button-icon icon ion-navicon" ng-click="ctrl.showShortcuts()"></button>
+  <div class="h1 title">Home</div>
+  <button class="button button-icon icon ion-ios-refresh-empty" ng-click="ctrl.reloadPage()"></button>
+</ion-header-bar>
 
-    <h3>Home</h3>
-    <div ng-include="'icon-shortcuts.html'"></div>
-    <span flex class="flex"></span>
-    <div ng-include="'icon-reload.html'"></div>
+<ion-content>
 
-  </div>
-</md-toolbar>
+  <ion-list>
+    <ion-item ng-repeat="postInfo in ctrl.postList">
+      <h2 class="item-content">
+        {{ postInfo.title }}
+      </h2>
+      <a href="#" class="subdued">
+        <i class="icon ion-ios-book-outline"></i>
+        {{ ctrl.categoryGetTitleViaUuid(postInfo.category) }}
+      </a>
+    </ion-item>
+  </ion-list>
 
-<md-content class="md-padding">
-
-  <md-list>
-
-    <md-subheader class="md-no-sticky">Posts</md-subheader>
-
-    <md-list-item class="md-2-line md-clickable" ng-repeat="postInfo in ctrl.postList">
-      <md-button class="md-no-style">
-        <div class="md-list-item-text">
-          <h3>{{ postInfo.title }}</h3>
-          <p>
-            <md-icon md-font-set="material-icons md-16" style="margin-right: 4px;">layers</md-icon>
-            {{ ctrl.categoryGetTitleViaUuid(postInfo.category) }}
-          </p>
-        </div>
-      </md-button>
-    </md-list-item>
-
-  </md-list>
-
-</md-content>
+</ion-content>

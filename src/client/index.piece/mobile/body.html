@@ -1,1 +1,20 @@
+<script type="text/ng-template" id="toast.html">
+  <md-toast>
+    <span flex><p style="color: {{ ctrl.color }}">{{ ctrl.message }}</p></span>
+    <md-button ng-click="ctrl.closeToast()" ng-show="ctrl.confirm">
+      Close
+    </md-button>
+  </md-toast>
+</script>
+
+<script type="text/ng-template" id="shortcut.html">
+  <ion-list ng-controller="CartModalShortcutCtrl as ctrl">
+    <ion-item ng-repeat="button in ctrl.bottomButtons">
+      <i class="icon {{ button.icon }}"></i>
+      <a ui-sref="{{ button.state }}" ng-click="ctrl.hideSheet()">{{ button.name }}</a>
+    </ion-item>
+  </ion-list>
+</script>
+
+
 <script type="text/javascript" src="cordova.js"></script>

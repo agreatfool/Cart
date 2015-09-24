@@ -14,6 +14,8 @@ class CartBase {
 
     if (this.conf.platform === 'desktop') {
       this.$mdBottomSheet = this.$injector.get('$mdBottomSheet');
+    } else {
+      this.$ionicPopup = this.$injector.get('$ionicPopup');
     }
   }
 
@@ -23,6 +25,11 @@ class CartBase {
         templateUrl: 'shortcut.html',
         controller: 'CartModalShortcutCtrl as ctrl',
         targetEvent: $event
+      });
+    } else {
+      this.$ionicPopup.show({
+        title: 'Shortcuts',
+        templateUrl: 'shortcut.html'
       });
     }
   }
