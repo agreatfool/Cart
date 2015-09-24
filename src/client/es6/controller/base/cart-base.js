@@ -1,19 +1,30 @@
+import conf from '../../../../common/config.json';
+
 class CartBase {
-  constructor(CartMessageService, CartApiService, $location, $window, $mdBottomSheet) {
+  constructor(CartMessageService, CartApiService, $location, $window, $timeout, $injector) {
     this.msgService = CartMessageService;
     this.apiService = CartApiService;
 
     this.$location = $location;
     this.$window = $window;
-    this.$mdBottomSheet = $mdBottomSheet;
+    this.$timeout = $timeout;
+    this.$injector = $injector;
+
+    this.conf = conf;
+
+    if (this.conf.platform === 'desktop') {
+      this.$mdBottomSheet = this.$injector.get('$mdBottomSheet');
+    }
   }
 
   showShortcuts($event) {
-    this.$mdBottomSheet.show({
-      templateUrl: 'shortcut.html',
-      controller: 'CartModalShortcutCtrl as ctrl',
-      targetEvent: $event
-    });
+    if (this.conf.platform === 'desktop') {
+      this.$mdBottomSheet.show({
+        templateUrl: 'shortcut.html',
+        controller: 'CartModalShortcutCtrl as ctrl',
+        targetEvent: $event
+      });
+    }
   }
 
   goPath(path = '/') {
@@ -38,8 +49,7 @@ class CartBase {
 
 CartBase.$inject = [
   'CartMessageService', 'CartApiService',
-  '$location', '$window',
-  '$mdBottomSheet'
+  '$location', '$window', '$timeout', '$injector'
 ];
 
 export default CartBase;

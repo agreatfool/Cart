@@ -1,9 +1,15 @@
+import conf from '../../../../common/config.json';
+
 class CartBase {
-  constructor(CartPost, CartCategory, CartTag, CartAttachment) {
+  constructor(CartPost, CartCategory, CartTag, CartAttachment, $injector) {
     this.modelPost = CartPost;
     this.modelCategory = CartCategory;
     this.modelTag = CartTag;
     this.modelAttachment = CartAttachment;
+
+    this.$injector = $injector;
+
+    this.conf = conf;
   }
 
   logInit(name) {
@@ -14,6 +20,6 @@ class CartBase {
   }
 }
 
-CartBase.$inject = ['CartPost', 'CartCategory', 'CartTag', 'CartAttachment'];
+CartBase.$inject = ['CartPost', 'CartCategory', 'CartTag', 'CartAttachment', '$injector'];
 
 export default CartBase;

@@ -1,10 +1,8 @@
 import CartModalBase from '../base/cart-modal.js';
 
 class CartModalShortcutCtrl extends CartModalBase {
-  constructor($mdBottomSheet, ...args) {
+  constructor(...args) {
     super(...args);
-
-    this.$mdBottomSheet = $mdBottomSheet;
 
     this.bottomButtons = [
       { name: 'Home',     icon: 'home',     state: 'home' },
@@ -14,13 +12,19 @@ class CartModalShortcutCtrl extends CartModalBase {
       { name: 'Search',   icon: 'search',   state: 'search' },
       { name: 'Settings', icon: 'settings', state: 'settings' },
     ];
+
+    if (this.conf.platform === 'desktop') {
+      this.$mdBottomSheet = this.$injector.get('$mdBottomSheet');
+    }
   }
 
   hideSheet() {
-    this.$mdBottomSheet.hide();
+    if (this.conf.platform === 'desktop') {
+      this.$mdBottomSheet.hide();
+    }
   }
 }
 
-CartModalShortcutCtrl.$inject = ['$mdBottomSheet', ...CartModalBase.$inject];
+CartModalShortcutCtrl.$inject = [...CartModalBase.$inject];
 
 export default CartModalShortcutCtrl;

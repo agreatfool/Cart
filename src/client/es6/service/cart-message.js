@@ -1,11 +1,13 @@
 import CartBase from './base/cart-base.js';
 
 class CartMessageService extends CartBase {
-  constructor($mdToast, ...args) {
+  constructor(...args) {
     super(...args);
     this.logInit('CartMessageService');
 
-    this.$mdToast = $mdToast;
+    if (this.conf.platform === 'desktop') {
+      this.$mdToast = this.$injector.get('$mdToast');
+    }
   }
 
   static factory(...args) {
@@ -71,7 +73,9 @@ class CartMessageService extends CartBase {
       locals: locals,
       bindToController: true
     };
-    this.$mdToast.show(options);
+    if (this.conf.platform === 'desktop') {
+      this.$mdToast.show(options);
+    }
   }
 
   outputConsole(...args) {
@@ -82,6 +86,6 @@ class CartMessageService extends CartBase {
   }
 }
 
-CartMessageService.factory.$inject = ['$mdToast', ...CartBase.$inject];
+CartMessageService.factory.$inject = [...CartBase.$inject];
 
 export default CartMessageService;

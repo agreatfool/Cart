@@ -1,12 +1,11 @@
 import CartBase from './base/cart-base.js';
 
 class CartBlogListCtrl extends CartBase {
-  constructor($scope, $timeout, ...args) {
+  constructor($scope, ...args) {
     super(...args);
     this.logInit('CartBlogListCtrl');
 
     this.$scope = $scope;
-    this.$timeout = $timeout;
 
     this.postList = [];
 
@@ -56,6 +55,6 @@ class CartBlogListCtrl extends CartBase {
   }
 }
 
-CartBlogListCtrl.$inject = ['$scope', '$timeout', ...CartBase.$inject];
+CartBlogListCtrl.$inject = ['$scope', ...CartBase.$inject];
 
 export default CartBlogListCtrl;

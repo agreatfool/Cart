@@ -1,10 +1,12 @@
 import CartModalBase from '../base/cart-modal.js';
 
 class CartModalMetaInfoCtrl extends CartModalBase {
-  constructor($mdBottomSheet, ...args) {
+  constructor(...args) {
     super(...args);
 
-    this.$mdBottomSheet = $mdBottomSheet;
+    if (this.conf.platform === 'desktop') {
+      this.$mdBottomSheet = this.$injector.get('$mdBottomSheet');
+    }
   }
 
   categoryContentChanged() {
@@ -17,6 +19,6 @@ class CartModalMetaInfoCtrl extends CartModalBase {
   // tags及attachments类同于category
 }
 
-CartModalMetaInfoCtrl.$inject = ['$mdBottomSheet', ...CartModalBase.$inject];
+CartModalMetaInfoCtrl.$inject = [...CartModalBase.$inject];
 
 export default CartModalMetaInfoCtrl;

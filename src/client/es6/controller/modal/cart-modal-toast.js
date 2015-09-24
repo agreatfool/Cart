@@ -1,17 +1,21 @@
 import CartModalBase from '../base/cart-modal.js';
 
 class CartModalToastCtrl extends CartModalBase {
-  constructor($mdToast, ...args) {
+  constructor(...args) {
     super(...args);
 
-    this.$mdToast = $mdToast;
+    if (this.conf.platform === 'desktop') {
+      this.$mdToast = this.$injector.get('$mdToast');
+    }
   }
 
   closeToast() {
-    this.$mdToast.hide();
+    if (this.conf.platform === 'desktop') {
+      this.$mdToast.hide();
+    }
   }
 }
 
-CartModalToastCtrl.$inject = ['$mdToast', ...CartModalBase.$inject];
+CartModalToastCtrl.$inject = [...CartModalBase.$inject];
 
 export default CartModalToastCtrl;

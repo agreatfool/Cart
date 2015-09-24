@@ -1,9 +1,5 @@
 import CartBase from './base/cart-base.js';
 
-import libUuid from 'node-uuid';
-
-import conf from '../../../common/config.json';
-
 class CartApiService extends CartBase {
   constructor(CartMessageService, ...args) {
     super(...args);
@@ -93,7 +89,7 @@ class CartApiService extends CartBase {
   }
 
   postDefaultCategory() {
-    let uuid = conf['defaultCategory']['uuid'];
+    let uuid = this.conf['defaultCategory']['uuid'];
 
     let promise = null;
 
@@ -114,7 +110,7 @@ class CartApiService extends CartBase {
               // search not found, create it
               this.modelCategory.create({
                 uuid: uuid,
-                title: conf['defaultCategory']['name']
+                title: this.conf['defaultCategory']['name']
               }).$promise.then(
                 (category) => {
                   this.categoryMap.set(uuid, category);
