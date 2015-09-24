@@ -1,0 +1,32 @@
+<md-toolbar class="cart-toolbar">
+  <div class="md-toolbar-tools">
+
+    <h3>Home</h3>
+    <div ng-include="'icon-shortcuts.html'"></div>
+    <span flex class="flex"></span>
+    <div ng-include="'icon-reload.html'"></div>
+
+  </div>
+</md-toolbar>
+
+<md-content class="md-padding">
+
+  <md-list>
+
+    <md-subheader class="md-no-sticky">Posts</md-subheader>
+
+    <md-list-item class="md-2-line md-clickable" ng-repeat="postInfo in ctrl.postList">
+      <md-button class="md-no-style">
+        <div class="md-list-item-text">
+          <h3>{{ postInfo.title }}</h3>
+          <p>
+            <md-icon md-font-set="material-icons md-16" style="margin-right: 4px;">layers</md-icon>
+            {{ ctrl.categoryGetTitleViaUuid(postInfo.category) }}
+          </p>
+        </div>
+      </md-button>
+    </md-list-item>
+
+  </md-list>
+
+</md-content>

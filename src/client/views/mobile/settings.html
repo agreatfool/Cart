@@ -1,0 +1,37 @@
+<md-toolbar class="cart-toolbar">
+  <div class="md-toolbar-tools">
+
+    <div ng-include="'icon-back.html'"></div>
+    <h3>Settings</h3>
+    <div ng-include="'icon-shortcuts.html'"></div>
+
+  </div>
+</md-toolbar>
+
+<md-content class="md-padding">
+
+  <md-list>
+
+    <md-subheader class="md-no-sticky">Site setting</md-subheader>
+    <md-list-item class="md-1-line">
+      <md-icon md-font-set="material-icons md-36">cloud</md-icon>
+      <md-input-container flex>
+        <label>Blog server host</label>
+        <input>
+      </md-input-container>
+    </md-list-item>
+
+    <md-divider ></md-divider>
+
+    <md-subheader class="md-no-sticky">Edit setting</md-subheader>
+    <md-list-item class="md-with-secondary md-clickable">
+      <md-icon md-font-set="material-icons md-36">lock_open</md-icon>
+      <p>Mark all new created blog default "Private"</p>
+      <md-switch class="md-secondary"></md-switch>
+    </md-list-item>
+
+  </md-list>
+
+</md-content>
+
+
