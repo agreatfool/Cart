@@ -150,6 +150,15 @@ gulp.task('src:config:server', function() { // 根据当前gulp运行的环境�
     .pipe(gulp.dest(PATH.src.server.path));
 });
 
+gulp.task('src:app', function() {
+  var appPiecePath = libPath.join(PATH.src.client.es6, 'app.piece', PLATFORM);
+  return gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
+    .pipe(replace(/\/\/\s?inject:import[\s\S]*\/\/\s?endinject:import/, libFs.readFileSync(libPath.join(appPiecePath, 'import.js'))))
+    .pipe(replace(/\/\/\s?inject:angular[\s\S]*\/\/\s?endinject:angular/, libFs.readFileSync(libPath.join(appPiecePath, 'angular.js'))))
+    .pipe(rename('app.built.js'))
+    .pipe(gulp.dest(libPath.join(PATH.src.client.es6)));
+});
+
 gulp.task('src:eslint', function(done) { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
   if (IS_PRODUCTION) {
     return gulp.src([
@@ -200,9 +209,10 @@ gulp.task('resource:server', function() { // 拷贝 server 部分无需转码代
 });
 
 gulp.task('resource:html:index', function() { // 拷贝、转换 index HTML 到输出路径
+  var indexPiecePath = libPath.join(PATH.src.client.index, PLATFORM);
   return gulp.src(libPath.join(PATH.src.client.path, 'index.html'))
-    .pipe(replace('<!-- inject:head -->', libFs.readFileSync(libPath.join(PATH.src.client.index, PLATFORM, 'head.html'))))
-    .pipe(replace('<!-- inject:body -->', libFs.readFileSync(libPath.join(PATH.src.client.index, PLATFORM, 'body.html'))))
+    .pipe(replace('<!-- inject:head -->', libFs.readFileSync(libPath.join(indexPiecePath, 'head.html'))))
+    .pipe(replace('<!-- inject:body -->', libFs.readFileSync(libPath.join(indexPiecePath, 'body.html'))))
     .pipe(gulpif(IS_PRODUCTION, minhtml()))
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public')));
 });
@@ -245,6 +255,7 @@ gulp.task('default', function(done) { // 默认任务
     'pre:clean',
     'src:config:common',
     'src:config:server',
+    'src:app',
     'src:eslint',
     ['src:babel:common', 'src:babel:server'],
     'webpack:build',

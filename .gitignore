@@ -31,3 +31,7 @@ cordova/platforms/ios/www
 
 # iOS
 UserInterfaceState.xcuserstate
+
+# src
+# src:app build result
+src/client/es6/app.built.js

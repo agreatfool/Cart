@@ -1,0 +1,1 @@
+angularDependencies.push(ngMaterial);

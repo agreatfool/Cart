@@ -9,10 +9,12 @@ import babelPolyfill from 'babel-core/lib/polyfill.js';
 import angular from 'angular';
 
 import uiRouter from 'angular-ui-router';
-import ngMaterial from 'angular-material';
 import ngResource from 'angular-resource';
-import ngTouch from 'angular-touch';
 import lbServices from './lb-services.js';
+
+// import injection
+// inject:import
+// endinject:import
 
 import CartRouters from './routers.js';
 import CartTheming from './theme.js';
@@ -34,12 +36,12 @@ import CartMessageService from './service/cart-message.js';
 
 // Angular application initialization
 let angularDependencies = [
-  uiRouter, ngMaterial, ngResource,
-  lbServices
+  uiRouter, ngResource, lbServices
 ];
-if (conf['platform'] === 'mobile') {
-  angularDependencies.push(ngTouch);
-}
+
+// Angular Init code injection
+// inject:angular
+// endinject:angular
 
 let app = angular.module('app', angularDependencies);
 

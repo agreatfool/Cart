@@ -8,7 +8,7 @@ module.exports = {
   debug: true,
   cache: true,
   entry: [
-    libPath.join(PWD, 'src', 'client', 'es6', 'app.js')
+    libPath.join(PWD, 'src', 'client', 'es6', 'app.built.js')
   ],
   output: {
     path: libPath.join(PWD, 'client', 'public', 'js'),
