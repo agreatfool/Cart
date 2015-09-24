@@ -128,6 +128,28 @@ gulp.task('pre:clean', function() { // 清理任务，删除所有最终输出�
     .on('error', handleError);
 });
 
+gulp.task('src:config:common', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
+  return gulp.src(libPath.join(PATH.src.common.path, 'config.json'))
+    .pipe(jeditor(function(json) {
+      json.env = ENV;
+      json.platform = PLATFORM;
+      if (!IS_PRODUCTION) { // 非生产环境才需要自动配置IP地址
+        json.host = getLocalIp();
+      }
+      return json;
+    }))
+    .pipe(gulp.dest(PATH.src.common.path));
+});
+
+gulp.task('src:config:server', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
+  return gulp.src(libPath.join(PATH.src.server.path, 'config.json'))
+    .pipe(gulpif(!IS_PRODUCTION, jeditor(function(json) { // 非生产环境才需要自动配置IP地址
+      json.host = getLocalIp();
+      return json;
+    })))
+    .pipe(gulp.dest(PATH.src.server.path));
+});
+
 gulp.task('src:eslint', function(done) { // 源代码 ES6 lint 检查，相关配置请查看 .eslintignore & .eslintrc
   if (IS_PRODUCTION) {
     return gulp.src([
@@ -177,18 +199,6 @@ gulp.task('resource:server', function() { // 拷贝 server 部分无需转码代
     .pipe(gulp.dest(PATH.dest.server.path));
 });
 
-gulp.task('src:angular:gen', shell.task(['lb-ng ' + libPath.join(PATH.dest.server.path, 'server.js') + ' ' + libPath.join(PATH.src.client.es6, 'lb-services.js')])); // 生成 StrongLoop 对应的 angular 代码
-
-gulp.task('src:angular:build', function(done) { // 生成 StrongLoop 对应的 angular 代码，完整任务，含代码文件准备等工序
-  runSequence(
-    'src:eslint',
-    ['src:babel:common', 'src:babel:server'],
-    ['resource:common', 'resource:server'],
-    'src:angular:gen',
-    done
-  );
-});
-
 gulp.task('resource:html:index', function() { // 拷贝、转换 index HTML 到输出路径
   return gulp.src(libPath.join(PATH.src.client.path, 'index.html'))
     .pipe(replace('<!-- inject:head -->', libFs.readFileSync(libPath.join(PATH.src.client.index, PLATFORM, 'head.html'))))
@@ -199,32 +209,22 @@ gulp.task('resource:html:index', function() { // 拷贝、转换 index HTML 到�
 
 gulp.task('resource:html:views', function() { // 拷贝 views HTML 到输出路径
   return gulp.src([
-      libPath.join(PATH.src.client.path, 'views', '*.html')
-    ])
+    libPath.join(PATH.src.client.path, 'views', '*.html')
+  ])
     .pipe(gulpif(IS_PRODUCTION, minhtml()))
     .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'views')));
 });
 
-gulp.task('src:config:common', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
-  return gulp.src(libPath.join(PATH.src.common.path, 'config.json'))
-    .pipe(jeditor(function(json) {
-      json.env = ENV;
-      json.platform = PLATFORM;
-      if (!IS_PRODUCTION) { // 非生产环境才需要自动配置IP地址
-        json.host = getLocalIp();
-      }
-      return json;
-    }))
-    .pipe(gulp.dest(PATH.src.common.path));
-});
+gulp.task('src:angular:gen', shell.task(['lb-ng ' + libPath.join(PATH.dest.server.path, 'server.js') + ' ' + libPath.join(PATH.src.client.es6, 'lb-services.js')])); // 生成 StrongLoop 对应的 angular 代码
 
-gulp.task('src:config:server', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
-  return gulp.src(libPath.join(PATH.src.server.path, 'config.json'))
-    .pipe(gulpif(!IS_PRODUCTION, jeditor(function(json) { // 非生产环境才需要自动配置IP地址
-      json.host = getLocalIp();
-      return json;
-    })))
-    .pipe(gulp.dest(PATH.src.server.path));
+gulp.task('src:angular:build', function(done) { // 生成 StrongLoop 对应的 angular 代码，完整任务，含代码文件准备等工序
+  runSequence(
+    'src:eslint',
+    ['src:babel:common', 'src:babel:server'],
+    ['resource:common', 'resource:server'],
+    'src:angular:gen',
+    done
+  );
 });
 
 gulp.task('webpack:build', function() { // webpack构建
