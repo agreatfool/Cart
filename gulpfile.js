@@ -38,6 +38,7 @@ var lodash = require('lodash');
 //-* WEBPACK
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 var webpack = require('webpack-stream');
+var webpackLib = require('webpack');
 var webpackConf = require(libPath.join(PWD, 'webpack.config.js'));
 
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -92,7 +93,7 @@ function getWebpackConf() {
 
   // plugins
   if (IS_PRODUCTION) {
-    conf.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
+    conf.plugins.push(new webpackLib.optimize.UglifyJsPlugin({ minimize: true }));
   }
 
   return conf;
