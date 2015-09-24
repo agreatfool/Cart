@@ -1,7 +1,5 @@
 import conf from '../../common/config.json';
 
-import 'angular-material/angular-material.min.css';
-
 import '../styles/main.scss';
 
 import babelPolyfill from 'babel-core/lib/polyfill.js';
@@ -10,6 +8,8 @@ import angular from 'angular';
 
 import uiRouter from 'angular-ui-router';
 import ngResource from 'angular-resource';
+import ngAnimate from 'angular-animate';
+import ngSanitize from 'angular-sanitize';
 import lbServices from './lb-services.js';
 
 // import injection
@@ -17,7 +17,6 @@ import lbServices from './lb-services.js';
 // endinject:import
 
 import CartRouters from './routers.js';
-import CartTheming from './theme.js';
 import CartLoopback from './loopback.js';
 
 import CartModalMetaInfoCtrl from './controller/modal/cart-modal-meta.js';
@@ -36,7 +35,7 @@ import CartMessageService from './service/cart-message.js';
 
 // Angular application initialization
 let angularDependencies = [
-  uiRouter, ngResource, lbServices
+  uiRouter, ngResource, ngAnimate, ngSanitize, lbServices
 ];
 
 // Angular Init code injection
@@ -47,9 +46,6 @@ let app = angular.module('app', angularDependencies);
 
 // Angular UI router config
 app.config(CartRouters.factory);
-
-// Angular Material Theme config
-app.config(CartTheming.factory);
 
 // StrongLoop backend config
 app.config(CartLoopback.factory);
@@ -69,6 +65,10 @@ app.controller('CartBlogTagCtrl',       CartBlogTagCtrl);
 // Define self services
 app.factory('CartApiService',           CartApiService.factory);
 app.factory('CartMessageService',       CartMessageService.factory);
+
+// Logic code injection
+// inject:logic
+// endinject:logic
 
 // Boot angular
 let angularBoot = function(event) {

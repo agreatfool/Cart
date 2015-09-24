@@ -25,11 +25,15 @@ module.exports = {
       { test: /\.json$/, loader: 'json-loader' },
       { test: /\.css$/, loader: 'style-loader!css-loader' },
       { test: /\.scss$/, loader: 'style!css!autoprefixer!sass' },
-      { test: /\.(woff|woff2|ttf|eot)$/, loader: 'url-loader?limit=100000' },
+      { test: /\.(woff|woff2|ttf|eot)([\?]?.*)$/, loader: 'url-loader?limit=100000' },
+      { test: /\.svg([\?]?.*)$/, loader: 'svg-inline' },
       // AMD exports loaders
       { test: /[\/]angular\.js$/, loader: 'exports?angular' },
       { test: /[\/]angular-resource\.js$/, loader: "exports?angular.module('ngResource').name" },
+      { test: /[\/]angular-animate\.js$/, loader: "exports?angular.module('ngAnimate').name" },
+      { test: /[\/]angular-sanitize\.js$/, loader: "exports?angular.module('ngSanitize').name" },
       { test: /[\/]angular-touch\.js$/, loader: "exports?angular.module('ngTouch').name" },
+      { test: /[\/]ionic-angular\.js$/, loader: "exports?angular.module('ionic').name" },
       { test: /[\/]lb-services\.js$/, loader: "exports?angular.module('lbServices').name" }
     ]
   },

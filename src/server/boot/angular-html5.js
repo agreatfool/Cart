@@ -24,6 +24,9 @@ module.exports = function supportAngularHtml5(server) {
     } else if (reqUrl.match(/^\/explorer.*/)) {
       // loopback explorer root, skip it
       next();
+    } else if (reqUrl.match(/^\/cordova\.js/)) {
+      // root cordova.js, skip it
+      next();
     } else {
       // otherwise just gave the index.html for angular HTML5 mode support
       res.sendFile('client/public/index.html', { root: libPath.join(__dirname, '..', '..') });

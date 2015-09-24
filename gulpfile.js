@@ -183,6 +183,7 @@ gulp.task('src:app', function() {
   return gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
     .pipe(replace(/\/\/\s?inject:import[\s\S]*\/\/\s?endinject:import/, libFs.readFileSync(libPath.join(appPiecePath, 'import.js'))))
     .pipe(replace(/\/\/\s?inject:angular[\s\S]*\/\/\s?endinject:angular/, libFs.readFileSync(libPath.join(appPiecePath, 'angular.js'))))
+    .pipe(replace(/\/\/\s?inject:logic[\s\S]*\/\/\s?endinject:logic/, libFs.readFileSync(libPath.join(appPiecePath, 'logic.js'))))
     .pipe(rename('app.built.js'))
     .pipe(gulp.dest(libPath.join(PATH.src.client.es6)));
 });
@@ -247,10 +248,10 @@ gulp.task('resource:html:index', function() { // 拷贝、转换 index HTML 到�
 
 gulp.task('resource:html:views', function() { // 拷贝 views HTML 到输出路径
   return gulp.src([
-    libPath.join(PATH.src.client.path, 'views', '*.html')
+    libPath.join(PATH.src.client.path, 'views', PLATFORM, '*.html')
   ])
-    .pipe(gulpif(IS_PRODUCTION, minhtml()))
-    .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'views')));
+  .pipe(gulpif(IS_PRODUCTION, minhtml()))
+  .pipe(gulp.dest(libPath.join(PATH.dest.client.path, 'public', 'views')));
 });
 
 gulp.task('src:angular:gen', shell.task(['lb-ng ' + libPath.join(PATH.dest.server.path, 'server.js') + ' ' + libPath.join(PATH.src.client.es6, 'lb-services.js')])); // 生成 StrongLoop 对应的 angular 代码
