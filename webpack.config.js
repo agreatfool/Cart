@@ -26,7 +26,7 @@ module.exports = {
       { test: /\.css$/, loader: 'style-loader!css-loader' },
       { test: /\.scss$/, loader: 'style!css!autoprefixer!sass' },
       { test: /\.(woff|woff2|ttf|eot)([\?]?.*)$/, loader: 'url-loader?limit=100000' },
-      { test: /\.svg([\?]?.*)$/, loader: 'svg-inline' },
+      { test: /\.svg([\?]?.*)$/, loader: 'url-loader?limit=100000&mimetype=image/svg+xml' },
       // AMD exports loaders
       { test: /[\/]angular\.js$/, loader: 'exports?angular' },
       { test: /[\/]angular-resource\.js$/, loader: "exports?angular.module('ngResource').name" },
