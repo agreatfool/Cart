@@ -154,8 +154,10 @@ gulp.task('src:config:common', function() { // 根据当前gulp运行的环境�
     .pipe(jeditor(function(json) {
       json.env = ENV;
       json.platform = PLATFORM;
-      if (!IS_PRODUCTION && IS_MOBILE) { // 非生产环境 且 移动编译，才需要自动配置IP地址
+      if (!IS_PRODUCTION && IS_MOBILE) { // 非生产环境，才需要自动配置IP地址
         json.host = getLocalIp();
+      } else if (!IS_PRODUCTION && !IS_MOBILE) {
+        json.host = 'localhost';
       }
       return json;
     }))
@@ -164,8 +166,12 @@ gulp.task('src:config:common', function() { // 根据当前gulp运行的环境�
 
 gulp.task('src:config:server', function() { // 根据当前gulp运行的环境变量，修改源代码配置文件中的环境变量，以便在后续的构造任务中生效
   return gulp.src(libPath.join(PATH.src.server.path, 'config.json'))
-    .pipe(gulpif(!IS_PRODUCTION && IS_MOBILE, jeditor(function(json) { // 非生产环境 且 移动编译，才需要自动配置IP地址
-      json.host = getLocalIp();
+    .pipe(gulpif(!IS_PRODUCTION, jeditor(function(json) { // 非生产环境，才需要自动配置IP地址
+      if (IS_MOBILE) {
+        json.host = getLocalIp();
+      } else {
+        json.host = 'localhost';
+      }
       return json;
     })))
     .pipe(gulp.dest(PATH.src.server.path));
