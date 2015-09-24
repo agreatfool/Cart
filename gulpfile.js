@@ -294,7 +294,7 @@ gulp.task('default', function(done) { // 默认任务
   );
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['src:app'], function() {
   // 前端视图改动
   gulp.watch([
     libPath.join(PATH.src.client.path, 'index.html'),
@@ -324,14 +324,19 @@ gulp.task('watch', function() {
   livereload.listen();
   gulp.watch([libPath.join(PATH.dest.client.path, 'public', '**', '*')]).on('change', livereload.changed);
 
-  // 前端样式和代码改动
-  var conf = lodash.extend(webpackConf, { watch: true });
-  gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
-    .pipe(webpack(conf, null, function(err, stats) {
+  // app.js 及注入代码变动，重新制作 app.built.js
+  gulp.watch([
+    libPath.join(PATH.src.client.es6, 'app.js'),
+    libPath.join(PATH.src.client.es6, 'app.piece', '**', '*.js')
+  ], ['src:app']);
+
+  // 前端样式和代码改动，webpack重新打包
+  gulp.src(libPath.join(PATH.src.client.es6, 'app.built.js'))
+    .pipe(webpack(lodash.extend(getWebpackConf(), { watch: true }), null, function(err, stats) {
       if (err) {
-        throw new gutil.PluginError('webpack:build', err);
+        throw new gutil.PluginError('webpack:watch', err);
       }
-      gutil.log('[webpack:build]', stats.toString({
+      gutil.log('[webpack:watch]', stats.toString({
         colors: true
       }));
     }))
