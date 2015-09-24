@@ -77,6 +77,27 @@ function getLocalIp() {
   }
 }
 
+function getWebpackConf() {
+  var confExt = {};
+
+  // root elements
+  if (!IS_PRODUCTION) {
+    confExt = {
+      devtool: 'sourcemap',
+      debug: true
+    };
+  }
+
+  var conf = lodash.extend(webpackConf, confExt);
+
+  // plugins
+  if (IS_PRODUCTION) {
+    conf.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
+  }
+
+  return conf;
+}
+
 gutil.log(
   gutil.colors.yellow('GLOBAL'),
   gutil.colors.magenta('ENV'),
@@ -239,7 +260,7 @@ gulp.task('src:angular:build', function(done) { // 生成 StrongLoop 对应的 a
 
 gulp.task('webpack:build', function() { // webpack构建
   return gulp.src(libPath.join(PATH.src.client.es6, 'app.js'))
-    .pipe(webpack(webpackConf, null, function(err, stats) {
+    .pipe(webpack(getWebpackConf(), null, function(err, stats) {
       if (err) {
         throw new gutil.PluginError('webpack:build', err);
       }
