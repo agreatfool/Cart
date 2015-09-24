@@ -11,55 +11,6 @@
 
   <div ui-view></div>
 
-  <script type="text/ng-template" id="icon-back.html">
-    <md-button class="md-icon-button md-button" ng-click="ctrl.goBack()">
-      <md-icon md-font-set="material-icons">arrow_back</md-icon>
-      <md-tooltip>
-        Back
-      </md-tooltip>
-    </md-button>
-  </script>
-
-  <script type="text/ng-template" id="icon-reload.html">
-    <md-button class="md-icon-button md-button" ng-click="ctrl.reloadPage()">
-      <md-icon md-font-set="material-icons">refresh</md-icon>
-      <md-tooltip>
-        Refresh
-      </md-tooltip>
-    </md-button>
-  </script>
-
-  <script type="text/ng-template" id="icon-shortcuts.html">
-    <md-button class="md-icon-button md-button" ng-click="ctrl.showShortcuts()">
-      <md-icon md-font-set="material-icons">menu</md-icon>
-      <md-tooltip>
-        Shortcut
-      </md-tooltip>
-    </md-button>
-  </script>
-
-  <script type="text/ng-template" id="toast.html">
-    <md-toast>
-      <span flex><p style="color: {{ ctrl.color }}">{{ ctrl.message }}</p></span>
-      <md-button ng-click="ctrl.closeToast()" ng-show="ctrl.confirm">
-        Close
-      </md-button>
-    </md-toast>
-  </script>
-
-  <script type="text/ng-template" id="shortcut.html">
-    <md-bottom-sheet class="md-grid" layout="row">
-      <md-list flex layout="row" layout-align="center center">
-        <md-list-item ng-repeat="button in ctrl.bottomButtons">
-          <md-button ui-sref="{{ button.state }}" ng-click="ctrl.hideSheet()">
-            <md-icon md-font-set="material-icons md-36">{{ button.icon }}</md-icon>
-            <div>{{ button.name }}</div>
-          </md-button>
-        </md-list-item>
-      </md-list>
-    </md-bottom-sheet>
-  </script>
-
   <!-- inject:body -->
   <script type="text/javascript" src="js/bundle.js"></script>
 </body>
